@@ -135,13 +135,44 @@
     .list-title{font-size:18px;font-weight:900;margin:0 0 4px}
     .list-meta{font-size:13px;color:var(--muted);line-height:1.45}
     .list-buttons{display:flex;gap:8px;flex-wrap:wrap}
+    .objective-detail-grid{display:grid;grid-template-columns:minmax(0,2.1fr) minmax(300px,1fr);gap:0;border-top:1px solid var(--line)}
+    .detail-main,.detail-side{min-width:0}
+    .detail-side{border-left:1px solid var(--line);background:#fbfcfd}
+    .detail-block{padding:18px 20px;border-bottom:1px solid var(--line)}
+    .detail-grid-top{display:grid;grid-template-columns:1.4fr 1fr 1fr;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .detail-grid-top > div{padding:16px 20px;border-right:1px solid var(--line);min-height:110px}
+    .detail-grid-top > div:last-child{border-right:none}
+    .detail-kicker{font-size:12px;font-weight:900;color:#667085;text-transform:uppercase;margin-bottom:8px}
+    .detail-big{font-size:14px;line-height:1.6}
+    .detail-meta-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}
+    .detail-meta-card{padding:0;border:none;background:transparent}
+    .detail-meta-card .detail-kicker{margin-bottom:5px}
+    .side-section{padding:16px 18px;border-bottom:1px solid var(--line)}
+    .side-section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+    .side-section-title{font-size:14px;font-weight:900}
+    .chip-list{display:flex;gap:8px;flex-wrap:wrap}
+    .chip-item{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:#eef4ff;color:#175cd3;font-size:12px;font-weight:800}
+    .chip-item.gray{background:#eef2f6;color:#344054}
+    .chip-item.purple{background:#f4f3ff;color:#6941c6}
+    .chip-item button{border:none;background:transparent;color:inherit;cursor:pointer;font-weight:900;padding:0;font-size:13px;line-height:1}
+    .stack-list{display:flex;flex-direction:column;gap:10px}
+    .stack-item{padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#fff}
+    .stack-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+    .stack-title{font-weight:900;color:var(--text);font-size:13px;line-height:1.3}
+    .stack-sub{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.4;word-break:break-word}
+    .stack-tools{display:flex;gap:6px;flex-wrap:wrap}
+    .file-link{color:#175cd3;text-decoration:none;font-weight:800}
+    .detail-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .detail-header-inline{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;width:100%}
+    .objective-action-buttons{display:flex;gap:6px;flex-wrap:wrap}
 
     @media(max-width:1100px){
-      .summary-grid,.filters,.kpi-summary,.tab-summary-grid{grid-template-columns:1fr}
+      .summary-grid,.filters,.kpi-summary,.tab-summary-grid,.detail-grid-top,.detail-meta-grid,.objective-detail-grid{grid-template-columns:1fr}
       .topbar{flex-direction:column}
       .page{padding:16px}
       .initiative-cascade-card,.form-grid{grid-template-columns:1fr}
       .modal-header{flex-direction:column}
+      .detail-side{border-left:none;border-top:1px solid var(--line)}
     }
   </style>
 </head>
@@ -351,6 +382,97 @@
     </div>
   </div>
 
+  <div id="objectiveDetailModalBackdrop" class="modal-backdrop">
+    <div class="modal" style="width:min(1320px,98vw)">
+      <div class="modal-header">
+        <div class="detail-header-inline">
+          <div style="display:flex;gap:12px;align-items:flex-start;min-width:0;">
+            <button class="btn btn-secondary btn-small" type="button" onclick="closeObjectiveDetailModal()">←</button>
+            <div>
+              <h3 id="objectiveDetailTitle" class="modal-title">Objetivo</h3>
+            </div>
+          </div>
+          <div class="detail-actions">
+            <button id="objectiveDetailEditBtn" class="btn btn-secondary" type="button">Editar</button>
+            <button id="objectiveDetailDeleteBtn" class="btn btn-danger" type="button">Eliminar</button>
+          </div>
+        </div>
+      </div>
+      <div id="objectiveDetailBody" class="modal-body" style="padding:0"></div>
+    </div>
+  </div>
+
+  <div id="objectiveEditModalBackdrop" class="modal-backdrop">
+    <div class="modal narrow">
+      <div class="modal-header">
+        <div>
+          <h3 id="objectiveEditTitle" class="modal-title">Editar objetivo</h3>
+          <p class="modal-subtitle">Actualiza la información principal del objetivo.</p>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" type="button" onclick="closeObjectiveEditModal()">Cerrar</button>
+          <button class="btn btn-primary" type="button" onclick="saveObjectiveFromForm()">Guardar</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="objectiveFormId">
+        <div class="form-grid">
+          <div class="field full">
+            <label>Nombre del objetivo</label>
+            <input id="objectiveFormName" class="input" type="text">
+          </div>
+          <div class="field full">
+            <label>Descripción</label>
+            <textarea id="objectiveFormDescription" class="textarea"></textarea>
+          </div>
+          <div class="field">
+            <label>Creador</label>
+            <input id="objectiveFormCreator" class="input" type="text">
+          </div>
+          <div class="field">
+            <label>Líder responsable</label>
+            <input id="objectiveFormLeader" class="input" type="text">
+          </div>
+          <div class="field">
+            <label>Fecha inicio</label>
+            <input id="objectiveFormStartDate" class="input" type="date">
+          </div>
+          <div class="field">
+            <label>Fecha compromiso</label>
+            <input id="objectiveFormEndDate" class="input" type="date">
+          </div>
+          <div class="field">
+            <label>Estatus</label>
+            <select id="objectiveFormStatus" class="select">
+              <option>Activo</option>
+              <option>En riesgo</option>
+              <option>Pausado</option>
+              <option>Cumplido</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Tipo</label>
+            <input id="objectiveFormType" class="input" type="text" placeholder="resultado, proceso, etc.">
+          </div>
+          <div class="field">
+            <label>Perspectiva</label>
+            <input id="objectiveFormPerspective" class="input" type="text">
+          </div>
+          <div class="field">
+            <label>Nivel de contribución</label>
+            <input id="objectiveFormContribution" class="input" type="text">
+          </div>
+          <div class="field full">
+            <label>Resultado esperado</label>
+            <input id="objectiveFormExpected" class="input" type="text">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <input id="objectiveAttachmentInput" type="file" class="hidden">
+
   <script>
     const OBJECTIVES_KEY='ximpler_objetivos_demo_v7_planes';
     const PLANNINGS_KEY='ximpler_planeaciones_demo_v1';
@@ -363,6 +485,7 @@
     let activeTab='objetivos';
     let expanded={};
     let currentActionsContext=null;
+    let currentObjectiveDetailId='';
 
     const $=id=>document.getElementById(id);
     const uid=(p='id')=>p+'_'+Math.random().toString(36).slice(2,10);
@@ -386,7 +509,10 @@
     function normalizeIndicator(ind={}){return{id:ind.id||uid('ind'),name:ind.name||'',action:ind.action||'Incrementar',unit:ind.unit||'',initialValue:Number(ind.initialValue??ind.initial??0),target:Number(ind.target??0),current:Number(ind.current??0),frequency:ind.frequency||'Mensual',owner:ind.owner||'',hidden:Boolean(ind.hidden),metaPlan:Array.isArray(ind.metaPlan)?ind.metaPlan:[],kpiWeight:ind.kpiWeight!==undefined?Number(ind.kpiWeight):undefined,valueHistory:Array.isArray(ind.valueHistory)?ind.valueHistory:[]}}
     function normalizeObjective(o={}){
       const initiatives=(Array.isArray(o.initiatives)?o.initiatives:(Array.isArray(o.activities)?o.activities:[])).map(normalizeInitiative);
-      return {...o,id:o.id||uid('obj'),planningId:o.planningId||'',name:o.name||'',description:o.description||'',leader:o.leader||'',areas:Array.isArray(o.areas)?o.areas:[],tags:Array.isArray(o.tags)?o.tags:[],linkedProjects:Array.isArray(o.linkedProjects)?o.linkedProjects:[],relatedObjectives:Array.isArray(o.relatedObjectives)?o.relatedObjectives:[],endDate:o.endDate||'',status:o.status||'activo',objectiveType:o.objectiveType||'resultado',strategicPerspective:o.strategicPerspective||'',contributionLevel:o.contributionLevel||'',expectedStrategicResult:o.expectedStrategicResult||'',kpiWeight:o.kpiWeight!==undefined?Number(o.kpiWeight):undefined,indicators:Array.isArray(o.indicators)?o.indicators.map(normalizeIndicator):[],initiatives,activities:initiatives}
+      const links=(Array.isArray(o.links)?o.links:[]).map((x,idx)=>typeof x==='string'?{id:uid('lnk'+idx),label:x,url:x}:({id:x.id||uid('lnk'),label:x.label||x.name||x.url||'Enlace',url:x.url||x.href||''}));
+      const linkedItems=(Array.isArray(o.linkedItems)?o.linkedItems:(Array.isArray(o.linkedProjects)?o.linkedProjects:[])).map((x,idx)=>typeof x==='string'?{id:uid('lig'+idx),type:'Proyecto',name:x}:({id:x.id||uid('lig'),type:x.type||'Proyecto',name:x.name||x.title||String(x),url:x.url||''}));
+      const attachments=(Array.isArray(o.attachments)?o.attachments:[]).map((x,idx)=>({id:x.id||uid('file'+idx),name:x.name||x.filename||'Archivo',dataUrl:x.dataUrl||x.url||'',type:x.type||'',size:x.size||0}));
+      return {...o,id:o.id||uid('obj'),planningId:o.planningId||'',name:o.name||'',description:o.description||'',creator:o.creator||o.createdBy||o.leader||'',leader:o.leader||'',invited:o.invited||'',startDate:o.startDate||'',areas:Array.isArray(o.areas)?o.areas:[],tags:Array.isArray(o.tags)?o.tags:[],links,linkedItems,linkedProjects:linkedItems,attachments,relatedObjectives:Array.isArray(o.relatedObjectives)?o.relatedObjectives:[],endDate:o.endDate||'',status:o.status||'activo',objectiveType:o.objectiveType||'resultado',strategicPerspective:o.strategicPerspective||'',contributionLevel:o.contributionLevel||'',expectedStrategicResult:o.expectedStrategicResult||'',kpiWeight:o.kpiWeight!==undefined?Number(o.kpiWeight):undefined,indicators:Array.isArray(o.indicators)?o.indicators.map(normalizeIndicator):[],initiatives,activities:initiatives}
     }
     function loadData(){plannings=loadJson(PLANNINGS_KEY,[]);rawObjectives=loadRawObjectives();objectives=rawObjectives.map(normalizeObjective);if(!currentPlanningId&&plannings.length)currentPlanningId=plannings[0].id;if(currentPlanningId)localStorage.setItem('ximpler_current_planning_id',currentPlanningId)}
     function plan(){return plannings.find(p=>p.id===currentPlanningId)||{}}
@@ -458,7 +584,7 @@
 
     function renderObjetivos(){
       const objs=planObjectives();
-      $('tabObjetivos').innerHTML='<div class="card"><div class="filters"><input id="objSearch" class="input" placeholder="Buscar objetivo, área, responsable"><select id="objStatus" class="select"><option value="all">Todos los estatus</option><option value="activo">Activo</option><option value="en_riesgo">En riesgo</option><option value="pausado">Pausado</option><option value="cumplido">Cumplido</option></select><select id="objSort" class="select"><option value="default">Orden original</option><option value="kpi">Mayor KPI</option><option value="operativo">Mayor operativo</option><option value="fecha">Fecha compromiso</option></select></div><div class="table-wrap"><table><thead><tr><th>Objetivo</th><th>KPI</th><th>Operativo</th><th>Líder</th><th>Fecha</th><th>Estatus</th><th>Arquitectura</th></tr></thead><tbody id="objBody"></tbody></table></div><div id="objEmpty" class="empty hidden">No hay objetivos que coincidan.</div></div>';
+      $('tabObjetivos').innerHTML='<div class="card"><div class="filters"><input id="objSearch" class="input" placeholder="Buscar objetivo, área, responsable"><select id="objStatus" class="select"><option value="all">Todos los estatus</option><option value="activo">Activo</option><option value="en_riesgo">En riesgo</option><option value="pausado">Pausado</option><option value="cumplido">Cumplido</option></select><select id="objSort" class="select"><option value="default">Orden original</option><option value="kpi">Mayor KPI</option><option value="operativo">Mayor operativo</option><option value="fecha">Fecha compromiso</option></select></div><div class="table-wrap"><table><thead><tr><th>Objetivo</th><th>KPI</th><th>Operativo</th><th>Líder</th><th>Fecha</th><th>Estatus</th><th>Arquitectura</th><th>Acciones</th></tr></thead><tbody id="objBody"></tbody></table></div><div id="objEmpty" class="empty hidden">No hay objetivos que coincidan.</div></div>';
       const draw=()=>{
         let rows=[...objs];
         const q=$('objSearch').value.toLowerCase(),st=$('objStatus').value,sort=$('objSort').value;
@@ -474,6 +600,9 @@
         document.querySelectorAll('[data-delete-initiative]').forEach(b=>b.onclick=()=>deleteInitiative(b.dataset.objectiveId,b.dataset.deleteInitiative));
         document.querySelectorAll('[data-open-actions]').forEach(b=>b.onclick=()=>openActionsModal(b.dataset.objectiveId,b.dataset.openActions));
         document.querySelectorAll('[data-add-action]').forEach(b=>b.onclick=()=>openActionFormModal(b.dataset.objectiveId,b.dataset.addAction));
+        document.querySelectorAll('[data-view-objective]').forEach(b=>b.onclick=()=>openObjectiveDetailModal(b.dataset.viewObjective));
+        document.querySelectorAll('[data-edit-objective]').forEach(b=>b.onclick=()=>openObjectiveEditModal(b.dataset.editObjective));
+        document.querySelectorAll('[data-delete-objective]').forEach(b=>b.onclick=()=>deleteObjective(b.dataset.deleteObjective));
       };
       $('objSearch').oninput=draw;$('objStatus').onchange=draw;$('objSort').onchange=draw;draw();
     }
@@ -488,9 +617,10 @@
         <td>${daysText(o.endDate)}</td>
         <td>${statusBadge(o.status)}</td>
         <td><span class="badge b-purple">${esc(o.objectiveType||'resultado')}</span><div class="small muted">${esc([o.strategicPerspective,o.contributionLevel].filter(Boolean).join(' · ')||'—')}</div></td>
+        <td><div class="objective-action-buttons"><button class="btn btn-secondary btn-small" data-view-objective="${esc(o.id)}">Ver</button><button class="btn btn-secondary btn-small" data-edit-objective="${esc(o.id)}">Editar</button><button class="btn btn-danger btn-small" data-delete-objective="${esc(o.id)}">Eliminar</button></div></td>
       </tr>`;
       if(!ex)return main;
-      return main+`<tr class="cascade-row"><td colspan="7" class="cascade-cell">${renderCascade(o)}</td></tr>`;
+      return main+`<tr class="cascade-row"><td colspan="8" class="cascade-cell">${renderCascade(o)}</td></tr>`;
     }
     function renderCascade(o){
       const initiatives=o.initiatives||[];
@@ -670,6 +800,119 @@
       $('opSearch').oninput=draw;$('opStatus').onchange=draw;draw();
     }
 
+
+    function getRawObjectiveNormalized(id){const raw=rawObjective(id);if(!raw)return null;const normalized=normalizeObjective(raw);Object.assign(raw,normalized);return raw}
+    function linkItemHtml(item,kind,objectiveId){
+      const label=kind==='attachment' ? `<a class="file-link" href="${esc(item.dataUrl||'#')}" download="${esc(item.name||'archivo')}">${esc(item.name||'Archivo')}</a>` : (item.url?`<a class="file-link" href="${esc(item.url)}" target="_blank" rel="noopener">${esc(item.label||item.name||'Ver')}</a>`:esc(item.label||item.name||'Sin nombre'));
+      const sub=kind==='link'?(item.url||''):(kind==='linked'?`${item.type||''}${item.url?' · '+item.url:''}`:(item.type||''));
+      return `<div class="stack-item"><div class="stack-head"><div><div class="stack-title">${label}</div><div class="stack-sub">${esc(sub||'')}</div></div><div class="stack-tools"><button class="btn btn-secondary btn-small" type="button" onclick="editObjectiveMetaItem('${esc(objectiveId)}','${kind}','${esc(item.id)}')">Editar</button><button class="btn btn-danger btn-small" type="button" onclick="deleteObjectiveMetaItem('${esc(objectiveId)}','${kind}','${esc(item.id)}')">Eliminar</button></div></div></div>`;
+    }
+    function renderObjectiveDetailBody(obj){
+      const qualitative=objectiveOperationalScore(obj), quantitative=objectiveKpiScore(obj);
+      const related=(obj.relatedObjectives||[]).map(id=>objectives.find(x=>x.id===id)?.name).filter(Boolean);
+      const links=obj.links||[]; const areas=obj.areas||[]; const linked=obj.linkedItems||[]; const files=obj.attachments||[];
+      return `<div class="detail-grid-top">
+        <div>
+          <div class="detail-kicker">Fechas</div>
+          <div class="detail-big"><strong>Fecha Inicio:</strong> ${fmtDate(obj.startDate)}<br><strong>Fecha Compromiso:</strong> ${fmtDate(obj.endDate)}</div>
+        </div>
+        <div>
+          <div class="detail-kicker">Avance Cualitativo</div>
+          <div class="progress" style="width:160px;margin:8px 0 6px"><div class="fill" style="width:${qualitative}%;background:${progressColor(qualitative)}"></div></div>
+          <div class="detail-big">${qualitative}%</div>
+        </div>
+        <div>
+          <div class="detail-kicker">Avance Cuantitativo</div>
+          <div style="padding-top:4px">${ring(quantitative)}</div>
+        </div>
+      </div>
+      <div class="objective-detail-grid">
+        <div class="detail-main">
+          <div class="detail-block">
+            <div class="detail-kicker">Descripción</div>
+            <div class="detail-big">${esc(obj.description||'Sin descripción registrada')}</div>
+            <div class="detail-meta-grid">
+              <div class="detail-meta-card"><div class="detail-kicker">Creador</div><div class="detail-big"><strong>${esc(obj.creator||'—')}</strong></div></div>
+              <div class="detail-meta-card"><div class="detail-kicker">Líder responsable</div><div class="detail-big"><strong>${esc(obj.leader||'—')}</strong></div></div>
+              <div class="detail-meta-card"><div class="detail-kicker">Invitados</div><div class="detail-big"><strong>${esc(obj.invited||'—')}</strong></div></div>
+            </div>
+            <div style="margin-top:12px">
+              <div class="detail-kicker">Objetivos relacionados</div>
+              <div class="detail-big"><strong>${esc(related.join(', ')||'Ninguno')}</strong></div>
+            </div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-kicker">Indicadores cuantitativos</div>
+            ${(obj.indicators||[]).filter(i=>!i.hidden).length?`<div class="table-wrap"><table style="min-width:0"><thead><tr><th>Indicador</th><th>Acción</th><th>Unidad</th><th>Valor Inicial</th><th>Meta</th><th>Valor Actual</th><th>Avance</th><th>Responsable</th></tr></thead><tbody>${(obj.indicators||[]).filter(i=>!i.hidden).map(ind=>`<tr><td>${esc(ind.name||'—')}</td><td>${esc(ind.action||'—')}</td><td>${esc(ind.unit||'—')}</td><td>${esc(ind.initialValue)}</td><td>${esc(getEffectiveTarget(ind))}</td><td>${esc(ind.current)}</td><td>${calcIndicator(ind,true)}%</td><td>${esc(ind.owner||obj.leader||'—')}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty-box">Sin indicadores visibles.</div>'}
+          </div>
+        </div>
+        <div class="detail-side">
+          <div class="side-section"><div class="side-section-head"><div class="side-section-title">Enlaces</div><button class="btn btn-secondary btn-small" type="button" onclick="addObjectiveLink('${esc(obj.id)}')">Agregar +</button></div>${links.length?`<div class="stack-list">${links.map(item=>linkItemHtml(item,'link',obj.id)).join('')}</div>`:'<div class="muted">No hay enlaces registrados</div>'}</div>
+          <div class="side-section"><div class="side-section-head"><div class="side-section-title">Áreas involucradas</div><button class="btn btn-secondary btn-small" type="button" onclick="addObjectiveArea('${esc(obj.id)}')">Agregar</button></div>${areas.length?`<div class="chip-list">${areas.map((area,idx)=>`<span class="chip-item gray">${esc(area)} <button type="button" onclick="deleteObjectiveArea('${esc(obj.id)}',${idx})">×</button></span>`).join('')}</div>`:'<div class="muted">No hay áreas registradas</div>'}</div>
+          <div class="side-section"><div class="side-section-head"><div class="side-section-title">Ligado a</div><button class="btn btn-secondary btn-small" type="button" onclick="addObjectiveLinkedItem('${esc(obj.id)}')">Agregar</button></div>${linked.length?`<div class="stack-list">${linked.map(item=>linkItemHtml(item,'linked',obj.id)).join('')}</div>`:'<div class="muted">Sin proyectos o minutas ligados</div>'}</div>
+          <div class="side-section"><div class="side-section-head"><div class="side-section-title">Adjuntar Archivos</div><button class="btn btn-secondary btn-small" type="button" onclick="triggerObjectiveAttachment('${esc(obj.id)}')">Agregar archivo</button></div>${files.length?`<div class="stack-list">${files.map(item=>linkItemHtml(item,'attachment',obj.id)).join('')}</div>`:'<div class="muted">Sin archivos adjuntos</div>'}</div>
+        </div>
+      </div>`;
+    }
+    function openObjectiveDetailModal(objectiveId){
+      const obj=planObjectives().find(o=>o.id===objectiveId); if(!obj)return;
+      currentObjectiveDetailId=objectiveId;
+      $('objectiveDetailTitle').textContent=obj.name||'Objetivo';
+      $('objectiveDetailBody').innerHTML=renderObjectiveDetailBody(obj);
+      $('objectiveDetailEditBtn').onclick=()=>openObjectiveEditModal(objectiveId);
+      $('objectiveDetailDeleteBtn').onclick=()=>deleteObjective(objectiveId);
+      $('objectiveDetailModalBackdrop').classList.add('show');
+    }
+    function refreshObjectiveDetailModal(){if(currentObjectiveDetailId && $('objectiveDetailModalBackdrop').classList.contains('show')) openObjectiveDetailModal(currentObjectiveDetailId)}
+    function closeObjectiveDetailModal(){$('objectiveDetailModalBackdrop').classList.remove('show')}
+    function openObjectiveEditModal(objectiveId){
+      const obj=planObjectives().find(o=>o.id===objectiveId); if(!obj)return;
+      $('objectiveFormId').value=objectiveId;
+      $('objectiveEditTitle').textContent='Editar objetivo';
+      $('objectiveFormName').value=obj.name||'';
+      $('objectiveFormDescription').value=obj.description||'';
+      $('objectiveFormCreator').value=obj.creator||'';
+      $('objectiveFormLeader').value=obj.leader||'';
+      $('objectiveFormStartDate').value=obj.startDate||'';
+      $('objectiveFormEndDate').value=obj.endDate||'';
+      $('objectiveFormStatus').value=statusLabel(obj.status);
+      $('objectiveFormType').value=obj.objectiveType||'';
+      $('objectiveFormPerspective').value=obj.strategicPerspective||'';
+      $('objectiveFormContribution').value=obj.contributionLevel||'';
+      $('objectiveFormExpected').value=obj.expectedStrategicResult||'';
+      $('objectiveEditModalBackdrop').classList.add('show');
+    }
+    function closeObjectiveEditModal(){$('objectiveEditModalBackdrop').classList.remove('show')}
+    function saveObjectiveFromForm(){
+      const id=$('objectiveFormId').value; const raw=getRawObjectiveNormalized(id); if(!raw)return;
+      raw.name=$('objectiveFormName').value.trim(); raw.description=$('objectiveFormDescription').value.trim(); raw.creator=$('objectiveFormCreator').value.trim(); raw.leader=$('objectiveFormLeader').value.trim(); raw.startDate=$('objectiveFormStartDate').value; raw.endDate=$('objectiveFormEndDate').value; raw.status=$('objectiveFormStatus').value; raw.objectiveType=$('objectiveFormType').value.trim(); raw.strategicPerspective=$('objectiveFormPerspective').value.trim(); raw.contributionLevel=$('objectiveFormContribution').value.trim(); raw.expectedStrategicResult=$('objectiveFormExpected').value.trim();
+      saveRawObjectives(); loadData(); closeObjectiveEditModal(); renderActiveTab(); refreshObjectiveDetailModal();
+    }
+    function deleteObjective(objectiveId){
+      const raw=rawObjective(objectiveId); if(!raw)return; if(!confirm(`¿Eliminar el objetivo "${raw.name||''}"?`)) return;
+      rawObjectives=rawObjectives.filter(o=>o.id!==objectiveId); saveRawObjectives(); loadData(); renderActiveTab(); if(currentObjectiveDetailId===objectiveId) closeObjectiveDetailModal();
+    }
+    function addObjectiveArea(objectiveId){const raw=getRawObjectiveNormalized(objectiveId); if(!raw)return; const value=prompt('Nombre del área involucrada:',''); if(!value)return; raw.areas=Array.isArray(raw.areas)?raw.areas:[]; raw.areas.push(value.trim()); saveRawObjectives(); loadData(); renderActiveTab(); refreshObjectiveDetailModal();}
+    function deleteObjectiveArea(objectiveId,index){const raw=getRawObjectiveNormalized(objectiveId); if(!raw)return; raw.areas=(Array.isArray(raw.areas)?raw.areas:[]).filter((_,i)=>i!==Number(index)); saveRawObjectives(); loadData(); renderActiveTab(); refreshObjectiveDetailModal();}
+    function addObjectiveLink(objectiveId){const raw=getRawObjectiveNormalized(objectiveId); if(!raw)return; const label=prompt('Nombre o etiqueta del enlace:',''); if(!label)return; const url=prompt('URL del enlace:','https://'); raw.links=Array.isArray(raw.links)?raw.links:[]; raw.links.push({id:uid('lnk'),label:label.trim(),url:(url||'').trim()}); saveRawObjectives(); loadData(); renderActiveTab(); refreshObjectiveDetailModal();}
+    function addObjectiveLinkedItem(objectiveId){const raw=getRawObjectiveNormalized(objectiveId); if(!raw)return; const type=prompt('Escribe el tipo (Proyecto o Minuta):','Proyecto'); if(!type)return; const name=prompt(`Nombre del ${type}:`,''); if(!name)return; const url=prompt('URL opcional:',''); raw.linkedItems=Array.isArray(raw.linkedItems)?raw.linkedItems:[]; raw.linkedItems.push({id:uid('lig'),type:type.trim(),name:name.trim(),url:(url||'').trim()}); raw.linkedProjects=raw.linkedItems; saveRawObjectives(); loadData(); renderActiveTab(); refreshObjectiveDetailModal();}
+    function triggerObjectiveAttachment(objectiveId){currentObjectiveDetailId=objectiveId; const input=$('objectiveAttachmentInput'); input.value=''; input.dataset.objectiveId=objectiveId; input.click();}
+    function handleObjectiveAttachmentSelected(event){const file=event.target.files&&event.target.files[0]; const objectiveId=event.target.dataset.objectiveId; if(!file||!objectiveId)return; const reader=new FileReader(); reader.onload=()=>{const raw=getRawObjectiveNormalized(objectiveId); if(!raw)return; raw.attachments=Array.isArray(raw.attachments)?raw.attachments:[]; raw.attachments.push({id:uid('file'),name:file.name,type:file.type,size:file.size,dataUrl:String(reader.result||'')}); saveRawObjectives(); loadData(); renderActiveTab(); refreshObjectiveDetailModal();}; reader.readAsDataURL(file);}
+    function editObjectiveMetaItem(objectiveId,kind,itemId){
+      const raw=getRawObjectiveNormalized(objectiveId); if(!raw)return;
+      if(kind==='link'){raw.links=Array.isArray(raw.links)?raw.links:[]; const item=raw.links.find(x=>x.id===itemId); if(!item)return; const label=prompt('Etiqueta del enlace:',item.label||''); if(!label)return; const url=prompt('URL del enlace:',item.url||''); item.label=label.trim(); item.url=(url||'').trim();}
+      if(kind==='linked'){raw.linkedItems=Array.isArray(raw.linkedItems)?raw.linkedItems:[]; const item=raw.linkedItems.find(x=>x.id===itemId); if(!item)return; const type=prompt('Tipo:',item.type||'Proyecto'); if(!type)return; const name=prompt('Nombre:',item.name||''); if(!name)return; const url=prompt('URL opcional:',item.url||''); item.type=type.trim(); item.name=name.trim(); item.url=(url||'').trim(); raw.linkedProjects=raw.linkedItems;}
+      if(kind==='attachment'){const item=(Array.isArray(raw.attachments)?raw.attachments:[]).find(x=>x.id===itemId); if(!item)return; const name=prompt('Nombre del archivo:',item.name||''); if(!name)return; item.name=name.trim();}
+      saveRawObjectives(); loadData(); renderActiveTab(); refreshObjectiveDetailModal();
+    }
+    function deleteObjectiveMetaItem(objectiveId,kind,itemId){
+      const raw=getRawObjectiveNormalized(objectiveId); if(!raw)return;
+      if(kind==='link') raw.links=(Array.isArray(raw.links)?raw.links:[]).filter(x=>x.id!==itemId);
+      if(kind==='linked'){raw.linkedItems=(Array.isArray(raw.linkedItems)?raw.linkedItems:[]).filter(x=>x.id!==itemId); raw.linkedProjects=raw.linkedItems;}
+      if(kind==='attachment') raw.attachments=(Array.isArray(raw.attachments)?raw.attachments:[]).filter(x=>x.id!==itemId);
+      saveRawObjectives(); loadData(); renderActiveTab(); refreshObjectiveDetailModal();
+    }
+
     function openInitiativeModal(objectiveId,initiativeId=''){
       const obj=planObjectives().find(o=>o.id===objectiveId);
       const ini=initiativeId?((obj?.initiatives||[]).find(i=>i.id===initiativeId)):null;
@@ -806,6 +1049,7 @@
       document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
       $('refreshBtn').onclick=()=>{loadData();updateHeader();renderActiveTab()};
       $('exportBtn').onclick=exportCsv;
+      $('objectiveAttachmentInput').addEventListener('change',handleObjectiveAttachmentSelected);
       document.querySelectorAll('.modal-backdrop').forEach(backdrop=>backdrop.addEventListener('click',e=>{if(e.target===backdrop)backdrop.classList.remove('show')}));
       setTab('objetivos');
     }
