@@ -573,7 +573,7 @@ function renderWorkspace(){
     ['Avance KPI',m.kpi+'%','Resultados medidos'],
     ['Impacto',m.impact+'%','Real vs esperado'],
     ['Alineación',m.align+'%','Estrategia ↔ operación'],
-    ['Riesgo',m.risk+'%','Riesgo de ejecución'],
+    ['Riesgo',m.risk+'%','IIE'],
     ['Alertas críticas','<span style="color:'+(m.criticalAlerts.length?'var(--red)':'var(--green2)')+';font-size:24px;font-weight:900">'+m.criticalAlerts.length+'</span>','Requieren atención'],
     ['Desconectadas','<span style="color:'+(m.disconnected.length?'var(--purple)':'var(--green2)')+';font-size:24px;font-weight:900">'+m.disconnected.length+'</span>','Iniciativas sin impacto KPI']
   ].map(x=>'<div class="summary-card"><div class="summary-label">'+x[0]+'</div><div class="summary-value">'+x[1]+'</div><div class="summary-note">'+x[2]+'</div></div>').join('');
@@ -1251,7 +1251,7 @@ function objectiveActionStats(o){
   const done=actions.filter(isActionFinished).length;
   const overdue=actions.filter(a=>isOverdue(a.dueDate,a.status)).length;
   const dueSoon=actions.filter(a=>!isOverdue(a.dueDate,a.status)&&isDueWithin(a.dueDate,7)).length;
-  const progress=total?Math.round((done/total)*100):((o.initiatives||[]).length?0:0);
+  const progress=total?Math.round((done/total)*100):0;
   return{total,done,pending:Math.max(0,total-done),overdue,dueSoon,progress};
 }
 function objectiveInitiativeProgressScore(o){
@@ -1277,7 +1277,53 @@ function objectiveCriticalRelations(o){
   });
   return connected;
 }
-function objectiveExecutionRiskProfile(o){
+function severityFromPerformance(score){
+  score=clamp(score);
+  if(score>=90)return 0;
+  if(score>=80)return Math.round(10+(90-score)*1.2);
+  if(score>=70)return Math.round(24+(80-score)*1.7);
+  if(score>=50)return Math.round(42+(70-score)*1.35);
+  return Math.round(69+(50-score)*0.62);
+}
+function severityFromAlignment(score){
+  score=clamp(score);
+  if(score>=85)return 0;
+  if(score>=70)return Math.round(18+(85-score)*1.4);
+  if(score>=60)return Math.round(42+(70-score)*1.5);
+  return Math.round(62+(60-score)*0.75);
+}
+function severityFromTom(score){
+  score=clamp(score);
+  if(score>=85)return 0;
+  if(score>=70)return Math.round(15+(85-score)*1.2);
+  if(score>=50)return Math.round(35+(70-score)*1.25);
+  return Math.round(60+(50-score)*0.75);
+}
+function evidenceRiskScore(level){
+  const s=evidenceScore(level||'Sin evidencia');
+  if(s>=85)return 0;
+  if(s>=60)return 18;
+  if(s>=35)return 34;
+  return 48;
+}
+function actionDelayRisk(o,actionStats,kpi){
+  if(actionStats.overdue>0){
+    const density=actionStats.total?Math.round((actionStats.overdue/actionStats.total)*100):35;
+    return clamp(50+density*.35+(kpi<70?12:0));
+  }
+  if(actionStats.dueSoon>0&&actionStats.progress<65)return 42;
+  if(actionStats.total>0&&actionStats.progress<30&&isDueWithin(o.endDate,30)&&kpi<75)return 45;
+  return 0;
+}
+function datePressureRisk(o,kpi){
+  const status=String(o.status||'').toLowerCase();
+  const overdueObjective=o.endDate&&new Date(o.endDate+'T00:00:00')<new Date(todayKey()+'T00:00:00')&&status!=='cumplido';
+  const dueSoon=isDueWithin(o.endDate,30)&&status!=='cumplido';
+  if(overdueObjective)return kpi>=90?35:85;
+  if(dueSoon&&kpi<85)return 55;
+  return 0;
+}
+function componentListForObjective(o){
   const hasKpi=(o.indicators||[]).length>0;
   const hasInits=(o.initiatives||[]).length>0;
   const kpi=hasKpi?objectiveKpiScore(o):0;
@@ -1287,38 +1333,56 @@ function objectiveExecutionRiskProfile(o){
   const actionStats=objectiveActionStats(o);
   const initiativeProgress=objectiveInitiativeProgressScore(o);
   const tacticalProgress=actionStats.total?actionStats.progress:initiativeProgress;
-  const actionRisk=actionStats.overdue?Math.min(100,45+(actionStats.overdue*15)):(actionStats.total?100-actionStats.progress:(hasInits?65:100));
-  const gap= riskValue(o.gapRisk);
   const rels=objectiveCriticalRelations(o);
   const relationRisk=Math.min(100,rels.reduce((max,r)=>Math.max(max,Number(r.risk||0)),0));
+  const actionRisk=actionDelayRisk(o,actionStats,kpi);
+  const dateRisk=datePressureRisk(o,kpi);
+  const components=[
+    {key:'kpi',label:'Desviación KPI',value:hasKpi?severityFromPerformance(kpi):100,raw:kpi,weight:.25},
+    {key:'impacto',label:'Bajo impacto de iniciativas',value:hasInits?severityFromPerformance(impact):65,raw:impact,weight:.18},
+    {key:'alineacion',label:'Desalineación estratégica',value:severityFromAlignment(alignment),raw:alignment,weight:.16},
+    {key:'tom',label:'TOM incompleto',value:severityFromTom(tom),raw:tom,weight:.12},
+    {key:'brecha',label:'Riesgo de brecha',value:riskValue(o.gapRisk),raw:o.gapRisk||'Medio',weight:.10},
+    {key:'acciones',label:'Atrasos reales de acciones',value:actionRisk,raw:actionStats.overdue+' vencidas',weight:.10},
+    {key:'relaciones',label:'Dependencias estratégicas',value:relationRisk,raw:rels.length+' relaciones',weight:.06},
+    {key:'fecha',label:'Presión de fecha compromiso',value:dateRisk,raw:daysText(o.endDate),weight:.03},
+    {key:'evidencia',label:'Evidencia insuficiente',value:evidenceRiskScore(o.evidenceLevel),raw:o.evidenceLevel||'Sin evidencia',weight:.00}
+  ];
+  return{components,hasKpi,hasInits,kpi,impact,alignment,tom,actionStats,initiativeProgress,tacticalProgress,relationRisk,dateRisk,criticalRelations:rels};
+}
+function objectiveInterventionProfile(o){
+  const base=componentListForObjective(o);
+  const weighted=base.components.reduce((sum,c)=>sum+(Number(c.value||0)*Number(c.weight||0)),0);
+  const dominant=Math.max(...base.components.filter(c=>c.key!=='evidencia').map(c=>Number(c.value||0)),0);
+  const disconnected=objectiveDisconnectedInitiativeCount(o);
+  const gapRisk=String(o.gapRisk||'Medio');
+  let score=Math.round(weighted*.72+dominant*.28);
+  if(!base.hasKpi)score=Math.max(score,92);
+  if(!base.hasInits)score=Math.max(score,86);
+  if(disconnected>0)score+=Math.min(10,disconnected*5);
+  if(base.kpi<50&&base.impact<50&&base.hasKpi&&base.hasInits)score+=8;
+  if(base.alignment<60)score+=6;
+  if(base.tom<50)score+=6;
+  if(['Alto','Crítico','Critico'].includes(gapRisk)&&base.kpi<70)score+=5;
   const status=String(o.status||'').toLowerCase();
   const overdueObjective=o.endDate&&new Date(o.endDate+'T00:00:00')<new Date(todayKey()+'T00:00:00')&&status!=='cumplido';
   const dueSoon=isDueWithin(o.endDate,30)&&status!=='cumplido';
-  const dateRisk=overdueObjective?100:(dueSoon&&kpi<85?70:0);
-  let score=Math.round(
-    (100-kpi)*0.22+
-    (100-impact)*0.18+
-    (100-tacticalProgress)*0.12+
-    actionRisk*0.12+
-    (100-alignment)*0.12+
-    (100-tom)*0.10+
-    gap*0.08+
-    relationRisk*0.04+
-    dateRisk*0.02
-  );
-  if(!hasKpi)score=Math.max(score,88);
-  if(!hasInits)score=Math.max(score,82);
-  return{score:clamp(score),kpi,impact,alignment,tom,actionStats,initiativeProgress,tacticalProgress,actionRisk,gapRiskScore:gap,relationRisk,dateRisk,criticalRelations:rels,hasKpi,hasInits,overdueObjective,dueSoon};
+  return{...base,score:clamp(score),dominantComponent:base.components.slice().sort((a,b)=>b.value-a.value)[0],gapRiskScore:riskValue(o.gapRisk),disconnected,overdueObjective,dueSoon};
 }
-function executionDecisionLevel(score){
+function objectiveExecutionRiskProfile(o){
+  // Compatibilidad con vistas existentes. El término correcto en la vista de Brechas es IIE: Índice de Intervención Ejecutiva.
+  return objectiveInterventionProfile(o);
+}
+function interventionDecisionLevel(score){
   score=Number(score||0);
-  if(score>=80)return{label:'Intervención crítica',color:'red',tone:'critical'};
-  if(score>=65)return{label:'Decisión de comité',color:'yellow',tone:'committee'};
-  if(score>=45)return{label:'Ajuste operativo',color:'blue',tone:'adjust'};
+  if(score>=75)return{label:'Intervención crítica',color:'red',tone:'critical'};
+  if(score>=60)return{label:'Decisión de comité',color:'yellow',tone:'committee'};
+  if(score>=40)return{label:'Ajuste operativo',color:'blue',tone:'adjust'};
   return{label:'Seguimiento',color:'green',tone:'follow'};
 }
+function executionDecisionLevel(score){return interventionDecisionLevel(score)}
 function hardSignalsText(o){
-  const p=objectiveExecutionRiskProfile(o);
+  const p=objectiveInterventionProfile(o);
   return[
     'KPI '+p.kpi+'%',
     'Impacto '+p.impact+'%',
@@ -1326,78 +1390,85 @@ function hardSignalsText(o){
     'TOM '+p.tom+'%',
     'Acciones '+p.actionStats.done+'/'+p.actionStats.total,
     'Vencidas '+p.actionStats.overdue,
-    'Desconectadas '+objectiveDisconnectedInitiativeCount(o),
+    'Factor dominante: '+(p.dominantComponent?.label||'—'),
     'Relaciones críticas '+p.criticalRelations.length
   ].join(' · ');
 }
 function hardSignalsHtml(o){
-  const p=objectiveExecutionRiskProfile(o);
-  const disc=objectiveDisconnectedInitiativeCount(o);
+  const p=objectiveInterventionProfile(o);
   return'<div class="brecha-signals">'+
     '<span>KPI '+p.kpi+'%</span>'+
     '<span>Impacto '+p.impact+'%</span>'+
     '<span>Alineación '+p.alignment+'%</span>'+
     '<span>TOM '+p.tom+'%</span>'+
-    '<span>Acciones '+p.actionStats.done+'/'+p.actionStats.total+'</span>'+
-    '<span>Vencidas '+p.actionStats.overdue+'</span>'+
-    '<span>Desconectadas '+disc+'</span>'+
-    '<span>Rel. críticas '+p.criticalRelations.length+'</span>'+
+    '<span>Acciones '+p.actionStats.done+'/'+p.actionStats.total+'</span>'+ 
+    '<span>Vencidas '+p.actionStats.overdue+'</span>'+ 
+    '<span>Dominante: '+esc(p.dominantComponent?.label||'—')+'</span>'+ 
+    '<span>Rel. críticas '+p.criticalRelations.length+'</span>'+ 
   '</div>';
 }
+function decisionByDominantFactor(o,p,c){
+  const key=p.dominantComponent?.key||'';
+  if(key==='kpi')return themeDecision(o,'kpi',c);
+  if(key==='impacto')return'Repriorizar el portafolio: concentrar recursos en iniciativas con mayor impacto real y pausar trabajo de bajo retorno estratégico.';
+  if(key==='alineacion')return themeDecision(o,'dimension',c);
+  if(key==='tom')return'Completar TOM antes de exigir resultados: proceso, dueño end-to-end, capacidades, tecnología, gobernanza y escalamiento.';
+  if(key==='brecha')return'Decidir cierre de brecha: responsable único, recurso requerido, fecha de corrección y criterio de éxito.';
+  if(key==='acciones')return'Cerrar compromisos tácticos atrasados o próximos: responsable, fecha realista y entregable verificable.';
+  if(key==='relaciones')return'Resolver dependencias estratégicas: alinear objetivos conectados, responsables y acuerdo de coordinación.';
+  if(key==='fecha')return'Revisar viabilidad de cierre: confirmar alcance, entregables pendientes y recuperación posible antes de la fecha compromiso.';
+  if(key==='evidencia')return'Validar evidencia documental antes de declarar el objetivo alineado o listo para cierre ejecutivo.';
+  return'Ajustar la señal dura más débil y revisar avance en el siguiente corte de cadencia.';
+}
 function decisionRequiredForObjective(o){
-  const p=objectiveExecutionRiskProfile(o);
+  const p=objectiveInterventionProfile(o);
   const c=alignmentCriticalDimension(o);
   const gapRisk=String(o.gapRisk||'Medio');
-  const disconnected=objectiveDisconnectedInitiativeCount(o);
-  const actionStats=p.actionStats;
-  const endSoon=p.dueSoon;
+  const evScore=evidenceScore(o.evidenceLevel||'Sin evidencia');
 
-  // Bloqueos de diseño: no se debe aprobar ejecución si faltan las bases medibles.
+  // 1) Bloqueos de diseño: sin base medible o sin portafolio no se debe declarar ejecución estratégica.
   if(!p.hasKpi)return'No aprobar como objetivo estratégico hasta definir KPI rector, meta, frecuencia y responsable del dato.';
   if(!p.hasInits)return'Definir portafolio mínimo de ejecución antes del siguiente comité: iniciativas, responsables, fechas y KPI impactado.';
 
-  // Ejecución táctica: acciones y avance automático de iniciativas.
-  if(actionStats.overdue>0&&p.kpi<70)return'Reasignar responsables o redefinir fechas de acciones vencidas; cerrar atrasos antes de abrir nuevas iniciativas.';
-  if(actionStats.total>0&&actionStats.progress<40&&p.kpi<70)return'Desbloquear ejecución táctica: convertir acciones pendientes en compromisos cerrables con dueño y fecha inmediata.';
-  if(disconnected>0)return'Reorientar, fusionar o cancelar iniciativas con avance calculado alto y bajo impacto real en KPI.';
+  // 2) Atrasos reales: solo disparan decisión táctica si hay acciones vencidas o presión de fecha; no por simples pendientes.
+  if(p.actionStats.overdue>0){
+    if(p.kpi<70||p.score>=60)return'Reasignar responsables y fechas de acciones vencidas; cerrar atrasos críticos antes de abrir nuevas iniciativas.';
+    return'Cerrar acciones vencidas y documentar evidencia de recuperación en el siguiente corte operativo.';
+  }
+  if(p.actionStats.dueSoon>0&&p.actionStats.progress<65&&p.kpi<75)return'Acelerar compromisos próximos: confirmar responsables, entregables y fechas cerrables antes del siguiente comité.';
 
-  // Impacto: mucha actividad o portafolio activo, pero poco resultado.
-  if(p.impact<40&&p.initiativeProgress>=60)return'Revisar suficiencia del portafolio: hay avance operativo, pero el impacto real no justifica seguir igual.';
-  if(p.kpi<50&&p.impact<50)return'Rediseñar la estrategia de ejecución: las iniciativas actuales no están moviendo suficientemente el resultado.';
+  // 3) Actividad sin resultado: condición más grave que “acciones pendientes”.
+  if(p.disconnected>0&&p.impact<55)return'Reorientar, fusionar o cancelar iniciativas con avance calculado alto y bajo impacto real en KPI.';
+  if(p.impact<40&&p.initiativeProgress>=55)return'Revisar suficiencia del portafolio: hay avance operativo, pero el impacto real no justifica seguir igual.';
+  if(p.kpi<50&&p.impact<50)return'Rediseñar estrategia de ejecución: el KPI y el impacto real muestran que las iniciativas actuales no están moviendo el resultado.';
   if(p.impact<50&&p.kpi<70)return'Repriorizar iniciativas hacia las de mayor impacto esperado y eliminar trabajo de bajo retorno estratégico.';
 
-  // Alineación y TOM: el problema es de soporte operativo, no de esfuerzo.
+  // 4) Soporte estratégico-operativo: alineación y TOM.
   if(p.alignment<60)return themeDecision(o,'dimension',c);
   if(p.tom<50&&p.kpi<75)return'Completar modelo operativo objetivo antes de exigir resultados: proceso, dueño end-to-end, capacidades, tecnología y escalamiento.';
-  if((gapRisk==='Crítico'||gapRisk==='Critico')&&p.kpi<75)return'Abrir mesa ejecutiva de resolución por brecha crítica: responsables clave, decisión pendiente y fecha de cierre.';
-  if(gapRisk==='Alto'&&p.score>=65)return'Decidir cierre de brecha en comité: responsable único, recurso requerido, fecha de corrección y criterio de éxito.';
 
-  // Relaciones estratégicas: evitar que un objetivo aislado bloquee a otros o dependa de un nodo débil.
+  // 5) Brecha y dependencias: riesgo sistémico, no texto abierto del punto de ruptura.
+  if((gapRisk==='Crítico'||gapRisk==='Critico')&&(p.kpi<75||p.score>=60))return'Abrir mesa ejecutiva de resolución por brecha crítica: responsables clave, decisión pendiente y fecha de cierre.';
+  if(gapRisk==='Alto'&&p.score>=60)return'Decidir cierre de brecha en comité: responsable único, recurso requerido, fecha de corrección y criterio de éxito.';
   if(p.criticalRelations.length>=2&&p.kpi<75)return'Resolver dependencias estratégicas críticas antes de seguir avanzando; definir qué objetivo desbloquea a cuál.';
-  if(p.relationRisk>=80&&p.kpi<75)return'Escalar dependencia crítica: alinear responsables de los objetivos conectados y fijar acuerdo de coordinación.';
+  if(p.relationRisk>=80&&p.kpi<75)return'Escalar dependencia crítica: alinear responsables de objetivos conectados y fijar acuerdo de coordinación.';
 
-  // Fecha compromiso: no sirve seguir reportando si el objetivo ya está cerca de vencer sin base suficiente.
+  // 6) Presión de fecha: solo si el desempeño no justifica cierre.
   if(p.overdueObjective&&p.kpi<90)return'Replantear alcance, responsable o fecha: el objetivo está vencido y el avance no permite cerrarlo con calidad.';
-  if(endSoon&&p.kpi<85)return'Revisar viabilidad de cierre antes de la fecha compromiso: confirmar entregables, alcance y recuperación pendiente.';
+  if(p.dueSoon&&p.kpi<85)return'Revisar viabilidad de cierre antes de la fecha compromiso: confirmar entregables, alcance y recuperación pendiente.';
 
-  // KPI bajo por tema de negocio: usar recomendación contextual para evitar texto genérico.
+  // 7) KPI medio/bajo con contexto de negocio para evitar textos genéricos.
   if(p.kpi<50)return themeDecision(o,'kpi',c);
   if(p.kpi<70)return themeDecision(o,'dimension',c);
 
-  // Cierre y evidencia: solo cuando los datos duros ya están razonablemente controlados.
-  const evScore=evidenceScore(o.evidenceLevel||'Sin evidencia');
+  // 8) Cierre y evidencia: solo cuando los datos duros ya están razonablemente controlados.
   if(p.kpi>=80&&p.impact>=75&&p.alignment>=75&&p.tom>=70&&evScore<60)return'Validar evidencia documental antes de declarar el objetivo alineado o listo para cierre ejecutivo.';
-  if(p.kpi>=85&&p.impact>=80&&p.alignment>=80&&p.tom>=70&&actionStats.overdue===0)return'Mantener seguimiento; no requiere decisión de comité salvo cambio de alcance, riesgo o prioridad.';
+  if(p.kpi>=85&&p.impact>=80&&p.alignment>=80&&p.tom>=70&&p.actionStats.overdue===0)return'Mantener seguimiento; no requiere decisión de comité salvo cambio de alcance, riesgo o prioridad.';
 
-  // Fallback basado en índice compuesto.
-  if(p.score>=80)return'Intervenir de inmediato: redefinir prioridad, dueño, recursos y compromisos de recuperación.';
-  if(p.score>=65)return'Elevar a comité como decisión ejecutiva: ajustar alcance, recursos, fecha o modelo operativo.';
-  if(p.score>=45)return'Ajustar operación y revisar en el siguiente corte: foco en la señal dura más débil.';
-  return'Mantener seguimiento con evidencia y monitorear desviaciones contra KPI, impacto y acciones.';
+  // 9) Fallback por factor dominante: evita que todos los objetivos caigan en la misma decisión.
+  return decisionByDominantFactor(o,p,c);
 }
-function recommendationForObjective(o){
-  return decisionRequiredForObjective(o);
-}
+function recommendationForObjective(o){return decisionRequiredForObjective(o)}
 
 // ─── MAPA ────────────────────────────────────────────────────────────
 function renderMapa(){
@@ -1507,35 +1578,38 @@ function impactInitiativeRow(i){
 
 function renderBrechas(){
   const objs=planObjectives();
-  const rows=objs.length?objs.map(o=>{
-    const p=objectiveExecutionRiskProfile(o);
-    const level=executionDecisionLevel(p.score);
-    const gapColor=(String(o.gapRisk||'Medio').includes('Crítico')||String(o.gapRisk||'Medio').includes('Critico'))?'red':String(o.gapRisk||'Medio')==='Alto'?'yellow':String(o.gapRisk||'Medio')==='Medio'?'blue':'green';
+  const profiles=objs.map(o=>objectiveInterventionProfile(o));
+  const avg=profiles.length?Math.round(profiles.reduce((a,p)=>a+p.score,0)/profiles.length):0;
+  const rows=objs.map(o=>{
+    const p=objectiveInterventionProfile(o);
+    const level=interventionDecisionLevel(p.score);
+    const gapBadge=badge(o.gapRisk||'Medio',(o.gapRisk==='Crítico'||o.gapRisk==='Critico')?'red':o.gapRisk==='Alto'?'yellow':o.gapRisk==='Medio'?'blue':'green');
     return`<tr>
       <td><strong>${esc(o.name)}</strong><div class="small muted">${esc(o.leader||'Sin responsable')} · ${daysText(o.endDate)}</div><div style="margin-top:8px"><button class="btn btn-secondary btn-small" data-brecha-detail="${o.id}">Ver detalle</button> <button class="btn btn-primary btn-small" data-brecha-edit="${o.id}">Editar</button></div></td>
       <td><div class="brecha-state"><strong>Actual:</strong> ${esc(o.currentState||'—')}</div><div class="brecha-state"><strong>Objetivo:</strong> ${esc(o.targetState||'—')}</div></td>
-      <td><strong>${esc(o.gap||'—')}</strong><div class="small muted" style="margin-top:6px">Punto de ruptura registrado: ${esc(o.gapBreakpoint||'—')}</div></td>
-      <td>${badge(o.gapRisk||'Medio',gapColor)}</td>
-      <td><div class="brecha-risk-score" style="color:${progressColor(100-p.score)}">${p.score}%</div><div class="small muted">Riesgo de ejecución</div></td>
-      <td>${badge(level.label,level.color)}</td>
+      <td><strong>${esc(o.gap||'—')}</strong><div class="small muted" style="margin-top:6px">Punto de ruptura: ${esc(o.gapBreakpoint||'—')}</div></td>
+      <td>${gapBadge}<div class="small muted" style="margin-top:6px">Valor: ${p.gapRiskScore}%</div></td>
+      <td><div class="brecha-risk-score" style="color:${progressColor(100-p.score)}">${p.score}%</div><div class="small muted">IIE · Índice de Intervención Ejecutiva</div></td>
+      <td>${badge(level.label,level.color)}<div class="small muted" style="margin-top:6px">Factor dominante:<br>${esc(p.dominantComponent?.label||'—')}</div></td>
       <td>${hardSignalsHtml(o)}</td>
       <td><strong>${esc(decisionRequiredForObjective(o))}</strong></td>
     </tr>`;
-  }).join(''):'<tr><td colspan="8" class="muted">Sin objetivos.</td></tr>';
+  }).join('');
   $('viewBrechas').innerHTML=`
     <div class="brecha-summary-grid">
-      <div class="brecha-card"><div class="brecha-label">Riesgo promedio</div><div class="brecha-value">${objs.length?Math.round(objs.reduce((a,o)=>a+objectiveExecutionRiskProfile(o).score,0)/objs.length):0}%</div><div class="brecha-note">Índice compuesto de ejecución</div></div>
-      <div class="brecha-card"><div class="brecha-label">Intervención crítica</div><div class="brecha-value" style="color:var(--red)">${objs.filter(o=>objectiveExecutionRiskProfile(o).score>=80).length}</div><div class="brecha-note">Requieren acción inmediata</div></div>
-      <div class="brecha-card"><div class="brecha-label">Decisión de comité</div><div class="brecha-value" style="color:var(--yellow)">${objs.filter(o=>{const s=objectiveExecutionRiskProfile(o).score;return s>=65&&s<80}).length}</div><div class="brecha-note">Requieren decisión ejecutiva</div></div>
-      <div class="brecha-card"><div class="brecha-label">Ajuste / seguimiento</div><div class="brecha-value" style="color:var(--green2)">${objs.filter(o=>objectiveExecutionRiskProfile(o).score<65).length}</div><div class="brecha-note">Manejables por operación</div></div>
+      <div class="brecha-card"><div class="brecha-label">IIE promedio</div><div class="brecha-value">${avg}%</div><div class="brecha-note">Índice de intervención, no “riesgo” genérico</div></div>
+      <div class="brecha-card"><div class="brecha-label">Intervención crítica</div><div class="brecha-value" style="color:var(--red)">${profiles.filter(p=>p.score>=75).length}</div><div class="brecha-note">Requieren acción inmediata</div></div>
+      <div class="brecha-card"><div class="brecha-label">Decisión de comité</div><div class="brecha-value" style="color:var(--yellow)">${profiles.filter(p=>p.score>=60&&p.score<75).length}</div><div class="brecha-note">Requieren decisión ejecutiva</div></div>
+      <div class="brecha-card"><div class="brecha-label">Ajuste / seguimiento</div><div class="brecha-value" style="color:var(--green2)">${profiles.filter(p=>p.score<60).length}</div><div class="brecha-note">Manejables por operación o seguimiento</div></div>
     </div>
-    <div class="brecha-explain"><h3>Decisión requerida basada en datos duros</h3><p>La columna de decisión ya no depende del texto abierto del punto de ruptura. Se calcula con KPI, impacto real de iniciativas, avance automático por acciones terminadas, acciones vencidas, alineación estratégica, TOM, riesgo del gap, fecha compromiso y relaciones estratégicas críticas.</p></div>
+    <div class="brecha-explain"><h3>Decisión requerida con fórmula corregida</h3><p>Se sustituyó “Riesgo de ejecución” por <strong>IIE · Índice de Intervención Ejecutiva</strong>, porque la vista no mide un riesgo legal o financiero formal, sino qué tanto necesita intervención ejecutiva cada objetivo. La fórmula ya no se dispara por acciones simplemente pendientes; considera KPI, impacto real, alineación, TOM, riesgo de brecha, atrasos reales, dependencias estratégicas y presión de fecha. Además mezcla promedio ponderado con el factor dominante para evitar resultados artificialmente parecidos.</p><p style="margin-top:8px"><strong>Fórmula:</strong> IIE = 72% promedio ponderado + 28% señal dominante + penalizaciones controladas por falta de KPI, falta de iniciativas, iniciativas desconectadas, TOM débil, alineación baja o brecha alta con KPI bajo.</p></div>
     <div class="card"><div class="card-pad"><div class="topbar" style="margin:0"><h2 style="margin:0;font-size:22px">Mapa de Brechas Estratégico-Operativas</h2><button class="btn btn-secondary btn-small" onclick="exportCurrentTable()">Exportar CSV</button></div></div>
-      <div class="table-wrap"><table id="currentMatrix" class="brecha-table"><thead><tr><th>Objetivo</th><th>Estado actual / objetivo</th><th>Brecha</th><th>Riesgo gap</th><th>Índice</th><th>Nivel</th><th>Señales duras</th><th>Decisión requerida</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <div class="table-wrap"><table id="currentMatrix" class="brecha-table"><thead><tr><th>Objetivo</th><th>Estado actual / objetivo</th><th>Brecha</th><th>Riesgo brecha</th><th>IIE</th><th>Nivel</th><th>Señales duras</th><th>Decisión requerida</th></tr></thead><tbody>${rows||'<tr><td colspan="8" class="muted">Sin objetivos registrados.</td></tr>'}</tbody></table></div>
     </div>`;
   document.querySelectorAll('[data-brecha-detail]').forEach(b=>b.onclick=()=>openDetail(b.dataset.brechaDetail));
   document.querySelectorAll('[data-brecha-edit]').forEach(b=>b.onclick=()=>openObjectiveModal(b.dataset.brechaEdit));
 }
+
 function renderTOM(){
   const objs=planObjectives(),scores=objs.map(tomScore),avg=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):0,solid=scores.filter(s=>s>=85).length,weak=scores.filter(s=>s<60).length,pending=objs.reduce((a,o)=>a+tomMissing(o).length,0);
   $('viewTOM').innerHTML='<div class="tom-summary-grid"><div class="tom-card"><div class="tom-card-label">Score TOM promedio</div><div class="tom-card-value">'+avg+'%</div></div><div class="tom-card"><div class="tom-card-label">TOM sólido</div><div class="tom-card-value">'+solid+'</div></div><div class="tom-card"><div class="tom-card-label">TOM débil</div><div class="tom-card-value">'+weak+'</div></div><div class="tom-card"><div class="tom-card-label">Campos pendientes</div><div class="tom-card-value">'+pending+'</div></div></div><div class="tom-explain"><h3>Uso del TOM</h3><p>El Modelo Operativo Objetivo traduce cada objetivo estratégico en operación real: proceso, dueño end-to-end, capacidades, tecnología, gobernanza y flujo de decisiones.</p></div><div class="card"><div class="card-pad"><div class="topbar" style="margin:0"><h2 style="margin:0;font-size:22px">Modelo Operativo Objetivo (TOM)</h2><button class="btn btn-secondary btn-small" onclick="exportCurrentTable()">Exportar CSV</button></div></div><div class="table-wrap"><table id="currentMatrix" class="tom-table"><thead><tr><th>Objetivo</th><th>Score TOM</th><th>Tipo proceso</th><th>Proceso TOM</th><th>Dueño end-to-end</th><th>Capacidades</th><th>Tecnología</th><th>Gobernanza</th><th>Flujo de decisiones</th><th>Diagnóstico</th><th>Acción recomendada</th><th>Editar</th></tr></thead><tbody>'+(objs.length?objs.map(o=>{const score=tomScore(o);return'<tr><td><strong>'+esc(o.name)+'</strong><div class="small muted">'+esc(typeLabels[o.objectiveType]||o.objectiveType)+' · '+esc(o.contributionLevel)+'</div></td><td>'+tomScorePill(score)+'</td><td>'+esc(o.tomProcessType||'—')+'</td><td>'+esc(o.tomProcess||'—')+'</td><td>'+esc(o.tomRole||o.leader||'—')+'</td><td>'+esc(o.tomCapabilities||'—')+'</td><td>'+esc(o.tomTechnology||'—')+'</td><td>'+esc(o.tomGovernance||'—')+'</td><td>'+esc(o.decisionFlow||'—')+'</td><td><div class="tom-diagnosis">'+esc(tomDiagnosis(o))+'</div><div class="tom-missing"><strong>Falta:</strong> '+esc(tomMissing(o).join(', ')||'Nada crítico')+'</div></td><td><div class="tom-action">'+esc(tomRecommendation(o))+'</div></td><td><button class="btn btn-secondary btn-small" data-edit-tom="'+o.id+'">Editar TOM</button></td></tr>'}).join(''):'<tr><td colspan="12" class="muted">Sin objetivos.</td></tr>')+'</tbody></table></div></div>';
@@ -1697,7 +1771,7 @@ function buildDictamenText(){
     const rel=[obj?'Objetivo: '+obj.name:'',init?'Iniciativa: '+init.name:''].filter(Boolean).join(' · ');
     return '- ['+a.type+' · '+a.priority+' · '+a.status+'] '+a.title+' · Responsable: '+(a.owner||'—')+(a.dueDate?' · Fecha: '+fmtDate(a.dueDate):'')+(rel?' · '+rel:'')+(a.decision?' · Decisión esperada: '+a.decision:'');
   }).join('\n'):'Sin puntos manuales registrados.';
-  return`DICTAMEN EJECUTIVO ESTRATÉGICO\n${p?.name||''}\nFecha: ${fmtDate(todayKey())} · Próxima revisión: ${fmtDate(nextReview)}\n\nIGEE: ${m.igee}%\nAvance KPI: ${m.kpi}%\nImpacto real vs esperado: ${m.impact}%\nAlineación estratégica: ${m.align}%\nRiesgo de ejecución: ${m.risk}%\nScore TOM promedio: ${m.tom}%\n\nDIAGNÓSTICO\n${m.igee>=85?'Estrategia en control.':m.igee>=70?'Estrategia viable con ajustes.':m.igee>=50?'Estrategia en riesgo.':'Estrategia críticamente desalineada.'}\n\nHALLAZGOS CLAVE\n- Objetivos evaluados: ${m.objs.length}\n- Alertas críticas: ${critical.length}\n- Acciones vencidas: ${m.overdueActions.length}\n- Iniciativas desconectadas de KPI: ${lowImpact.length}\n- Puntos manuales de agenda: ${manualAgenda.length}\n- Objetivos de mayor riesgo: ${topRisk.map(o=>o.name+' ('+objectiveRiskScore(o)+'%)').join(', ')||'Sin datos'}\n${lowImpact.length?'\nINICIATIVAS DESCONECTADAS (avanzan sin mover KPI):\n'+lowImpact.slice(0,6).map(x=>'- '+x).join('\n'):''}\n\nAGENDA MANUAL DEL COMITÉ\n${manualAgendaText}\n\nRECOMENDACIONES PARA EL COMITÉ\n${m.objs.map(o=>'- '+o.name+': '+recommendationForObjective(o)).join('\n')}\n\nACCIONES URGENTES PARA ESTA SEMANA\n${m.overdueActions.slice(0,5).map(({o,init,a})=>'- '+a.title+' ('+o.name+' → '+init.name+') · Responsable: '+(a.responsible||'—')+' · Venció: '+fmtDate(a.dueDate)).join('\n')||'Sin acciones vencidas.'}\n`;
+  return`DICTAMEN EJECUTIVO ESTRATÉGICO\n${p?.name||''}\nFecha: ${fmtDate(todayKey())} · Próxima revisión: ${fmtDate(nextReview)}\n\nIGEE: ${m.igee}%\nAvance KPI: ${m.kpi}%\nImpacto real vs esperado: ${m.impact}%\nAlineación estratégica: ${m.align}%\nIIE: ${m.risk}%\nScore TOM promedio: ${m.tom}%\n\nDIAGNÓSTICO\n${m.igee>=85?'Estrategia en control.':m.igee>=70?'Estrategia viable con ajustes.':m.igee>=50?'Estrategia en riesgo.':'Estrategia críticamente desalineada.'}\n\nHALLAZGOS CLAVE\n- Objetivos evaluados: ${m.objs.length}\n- Alertas críticas: ${critical.length}\n- Acciones vencidas: ${m.overdueActions.length}\n- Iniciativas desconectadas de KPI: ${lowImpact.length}\n- Puntos manuales de agenda: ${manualAgenda.length}\n- Objetivos de mayor riesgo: ${topRisk.map(o=>o.name+' ('+objectiveRiskScore(o)+'%)').join(', ')||'Sin datos'}\n${lowImpact.length?'\nINICIATIVAS DESCONECTADAS (avanzan sin mover KPI):\n'+lowImpact.slice(0,6).map(x=>'- '+x).join('\n'):''}\n\nAGENDA MANUAL DEL COMITÉ\n${manualAgendaText}\n\nRECOMENDACIONES PARA EL COMITÉ\n${m.objs.map(o=>'- '+o.name+': '+recommendationForObjective(o)).join('\n')}\n\nACCIONES URGENTES PARA ESTA SEMANA\n${m.overdueActions.slice(0,5).map(({o,init,a})=>'- '+a.title+' ('+o.name+' → '+init.name+') · Responsable: '+(a.responsible||'—')+' · Venció: '+fmtDate(a.dueDate)).join('\n')||'Sin acciones vencidas.'}\n`;
 }
 
 function openDictamen(){
