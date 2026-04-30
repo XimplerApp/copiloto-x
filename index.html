@@ -43,6 +43,10 @@
     .align-card{border:1px solid var(--line);border-radius:16px;background:#fff;padding:14px;box-shadow:var(--shadow)}
     .align-card-label{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:900;margin-bottom:6px}.align-card-value{font-size:24px;font-weight:900}.align-card-note{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.35}
     .align-reco{font-size:12px;line-height:1.45;color:#344054;max-width:390px}.align-critical{font-weight:900;color:#344054;font-size:13px}.align-dim-note{font-size:11px;color:var(--muted);margin-top:4px}.align-actions{display:flex;gap:8px;flex-wrap:wrap}.align-explain{border:1px solid var(--line);border-radius:16px;background:#fbfcfd;padding:14px;margin-bottom:16px}.align-explain h3{margin:0 0 8px;font-size:15px}.align-explain p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+
+    /* BRECHAS DECISIÓN REQUERIDA */
+    .brecha-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.brecha-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 15px;box-shadow:var(--shadow)}.brecha-label{font-size:11px;color:var(--muted);font-weight:900;text-transform:uppercase;margin-bottom:6px}.brecha-value{font-size:26px;font-weight:900;line-height:1}.brecha-note{font-size:12px;color:var(--muted);margin-top:4px}.brecha-explain{border:1px solid var(--line);border-radius:16px;background:#fbfcfd;padding:14px;margin-bottom:16px}.brecha-explain h3{margin:0 0 7px;font-size:15px}.brecha-explain p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}.brecha-table{min-width:1500px}.brecha-table th{white-space:nowrap}.brecha-table td{line-height:1.35}.brecha-state{font-size:12px;color:#344054;margin-bottom:7px}.brecha-risk-score{font-size:24px;font-weight:900}.brecha-signals{display:flex;flex-wrap:wrap;gap:6px;max-width:300px}.brecha-signals span{display:inline-flex;align-items:center;background:#f2f4f7;border:1px solid #e4e7ec;border-radius:999px;padding:5px 7px;font-size:11px;font-weight:800;color:#475467}
+
     @media(max-width:1100px){.align-summary-grid{grid-template-columns:1fr}}
 
     /* TOM */
@@ -117,7 +121,11 @@
     .agenda-tag-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px}
     .agenda-decision{font-size:12px;color:#0f5ea9;background:#eef5ff;border:1px solid #d7e7fb;border-radius:12px;padding:9px;margin-top:8px;white-space:pre-wrap}
     .agenda-manual-empty{border:1px dashed var(--line2);border-radius:16px;padding:20px;background:#fbfcfd;color:var(--muted);text-align:center}
-    @media(max-width:1100px){.grid-2,.grid-3,.grid-4,.grid-5,.summary-grid,.detail-layout,.dictamen,.filters,.action-editor-grid,.initiative-editor-grid,.detail-grid,.exec-stats,.quick-form,.impact-summary,.impact-objective-head{grid-template-columns:1fr}.initiative-editor-grid .span-2,.initiative-editor-grid .span-3,.detail-box-full{grid-column:auto}.detail-left{border-right:none}.topbar{flex-direction:column}.page{padding:16px}.initiative-cascade-card{grid-template-columns:1fr}.initiative-cascade-actions{justify-content:flex-start}.tom-summary-grid,.tom-mini-grid{grid-template-columns:1fr}}
+
+    /* BRECHAS DECISIÓN REQUERIDA */
+    .brecha-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.brecha-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 15px;box-shadow:var(--shadow)}.brecha-label{font-size:11px;color:var(--muted);font-weight:900;text-transform:uppercase;margin-bottom:6px}.brecha-value{font-size:26px;font-weight:900;line-height:1}.brecha-note{font-size:12px;color:var(--muted);margin-top:4px}.brecha-explain{border:1px solid var(--line);border-radius:16px;background:#fbfcfd;padding:14px;margin-bottom:16px}.brecha-explain h3{margin:0 0 7px;font-size:15px}.brecha-explain p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}.brecha-table{min-width:1500px}.brecha-table th{white-space:nowrap}.brecha-table td{line-height:1.35}.brecha-state{font-size:12px;color:#344054;margin-bottom:7px}.brecha-risk-score{font-size:24px;font-weight:900}.brecha-signals{display:flex;flex-wrap:wrap;gap:6px;max-width:300px}.brecha-signals span{display:inline-flex;align-items:center;background:#f2f4f7;border:1px solid #e4e7ec;border-radius:999px;padding:5px 7px;font-size:11px;font-weight:800;color:#475467}
+
+    @media(max-width:1100px){.grid-2,.grid-3,.grid-4,.grid-5,.summary-grid,.detail-layout,.dictamen,.filters,.action-editor-grid,.initiative-editor-grid,.detail-grid,.exec-stats,.quick-form,.impact-summary,.impact-objective-head{grid-template-columns:1fr}.initiative-editor-grid .span-2,.initiative-editor-grid .span-3,.detail-box-full{grid-column:auto}.detail-left{border-right:none}.topbar{flex-direction:column}.page{padding:16px}.initiative-cascade-card{grid-template-columns:1fr}.initiative-cascade-actions{justify-content:flex-start}.tom-summary-grid,.tom-mini-grid,.brecha-summary-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -1236,14 +1244,159 @@ function alignmentDetailPanel(o){
   const dims=alignmentDimensionScores(o).map(d=>'<div class="kv-item"><div class="kv-label">'+esc(d.label)+'</div><div class="kv-value">'+esc(d.value)+' · '+d.score+'%</div></div>').join('');
   return'<div class="panel"><h3>Alineación ejecutiva</h3><div class="kv">'+dims+'<div class="kv-item"><div class="kv-label">Evidencia</div><div class="kv-value">'+esc(o.evidenceLevel||'Sin evidencia')+' · '+evidenceScore(o.evidenceLevel||'Sin evidencia')+'%</div></div></div><div class="mini-card" style="margin-top:12px"><strong>Estado:</strong> '+badge(st.label,st.color)+' <span class="small muted">Score '+score+'%</span></div><div class="mini-card"><strong>Dimensión crítica:</strong><div class="small muted">'+esc(c.label)+' · '+esc(c.value)+'</div></div><div class="mini-card"><strong>Siguiente decisión sugerida:</strong><div class="small muted">'+esc(alignmentRecommendation(o))+'</div></div><div class="mini-card"><strong>Notas de evidencia:</strong><div class="small muted">'+esc(o.alignmentEvidence||'Sin notas registradas.')+'</div></div><div class="mini-card"><strong>Acción correctiva manual:</strong><div class="small muted">'+esc(o.correctionAction||'Sin acción manual. Usar la decisión sugerida.')+'</div></div></div>'
 }
+function objectiveActionStats(o){
+  const actions=[];
+  (o.initiatives||[]).forEach(init=>(init.actions||[]).forEach(a=>actions.push(a)));
+  const total=actions.length;
+  const done=actions.filter(isActionFinished).length;
+  const overdue=actions.filter(a=>isOverdue(a.dueDate,a.status)).length;
+  const dueSoon=actions.filter(a=>!isOverdue(a.dueDate,a.status)&&isDueWithin(a.dueDate,7)).length;
+  const progress=total?Math.round((done/total)*100):((o.initiatives||[]).length?0:0);
+  return{total,done,pending:Math.max(0,total-done),overdue,dueSoon,progress};
+}
+function objectiveInitiativeProgressScore(o){
+  const arr=o.initiatives||[];
+  if(!arr.length)return 0;
+  return Math.round(arr.reduce((a,i)=>a+calcInitiativeProgress(i),0)/arr.length);
+}
+function objectiveCriticalRelations(o){
+  const connected=[];
+  const all=planObjectives();
+  all.forEach(source=>{
+    (source.strategicRelations||[]).forEach(rel=>{
+      const target=findObjective(rel.targetId);
+      if(source.id===o.id||rel.targetId===o.id){
+        const ev=evaluateStrategicRelation(source,rel,target);
+        const risk=rel.manualOverride?riskValue(rel.riskLevel):ev.riskScore;
+        const type=rel.relationType||'Impacta a';
+        if(risk>=75||['Depende de','Bloquea a','Compite con'].includes(type)){
+          connected.push({source,rel,target,risk,type});
+        }
+      }
+    });
+  });
+  return connected;
+}
+function objectiveExecutionRiskProfile(o){
+  const hasKpi=(o.indicators||[]).length>0;
+  const hasInits=(o.initiatives||[]).length>0;
+  const kpi=hasKpi?objectiveKpiScore(o):0;
+  const impact=hasInits?objectiveImpactScore(o):0;
+  const alignment=objectiveAlignmentScore(o);
+  const tom=tomScore(o);
+  const actionStats=objectiveActionStats(o);
+  const initiativeProgress=objectiveInitiativeProgressScore(o);
+  const tacticalProgress=actionStats.total?actionStats.progress:initiativeProgress;
+  const actionRisk=actionStats.overdue?Math.min(100,45+(actionStats.overdue*15)):(actionStats.total?100-actionStats.progress:(hasInits?65:100));
+  const gap= riskValue(o.gapRisk);
+  const rels=objectiveCriticalRelations(o);
+  const relationRisk=Math.min(100,rels.reduce((max,r)=>Math.max(max,Number(r.risk||0)),0));
+  const status=String(o.status||'').toLowerCase();
+  const overdueObjective=o.endDate&&new Date(o.endDate+'T00:00:00')<new Date(todayKey()+'T00:00:00')&&status!=='cumplido';
+  const dueSoon=isDueWithin(o.endDate,30)&&status!=='cumplido';
+  const dateRisk=overdueObjective?100:(dueSoon&&kpi<85?70:0);
+  let score=Math.round(
+    (100-kpi)*0.22+
+    (100-impact)*0.18+
+    (100-tacticalProgress)*0.12+
+    actionRisk*0.12+
+    (100-alignment)*0.12+
+    (100-tom)*0.10+
+    gap*0.08+
+    relationRisk*0.04+
+    dateRisk*0.02
+  );
+  if(!hasKpi)score=Math.max(score,88);
+  if(!hasInits)score=Math.max(score,82);
+  return{score:clamp(score),kpi,impact,alignment,tom,actionStats,initiativeProgress,tacticalProgress,actionRisk,gapRiskScore:gap,relationRisk,dateRisk,criticalRelations:rels,hasKpi,hasInits,overdueObjective,dueSoon};
+}
+function executionDecisionLevel(score){
+  score=Number(score||0);
+  if(score>=80)return{label:'Intervención crítica',color:'red',tone:'critical'};
+  if(score>=65)return{label:'Decisión de comité',color:'yellow',tone:'committee'};
+  if(score>=45)return{label:'Ajuste operativo',color:'blue',tone:'adjust'};
+  return{label:'Seguimiento',color:'green',tone:'follow'};
+}
+function hardSignalsText(o){
+  const p=objectiveExecutionRiskProfile(o);
+  return[
+    'KPI '+p.kpi+'%',
+    'Impacto '+p.impact+'%',
+    'Alineación '+p.alignment+'%',
+    'TOM '+p.tom+'%',
+    'Acciones '+p.actionStats.done+'/'+p.actionStats.total,
+    'Vencidas '+p.actionStats.overdue,
+    'Desconectadas '+objectiveDisconnectedInitiativeCount(o),
+    'Relaciones críticas '+p.criticalRelations.length
+  ].join(' · ');
+}
+function hardSignalsHtml(o){
+  const p=objectiveExecutionRiskProfile(o);
+  const disc=objectiveDisconnectedInitiativeCount(o);
+  return'<div class="brecha-signals">'+
+    '<span>KPI '+p.kpi+'%</span>'+
+    '<span>Impacto '+p.impact+'%</span>'+
+    '<span>Alineación '+p.alignment+'%</span>'+
+    '<span>TOM '+p.tom+'%</span>'+
+    '<span>Acciones '+p.actionStats.done+'/'+p.actionStats.total+'</span>'+
+    '<span>Vencidas '+p.actionStats.overdue+'</span>'+
+    '<span>Desconectadas '+disc+'</span>'+
+    '<span>Rel. críticas '+p.criticalRelations.length+'</span>'+
+  '</div>';
+}
+function decisionRequiredForObjective(o){
+  const p=objectiveExecutionRiskProfile(o);
+  const c=alignmentCriticalDimension(o);
+  const gapRisk=String(o.gapRisk||'Medio');
+  const disconnected=objectiveDisconnectedInitiativeCount(o);
+  const actionStats=p.actionStats;
+  const endSoon=p.dueSoon;
+
+  // Bloqueos de diseño: no se debe aprobar ejecución si faltan las bases medibles.
+  if(!p.hasKpi)return'No aprobar como objetivo estratégico hasta definir KPI rector, meta, frecuencia y responsable del dato.';
+  if(!p.hasInits)return'Definir portafolio mínimo de ejecución antes del siguiente comité: iniciativas, responsables, fechas y KPI impactado.';
+
+  // Ejecución táctica: acciones y avance automático de iniciativas.
+  if(actionStats.overdue>0&&p.kpi<70)return'Reasignar responsables o redefinir fechas de acciones vencidas; cerrar atrasos antes de abrir nuevas iniciativas.';
+  if(actionStats.total>0&&actionStats.progress<40&&p.kpi<70)return'Desbloquear ejecución táctica: convertir acciones pendientes en compromisos cerrables con dueño y fecha inmediata.';
+  if(disconnected>0)return'Reorientar, fusionar o cancelar iniciativas con avance calculado alto y bajo impacto real en KPI.';
+
+  // Impacto: mucha actividad o portafolio activo, pero poco resultado.
+  if(p.impact<40&&p.initiativeProgress>=60)return'Revisar suficiencia del portafolio: hay avance operativo, pero el impacto real no justifica seguir igual.';
+  if(p.kpi<50&&p.impact<50)return'Rediseñar la estrategia de ejecución: las iniciativas actuales no están moviendo suficientemente el resultado.';
+  if(p.impact<50&&p.kpi<70)return'Repriorizar iniciativas hacia las de mayor impacto esperado y eliminar trabajo de bajo retorno estratégico.';
+
+  // Alineación y TOM: el problema es de soporte operativo, no de esfuerzo.
+  if(p.alignment<60)return themeDecision(o,'dimension',c);
+  if(p.tom<50&&p.kpi<75)return'Completar modelo operativo objetivo antes de exigir resultados: proceso, dueño end-to-end, capacidades, tecnología y escalamiento.';
+  if((gapRisk==='Crítico'||gapRisk==='Critico')&&p.kpi<75)return'Abrir mesa ejecutiva de resolución por brecha crítica: responsables clave, decisión pendiente y fecha de cierre.';
+  if(gapRisk==='Alto'&&p.score>=65)return'Decidir cierre de brecha en comité: responsable único, recurso requerido, fecha de corrección y criterio de éxito.';
+
+  // Relaciones estratégicas: evitar que un objetivo aislado bloquee a otros o dependa de un nodo débil.
+  if(p.criticalRelations.length>=2&&p.kpi<75)return'Resolver dependencias estratégicas críticas antes de seguir avanzando; definir qué objetivo desbloquea a cuál.';
+  if(p.relationRisk>=80&&p.kpi<75)return'Escalar dependencia crítica: alinear responsables de los objetivos conectados y fijar acuerdo de coordinación.';
+
+  // Fecha compromiso: no sirve seguir reportando si el objetivo ya está cerca de vencer sin base suficiente.
+  if(p.overdueObjective&&p.kpi<90)return'Replantear alcance, responsable o fecha: el objetivo está vencido y el avance no permite cerrarlo con calidad.';
+  if(endSoon&&p.kpi<85)return'Revisar viabilidad de cierre antes de la fecha compromiso: confirmar entregables, alcance y recuperación pendiente.';
+
+  // KPI bajo por tema de negocio: usar recomendación contextual para evitar texto genérico.
+  if(p.kpi<50)return themeDecision(o,'kpi',c);
+  if(p.kpi<70)return themeDecision(o,'dimension',c);
+
+  // Cierre y evidencia: solo cuando los datos duros ya están razonablemente controlados.
+  const evScore=evidenceScore(o.evidenceLevel||'Sin evidencia');
+  if(p.kpi>=80&&p.impact>=75&&p.alignment>=75&&p.tom>=70&&evScore<60)return'Validar evidencia documental antes de declarar el objetivo alineado o listo para cierre ejecutivo.';
+  if(p.kpi>=85&&p.impact>=80&&p.alignment>=80&&p.tom>=70&&actionStats.overdue===0)return'Mantener seguimiento; no requiere decisión de comité salvo cambio de alcance, riesgo o prioridad.';
+
+  // Fallback basado en índice compuesto.
+  if(p.score>=80)return'Intervenir de inmediato: redefinir prioridad, dueño, recursos y compromisos de recuperación.';
+  if(p.score>=65)return'Elevar a comité como decisión ejecutiva: ajustar alcance, recursos, fecha o modelo operativo.';
+  if(p.score>=45)return'Ajustar operación y revisar en el siguiente corte: foco en la señal dura más débil.';
+  return'Mantener seguimiento con evidencia y monitorear desviaciones contra KPI, impacto y acciones.';
+}
 function recommendationForObjective(o){
-  if(!(o.indicators||[]).length)return'Definir KPIs de resultado.';
-  if(!(o.initiatives||[]).length)return'Definir iniciativas de impacto.';
-  if(objectiveKpiScore(o)<50)return'Escalar a comité y redefinir acciones críticas.';
-  if(objectiveAlignmentScore(o)<60)return'Revisar alineación presupuesto-procesos-estructura.';
-  if(['Alto','Crítico'].includes(o.gapRisk))return'Reducir brecha crítica y asignar dueño end-to-end.';
-  if(disconnectedInitiatives([o]).length)return'Revisar iniciativas que avanzan sin mover el KPI.';
-  return'Mantener seguimiento y documentar evidencia.';
+  return decisionRequiredForObjective(o);
 }
 
 // ─── MAPA ────────────────────────────────────────────────────────────
@@ -1352,7 +1505,37 @@ function impactInitiativeRow(i){
   </tr>`;
 }
 
-function renderBrechas(){const objs=planObjectives();$('viewBrechas').innerHTML=matrixCard('Mapa de Brechas Estratégico-Operativas',['Objetivo','Estado actual','Estado objetivo','Gap','Riesgo','Punto de ruptura','Recomendación'],objs.map(o=>[o.name,o.currentState||'—',o.targetState||'—',o.gap||'—',o.gapRisk,o.gapBreakpoint||'—',recommendationForObjective(o)]))}
+function renderBrechas(){
+  const objs=planObjectives();
+  const rows=objs.length?objs.map(o=>{
+    const p=objectiveExecutionRiskProfile(o);
+    const level=executionDecisionLevel(p.score);
+    const gapColor=(String(o.gapRisk||'Medio').includes('Crítico')||String(o.gapRisk||'Medio').includes('Critico'))?'red':String(o.gapRisk||'Medio')==='Alto'?'yellow':String(o.gapRisk||'Medio')==='Medio'?'blue':'green';
+    return`<tr>
+      <td><strong>${esc(o.name)}</strong><div class="small muted">${esc(o.leader||'Sin responsable')} · ${daysText(o.endDate)}</div><div style="margin-top:8px"><button class="btn btn-secondary btn-small" data-brecha-detail="${o.id}">Ver detalle</button> <button class="btn btn-primary btn-small" data-brecha-edit="${o.id}">Editar</button></div></td>
+      <td><div class="brecha-state"><strong>Actual:</strong> ${esc(o.currentState||'—')}</div><div class="brecha-state"><strong>Objetivo:</strong> ${esc(o.targetState||'—')}</div></td>
+      <td><strong>${esc(o.gap||'—')}</strong><div class="small muted" style="margin-top:6px">Punto de ruptura registrado: ${esc(o.gapBreakpoint||'—')}</div></td>
+      <td>${badge(o.gapRisk||'Medio',gapColor)}</td>
+      <td><div class="brecha-risk-score" style="color:${progressColor(100-p.score)}">${p.score}%</div><div class="small muted">Riesgo de ejecución</div></td>
+      <td>${badge(level.label,level.color)}</td>
+      <td>${hardSignalsHtml(o)}</td>
+      <td><strong>${esc(decisionRequiredForObjective(o))}</strong></td>
+    </tr>`;
+  }).join(''):'<tr><td colspan="8" class="muted">Sin objetivos.</td></tr>';
+  $('viewBrechas').innerHTML=`
+    <div class="brecha-summary-grid">
+      <div class="brecha-card"><div class="brecha-label">Riesgo promedio</div><div class="brecha-value">${objs.length?Math.round(objs.reduce((a,o)=>a+objectiveExecutionRiskProfile(o).score,0)/objs.length):0}%</div><div class="brecha-note">Índice compuesto de ejecución</div></div>
+      <div class="brecha-card"><div class="brecha-label">Intervención crítica</div><div class="brecha-value" style="color:var(--red)">${objs.filter(o=>objectiveExecutionRiskProfile(o).score>=80).length}</div><div class="brecha-note">Requieren acción inmediata</div></div>
+      <div class="brecha-card"><div class="brecha-label">Decisión de comité</div><div class="brecha-value" style="color:var(--yellow)">${objs.filter(o=>{const s=objectiveExecutionRiskProfile(o).score;return s>=65&&s<80}).length}</div><div class="brecha-note">Requieren decisión ejecutiva</div></div>
+      <div class="brecha-card"><div class="brecha-label">Ajuste / seguimiento</div><div class="brecha-value" style="color:var(--green2)">${objs.filter(o=>objectiveExecutionRiskProfile(o).score<65).length}</div><div class="brecha-note">Manejables por operación</div></div>
+    </div>
+    <div class="brecha-explain"><h3>Decisión requerida basada en datos duros</h3><p>La columna de decisión ya no depende del texto abierto del punto de ruptura. Se calcula con KPI, impacto real de iniciativas, avance automático por acciones terminadas, acciones vencidas, alineación estratégica, TOM, riesgo del gap, fecha compromiso y relaciones estratégicas críticas.</p></div>
+    <div class="card"><div class="card-pad"><div class="topbar" style="margin:0"><h2 style="margin:0;font-size:22px">Mapa de Brechas Estratégico-Operativas</h2><button class="btn btn-secondary btn-small" onclick="exportCurrentTable()">Exportar CSV</button></div></div>
+      <div class="table-wrap"><table id="currentMatrix" class="brecha-table"><thead><tr><th>Objetivo</th><th>Estado actual / objetivo</th><th>Brecha</th><th>Riesgo gap</th><th>Índice</th><th>Nivel</th><th>Señales duras</th><th>Decisión requerida</th></tr></thead><tbody>${rows}</tbody></table></div>
+    </div>`;
+  document.querySelectorAll('[data-brecha-detail]').forEach(b=>b.onclick=()=>openDetail(b.dataset.brechaDetail));
+  document.querySelectorAll('[data-brecha-edit]').forEach(b=>b.onclick=()=>openObjectiveModal(b.dataset.brechaEdit));
+}
 function renderTOM(){
   const objs=planObjectives(),scores=objs.map(tomScore),avg=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):0,solid=scores.filter(s=>s>=85).length,weak=scores.filter(s=>s<60).length,pending=objs.reduce((a,o)=>a+tomMissing(o).length,0);
   $('viewTOM').innerHTML='<div class="tom-summary-grid"><div class="tom-card"><div class="tom-card-label">Score TOM promedio</div><div class="tom-card-value">'+avg+'%</div></div><div class="tom-card"><div class="tom-card-label">TOM sólido</div><div class="tom-card-value">'+solid+'</div></div><div class="tom-card"><div class="tom-card-label">TOM débil</div><div class="tom-card-value">'+weak+'</div></div><div class="tom-card"><div class="tom-card-label">Campos pendientes</div><div class="tom-card-value">'+pending+'</div></div></div><div class="tom-explain"><h3>Uso del TOM</h3><p>El Modelo Operativo Objetivo traduce cada objetivo estratégico en operación real: proceso, dueño end-to-end, capacidades, tecnología, gobernanza y flujo de decisiones.</p></div><div class="card"><div class="card-pad"><div class="topbar" style="margin:0"><h2 style="margin:0;font-size:22px">Modelo Operativo Objetivo (TOM)</h2><button class="btn btn-secondary btn-small" onclick="exportCurrentTable()">Exportar CSV</button></div></div><div class="table-wrap"><table id="currentMatrix" class="tom-table"><thead><tr><th>Objetivo</th><th>Score TOM</th><th>Tipo proceso</th><th>Proceso TOM</th><th>Dueño end-to-end</th><th>Capacidades</th><th>Tecnología</th><th>Gobernanza</th><th>Flujo de decisiones</th><th>Diagnóstico</th><th>Acción recomendada</th><th>Editar</th></tr></thead><tbody>'+(objs.length?objs.map(o=>{const score=tomScore(o);return'<tr><td><strong>'+esc(o.name)+'</strong><div class="small muted">'+esc(typeLabels[o.objectiveType]||o.objectiveType)+' · '+esc(o.contributionLevel)+'</div></td><td>'+tomScorePill(score)+'</td><td>'+esc(o.tomProcessType||'—')+'</td><td>'+esc(o.tomProcess||'—')+'</td><td>'+esc(o.tomRole||o.leader||'—')+'</td><td>'+esc(o.tomCapabilities||'—')+'</td><td>'+esc(o.tomTechnology||'—')+'</td><td>'+esc(o.tomGovernance||'—')+'</td><td>'+esc(o.decisionFlow||'—')+'</td><td><div class="tom-diagnosis">'+esc(tomDiagnosis(o))+'</div><div class="tom-missing"><strong>Falta:</strong> '+esc(tomMissing(o).join(', ')||'Nada crítico')+'</div></td><td><div class="tom-action">'+esc(tomRecommendation(o))+'</div></td><td><button class="btn btn-secondary btn-small" data-edit-tom="'+o.id+'">Editar TOM</button></td></tr>'}).join(''):'<tr><td colspan="12" class="muted">Sin objetivos.</td></tr>')+'</tbody></table></div></div>';
