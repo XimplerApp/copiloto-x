@@ -64,6 +64,22 @@
     .igee-critical{background:var(--redSoft);color:var(--red)}.igee-risk{background:var(--yellowSoft);color:var(--yellow)}.igee-ok{background:var(--greenSoft);color:var(--green2)}
     /* CHECKLIST */
     .checklist-wrap{padding:16px}.checklist-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}.checklist-item:last-child{border-bottom:none}.checklist-cb{width:18px;height:18px;accent-color:var(--green);cursor:pointer}
+    /* AGENDA MANUAL */
+    .cadence-toolbar{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:12px}
+    .manual-agenda-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}
+    .manual-agenda-card{border:1px solid var(--line);border-radius:16px;background:#fff;padding:13px;box-shadow:0 8px 22px rgba(15,23,42,.04)}
+    .manual-agenda-card.priority-critical{border-left:5px solid var(--red)}
+    .manual-agenda-card.priority-high{border-left:5px solid var(--yellow)}
+    .manual-agenda-card.priority-medium{border-left:5px solid var(--blue)}
+    .manual-agenda-card.priority-low{border-left:5px solid var(--green2)}
+    .manual-agenda-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:7px}
+    .manual-agenda-title{font-weight:900;font-size:14px;line-height:1.25}
+    .manual-agenda-meta{font-size:12px;color:var(--muted);line-height:1.45;margin-top:4px}
+    .manual-agenda-desc{font-size:12px;color:#344054;line-height:1.45;background:#fbfcfd;border:1px solid var(--line);border-radius:12px;padding:9px;margin-top:9px;white-space:pre-wrap}
+    .manual-agenda-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;justify-content:flex-end}
+    .agenda-tag-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px}
+    .agenda-decision{font-size:12px;color:#0f5ea9;background:#eef5ff;border:1px solid #d7e7fb;border-radius:12px;padding:9px;margin-top:8px;white-space:pre-wrap}
+    .agenda-manual-empty{border:1px dashed var(--line2);border-radius:16px;padding:20px;background:#fbfcfd;color:var(--muted);text-align:center}
     @media(max-width:1100px){.grid-2,.grid-3,.grid-4,.grid-5,.summary-grid,.detail-layout,.dictamen,.filters,.action-editor-grid,.initiative-editor-grid,.detail-grid,.exec-stats,.quick-form{grid-template-columns:1fr}.initiative-editor-grid .span-2,.initiative-editor-grid .span-3,.detail-box-full{grid-column:auto}.detail-left{border-right:none}.topbar{flex-direction:column}.page{padding:16px}.initiative-cascade-card{grid-template-columns:1fr}.initiative-cascade-actions{justify-content:flex-start}.tom-summary-grid,.tom-mini-grid{grid-template-columns:1fr}}
   </style>
 </head>
@@ -137,6 +153,8 @@
 <div id="initiativeViewModal" class="modal"><div class="modal-card modal-compact"><div class="modal-header"><div class="modal-title"><h2 id="initiativeViewTitle">Detalle de Iniciativa</h2><p id="initiativeViewSubtitle">Objetivo: —</p></div><div class="actions"><button id="closeInitiativeView" class="btn btn-secondary">Cerrar</button><button id="editInitiativeFromView" class="btn btn-primary">Editar</button></div></div><div id="initiativeViewBody" class="form-body"></div></div></div>
 <div id="actionViewModal" class="modal"><div class="modal-card modal-compact"><div class="modal-header"><div class="modal-title"><h2 id="actionViewTitle">Detalle de Acción</h2><p id="actionViewSubtitle">Iniciativa: —</p></div><div class="actions"><button id="closeActionView" class="btn btn-secondary">Cerrar</button><button id="editActionFromView" class="btn btn-primary">Editar</button></div></div><div id="actionViewBody" class="form-body"></div></div></div>
 
+<div id="manualAgendaModal" class="modal"><div class="modal-card modal-medium"><div class="modal-header"><div class="modal-title"><h2 id="manualAgendaModalTitle">Nuevo punto de agenda</h2><p>Agrega un tema manual para el próximo comité y relaciónalo con objetivos, iniciativas, KPIs, acciones o decisiones.</p></div><div class="actions"><button id="closeManualAgendaModal" class="btn btn-secondary">Cancelar</button><button id="saveManualAgenda" class="btn btn-primary">Guardar Punto</button></div></div><div class="form-body"><div class="grid-3"><div class="field"><label class="required">Tipo de punto</label><select id="agendaType" class="select"><option>Objetivo</option><option>KPI</option><option>Iniciativa</option><option>Acción</option><option>Alerta</option><option>Decisión</option><option>Tema libre</option></select></div><div class="field"><label>Prioridad</label><select id="agendaPriority" class="select"><option>Crítica</option><option>Alta</option><option selected>Media</option><option>Baja</option></select></div><div class="field"><label>Estatus</label><select id="agendaStatus" class="select"><option selected>Pendiente</option><option>En revisión</option><option>Aprobado</option><option>Rechazado</option><option>Resuelto</option><option>Pospuesto</option></select></div></div><div class="field"><label class="required">Título del punto de agenda</label><input id="agendaTitle" class="input" placeholder="Ej. Aprobar presupuesto para rediseño de rutas nacionales"></div><div class="grid-3"><div class="field"><label>Responsable / Presenta</label><input id="agendaOwner" class="input" placeholder="Ej. Dirección Comercial"></div><div class="field"><label>Fecha compromiso</label><input id="agendaDueDate" type="date" class="input"></div><div class="field"><label>Tiempo estimado en comité</label><input id="agendaDuration" class="input" placeholder="Ej. 10 min"></div></div><div class="grid-2"><div class="field"><label>Objetivo relacionado</label><select id="agendaLinkedObjective" class="select"></select></div><div class="field"><label>Iniciativa relacionada</label><select id="agendaLinkedInitiative" class="select"></select></div></div><div class="grid-2"><div class="field"><label>Contexto / situación</label><textarea id="agendaContext" class="textarea" placeholder="Describe por qué debe revisarse en comité."></textarea></div><div class="field"><label>Decisión o acuerdo esperado</label><textarea id="agendaDecision" class="textarea" placeholder="Ej. Autorizar presupuesto, reasignar responsable, cambiar fecha, escalar bloqueo, redefinir meta."></textarea></div></div><div class="field"><label>Notas / evidencia</label><textarea id="agendaNotes" class="textarea" placeholder="Datos, riesgos, antecedentes o evidencia que se debe llevar al comité."></textarea></div></div></div></div>
+
 <template id="indicatorTpl"><div class="repeat-item indicator-row"><button type="button" class="remove">Eliminar</button><div class="grid-4"><div class="field"><label>Indicador</label><input class="input ind-name"></div><div class="field"><label>Acción</label><select class="select ind-action"><option>Incrementar</option><option>Reducir</option><option>Mantener</option></select></div><div class="field"><label>Unidad</label><input class="input ind-unit"></div><div class="field"><label>Responsable dato</label><input class="input ind-owner"></div></div><div class="grid-4"><div class="field"><label>Valor inicial</label><input type="number" step="0.01" class="input ind-initial"></div><div class="field"><label>Valor actual</label><input type="number" step="0.01" class="input ind-current"></div><div class="field"><label>Meta</label><input type="number" step="0.01" class="input ind-target"></div><div class="field"><label>Peso KPI %</label><input type="number" step="1" class="input ind-weight" value="100"></div></div></div></template>
 <template id="initiativeTpl"><div class="repeat-item initiative-row"><button type="button" class="remove">Eliminar</button><div class="grid-3"><div class="field"><label>Iniciativa</label><input class="input init-name"></div><div class="field"><label>Responsable</label><input class="input init-owner"></div><div class="field"><label>Fecha compromiso</label><input type="date" class="input init-due"></div></div><div class="grid-4"><div class="field"><label>Estatus</label><select class="select init-status"><option>Pendiente</option><option selected>En progreso</option><option>Terminada</option><option>Pausada</option></select></div><div class="field"><label>Avance %</label><input type="number" min="0" max="100" step="1" class="input init-progress"></div><div class="field"><label>Impacto esperado %</label><input type="number" min="0" max="100" step="1" class="input init-expimpact"></div><div class="field"><label>Impacto real %</label><input type="number" min="0" max="100" step="1" class="input init-realimpact"></div></div><div class="grid-4"><div class="field"><label>Prioridad</label><select class="select init-priority"><option>Crítica</option><option selected>Alta</option><option>Media</option><option>Baja</option></select></div><div class="field"><label>¿Redundante?</label><select class="select init-redundant"><option>No</option><option>Sí</option></select></div><div class="field"><label>¿Compite?</label><select class="select init-competes"><option>No</option><option>Sí</option></select></div><div class="field"><label>KPI impactado</label><input class="input init-kpi"></div></div><div class="grid-4"><div class="field"><label>Beneficio esperado</label><input class="input init-benefit"></div><div class="field"><label>Beneficio real</label><input class="input init-benefitreal"></div><div class="field"><label>Dueño beneficio</label><input class="input init-benefitowner"></div><div class="field"><label>Fecha beneficio</label><input type="date" class="input init-benefitdate"></div></div><div class="grid-4"><div class="field"><label>Presupuesto</label><input type="number" step="0.01" class="input init-budget"></div><div class="field"><label>Gastado</label><input type="number" step="0.01" class="input init-spent"></div><div class="field"><label>Acciones tácticas</label><textarea class="textarea init-actions" placeholder="Una acción por línea"></textarea></div><div class="field"><label>Detalle / evidencia</label><textarea class="textarea init-detail"></textarea></div></div></div></template>
 <template id="relationTpl"><div class="repeat-item relation-row"><button type="button" class="remove">Eliminar</button><div class="grid-4"><div class="field"><label>Objetivo relacionado</label><select class="select rel-target"></select></div><div class="field"><label>Tipo de relación</label><select class="select rel-type"><option>Depende de</option><option>Impacta a</option><option>Habilita a</option><option>Bloquea a</option><option>Duplica a</option><option>Compite con</option></select></div><div class="field"><label>Intensidad</label><select class="select rel-intensity"><option>Alta</option><option selected>Media</option><option>Baja</option></select></div><div class="field"><label>Riesgo de ruptura</label><select class="select rel-risk"><option>Bajo</option><option selected>Medio</option><option>Alto</option><option>Crítico</option></select></div></div><div class="grid-3"><div class="field"><label>Tiempo de impacto</label><select class="select rel-time"><option>Inmediato</option><option>30 días</option><option>90 días</option><option>Anual</option></select></div><div class="field"><label>Responsable relación</label><input class="input rel-owner"></div><div class="field"><label>Evidencia</label><input class="input rel-evidence"></div></div></div></template>
@@ -167,7 +185,8 @@ let state={
   editingObjectiveId:null,currentTab:'ejecucion',detailObjectiveId:null,
   expandedObjectives:{},actionContext:null,editingActionId:null,
   initiativeContext:null,editingInitiativeId:null,
-  viewingActionId:null,viewingInitiativeId:null
+  viewingActionId:null,viewingInitiativeId:null,
+  editingAgendaItemId:null
 };
 
 // ─── UTILIDADES ───────────────────────────────────────────────────────
@@ -281,7 +300,8 @@ function planMetrics(planId=state.currentPlanningId){
 }
 
 // ─── NORMALIZACIÓN ───────────────────────────────────────────────────
-function normalizePlanning(p={}){return{...p,id:p.id||uid(),name:p.name||'',vision:p.vision||'',description:p.description||'',map:p.map||'',owner:p.owner||'',startDate:p.startDate||'',endDate:p.endDate||'',status:p.status||'activo',governanceCadence:p.governanceCadence||'Mensual',committee:p.committee||'',createdAt:p.createdAt||new Date().toISOString(),history:Array.isArray(p.history)?p.history:[]}}
+function normalizeManualAgendaItem(a={}){return{...a,id:a.id||uid(),type:a.type||'Tema libre',title:a.title||'',owner:a.owner||'',dueDate:a.dueDate||'',duration:a.duration||'',priority:a.priority||'Media',status:a.status||'Pendiente',linkedObjectiveId:a.linkedObjectiveId||'',linkedInitiativeId:a.linkedInitiativeId||'',context:a.context||'',decision:a.decision||'',notes:a.notes||'',createdAt:a.createdAt||new Date().toISOString(),updatedAt:a.updatedAt||new Date().toISOString()}}
+function normalizePlanning(p={}){return{...p,id:p.id||uid(),name:p.name||'',vision:p.vision||'',description:p.description||'',map:p.map||'',owner:p.owner||'',startDate:p.startDate||'',endDate:p.endDate||'',status:p.status||'activo',governanceCadence:p.governanceCadence||'Mensual',committee:p.committee||'',manualAgenda:Array.isArray(p.manualAgenda)?p.manualAgenda.map(normalizeManualAgendaItem):[],createdAt:p.createdAt||new Date().toISOString(),history:Array.isArray(p.history)?p.history:[]}}
 function normalizeAction(a={}){return{...a,id:a.id||uid(),title:a.title||a.name||'',responsible:a.responsible||a.owner||'',dueDate:a.dueDate||a.date||'',status:a.status||'Por hacer',detail:a.detail||a.description||''}}
 function normalizeInitiative(i={}){return{...i,id:i.id||uid(),name:i.name||'',owner:i.owner||i.responsible||'',dueDate:i.dueDate||i.date||'',status:i.status||'En progreso',progress:Number(i.progress||0),expectedImpact:Number(i.expectedImpact||0),realImpact:Number(i.realImpact||0),impactKpi:i.impactKpi||'',priority:i.priority||'Alta',redundant:i.redundant||'No',competes:i.competes||'No',budget:Number(i.budget||0),spent:Number(i.spent||0),benefitExpected:i.benefitExpected||'',benefitReal:i.benefitReal||'',benefitOwner:i.benefitOwner||'',benefitDate:i.benefitDate||'',detail:i.detail||'',actions:Array.isArray(i.actions)?i.actions.map(normalizeAction):[]}}
 function normalizeObjective(o={}){
@@ -297,7 +317,7 @@ function normalizeObjective(o={}){
 
 // ─── INIT ─────────────────────────────────────────────────────────────
 function init(){
-  const samplePlan={id:'plan_demo_2026',name:'Planeación Estratégica 2026',vision:'Visión estratégica al año 2026',description:'Plan base para gestionar objetivos, indicadores, iniciativas, brechas y decisiones.',map:'Dirección General / Planeación Estratégica',owner:'Dirección General',startDate:'2026-01-01',endDate:'2026-12-31',status:'activo',governanceCadence:'Mensual',committee:'Comité Estratégico'};
+  const samplePlan={id:'plan_demo_2026',name:'Planeación Estratégica 2026',vision:'Visión estratégica al año 2026',description:'Plan base para gestionar objetivos, indicadores, iniciativas, brechas y decisiones.',map:'Dirección General / Planeación Estratégica',owner:'Dirección General',startDate:'2026-01-01',endDate:'2026-12-31',status:'activo',governanceCadence:'Mensual',committee:'Comité Estratégico',manualAgenda:[]};
   state.plannings=loadJson(PLANNINGS_KEY,[samplePlan]).map(normalizePlanning);
   let loaded=[];
   for(const k of LEGACY_KEYS){loaded=loadJson(k,[]);if(Array.isArray(loaded)&&loaded.length)break}
@@ -347,6 +367,9 @@ function bindBaseEvents(){
   $('editInitiativeFromView').onclick=()=>{if(!state.initiativeContext)return;closeModal('initiativeViewModal');openInitiativeEditor(state.initiativeContext.objectiveId,state.initiativeContext.initiativeId)};
   $('closeActionView').onclick=()=>closeModal('actionViewModal');
   $('editActionFromView').onclick=()=>{if(!state.actionContext||!state.viewingActionId)return;closeModal('actionViewModal');openActionEditor(state.actionContext.objectiveId,state.actionContext.initiativeId,state.viewingActionId)};
+  $('closeManualAgendaModal').onclick=()=>closeModal('manualAgendaModal');
+  $('saveManualAgenda').onclick=saveManualAgendaItem;
+  $('agendaLinkedObjective').onchange=()=>renderAgendaInitiativeOptions('');
   // cerrar modales con click en overlay
   document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
 }
@@ -577,6 +600,7 @@ function renderCadencia(){
   const days=cadenceMap[p?.governanceCadence]||30;
   const nextReview=addDays(days);
   const m=planMetrics();
+  const manualAgenda=(p?.manualAgenda||[]).map(normalizeManualAgendaItem).sort(sortManualAgenda);
 
   // Checklist para la próxima sesión
   const checkItems=[
@@ -587,6 +611,7 @@ function renderCadencia(){
     {label:'Validar que todos los objetivos tienen KPI',done:objs.every(o=>(o.indicators||[]).length>0)},
     {label:'Validar que todos los objetivos tienen iniciativas',done:objs.every(o=>(o.initiatives||[]).length>0)},
     {label:'Completar TOM de objetivos débiles',done:objs.every(o=>tomScore(o)>=60)},
+    {label:'Revisar agenda manual del comité ('+manualAgenda.filter(a=>!['Resuelto','Aprobado','Rechazado'].includes(a.status)).length+' pendiente/s)',done:manualAgenda.length===0||manualAgenda.every(a=>['Resuelto','Aprobado','Rechazado'].includes(a.status))},
     {label:'Exportar dictamen ejecutivo para presentar',done:false},
   ];
   const doneCnt=checkItems.filter(c=>c.done).length;
@@ -603,10 +628,23 @@ function renderCadencia(){
     </div>
   </div>`;
 
-  // Agenda del comité: objetivos con mayor riesgo o alertas
+  // Agenda manual del comité
+  html+=`<div class="cadence-box">
+    <div class="cadence-toolbar">
+      <div>
+        <div class="cadence-title">Agenda manual del próximo comité</div>
+        <p style="font-size:13px;color:var(--muted);margin:4px 0 0">Puntos definidos por dirección, PMO o comité. Pueden relacionarse con objetivos, KPIs, iniciativas, acciones, alertas o decisiones.</p>
+      </div>
+      <button class="btn btn-primary btn-small" data-new-manual-agenda="1">Agregar punto manual +</button>
+    </div>
+    ${manualAgenda.length?`<div class="manual-agenda-list">${manualAgenda.map(renderManualAgendaCard).join('')}</div>`:`<div class="agenda-manual-empty">Aún no hay puntos manuales. Agrega temas ejecutivos que no dependan solamente del algoritmo automático.</div>`}
+  </div>`;
+
+  // Agenda automática del comité: objetivos con mayor riesgo o alertas
   const agenda=[...objs].sort((a,b)=>objectiveRiskScore(b)-objectiveRiskScore(a)).slice(0,6);
   html+=`<div class="cadence-box">
-    <div class="cadence-title">Agenda propuesta para el próximo comité</div>
+    <div class="cadence-title">Agenda propuesta automáticamente para el próximo comité</div>
+    <p style="font-size:13px;color:var(--muted);margin:4px 0 12px">El sistema sugiere estos puntos a partir de objetivos con mayor riesgo, bajo KPI, fechas próximas, brechas, TOM débil o alertas críticas.</p>
     <div class="cadence-grid">
       ${agenda.map(o=>{
         const risk=objectiveRiskScore(o);
@@ -624,7 +662,108 @@ function renderCadencia(){
   </div>`;
 
   $('viewCadencia').innerHTML=html;
+  document.querySelectorAll('[data-new-manual-agenda]').forEach(b=>b.onclick=()=>openManualAgendaModal());
+  document.querySelectorAll('[data-edit-agenda]').forEach(b=>b.onclick=()=>openManualAgendaModal(b.dataset.editAgenda));
+  document.querySelectorAll('[data-del-agenda]').forEach(b=>b.onclick=()=>deleteManualAgendaItem(b.dataset.delAgenda));
 }
+
+function sortManualAgenda(a,b){
+  const st={'Pendiente':0,'En revisión':1,'Pospuesto':2,'Aprobado':3,'Resuelto':4,'Rechazado':5};
+  const pr={'Crítica':0,'Alta':1,'Media':2,'Baja':3};
+  return (st[a.status]??9)-(st[b.status]??9)||(pr[a.priority]??9)-(pr[b.priority]??9)||String(a.dueDate||'9999-12-31').localeCompare(String(b.dueDate||'9999-12-31'));
+}
+function agendaPriorityClass(priority){return priority==='Crítica'?'priority-critical':priority==='Alta'?'priority-high':priority==='Media'?'priority-medium':'priority-low'}
+function agendaPriorityBadge(priority){return badge(priority||'Media',priority==='Crítica'?'red':priority==='Alta'?'yellow':priority==='Media'?'blue':'green')}
+function agendaTypeBadge(type){const map={Objetivo:'purple',KPI:'blue',Iniciativa:'green',Acción:'yellow',Alerta:'red',Decisión:'blue','Tema libre':'gray'};return badge(type||'Tema libre',map[type]||'gray')}
+function agendaStatusBadge(status){const s=String(status||'Pendiente');const color=s==='Resuelto'||s==='Aprobado'?'green':s==='Rechazado'?'red':s==='Pospuesto'?'gray':s==='En revisión'?'blue':'yellow';return badge(s,color)}
+function renderManualAgendaCard(a){
+  const obj=a.linkedObjectiveId?findObjective(a.linkedObjectiveId):null;
+  const init=a.linkedObjectiveId&&a.linkedInitiativeId?findInitiative(a.linkedObjectiveId,a.linkedInitiativeId).initiative:null;
+  const due=a.dueDate?fmtDate(a.dueDate)+' · '+daysText(a.dueDate):'Sin fecha compromiso';
+  return`<div class="manual-agenda-card ${agendaPriorityClass(a.priority)}">
+    <div class="manual-agenda-top">
+      <div>
+        <div class="manual-agenda-title">${esc(a.title||'Punto sin título')}</div>
+        <div class="manual-agenda-meta">Responsable: ${esc(a.owner||'—')} · ${esc(a.duration||'Tiempo no definido')}<br>Fecha: ${due}</div>
+      </div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end">${agendaTypeBadge(a.type)}${agendaStatusBadge(a.status)}${agendaPriorityBadge(a.priority)}</div>
+    </div>
+    <div class="agenda-tag-row">
+      ${obj?'<span class="chip">Objetivo: '+esc(obj.name)+'</span>':''}
+      ${init?'<span class="chip">Iniciativa: '+esc(init.name)+'</span>':''}
+    </div>
+    ${a.context?'<div class="manual-agenda-desc"><strong>Contexto:</strong><br>'+esc(a.context)+'</div>':''}
+    ${a.decision?'<div class="agenda-decision"><strong>Decisión esperada:</strong><br>'+esc(a.decision)+'</div>':''}
+    ${a.notes?'<div class="manual-agenda-desc"><strong>Notas / evidencia:</strong><br>'+esc(a.notes)+'</div>':''}
+    <div class="manual-agenda-actions"><button class="btn btn-secondary btn-small" data-edit-agenda="${a.id}">Editar</button><button class="btn btn-danger btn-small" data-del-agenda="${a.id}">Eliminar</button></div>
+  </div>`;
+}
+function openManualAgendaModal(id=null){
+  const p=getPlan();if(!p)return;
+  state.editingAgendaItemId=id||null;
+  const item=(p.manualAgenda||[]).find(a=>a.id===id)||normalizeManualAgendaItem({});
+  $('manualAgendaModalTitle').textContent=id?'Editar punto de agenda':'Nuevo punto de agenda';
+  $('agendaType').value=item.type||'Tema libre';
+  $('agendaTitle').value=item.title||'';
+  $('agendaOwner').value=item.owner||'';
+  $('agendaDueDate').value=item.dueDate||'';
+  $('agendaDuration').value=item.duration||'';
+  $('agendaPriority').value=item.priority||'Media';
+  $('agendaStatus').value=item.status||'Pendiente';
+  renderAgendaObjectiveOptions(item.linkedObjectiveId||'');
+  renderAgendaInitiativeOptions(item.linkedInitiativeId||'');
+  $('agendaContext').value=item.context||'';
+  $('agendaDecision').value=item.decision||'';
+  $('agendaNotes').value=item.notes||'';
+  openModal('manualAgendaModal');
+}
+function renderAgendaObjectiveOptions(selected=''){
+  const objs=planObjectives();
+  $('agendaLinkedObjective').innerHTML='<option value="">Sin objetivo relacionado</option>'+objs.map(o=>'<option value="'+o.id+'">'+esc(o.code?o.code+' · ':'')+esc(o.name)+'</option>').join('');
+  $('agendaLinkedObjective').value=selected||'';
+}
+function renderAgendaInitiativeOptions(selected=''){
+  const objectiveId=$('agendaLinkedObjective').value;
+  const o=objectiveId?findObjective(objectiveId):null;
+  const initiatives=o?(o.initiatives||[]):[];
+  $('agendaLinkedInitiative').innerHTML='<option value="">Sin iniciativa relacionada</option>'+initiatives.map(i=>'<option value="'+i.id+'">'+esc(i.name)+'</option>').join('');
+  $('agendaLinkedInitiative').value=selected&&initiatives.some(i=>i.id===selected)?selected:'';
+}
+function saveManualAgendaItem(){
+  const p=getPlan();if(!p)return;
+  const title=$('agendaTitle').value.trim();
+  if(!title)return alert('Ingresa el título del punto de agenda.');
+  if(!Array.isArray(p.manualAgenda))p.manualAgenda=[];
+  const previous=p.manualAgenda.find(a=>a.id===state.editingAgendaItemId);
+  const item=normalizeManualAgendaItem({
+    id:state.editingAgendaItemId||uid(),
+    type:$('agendaType').value,
+    title,
+    owner:$('agendaOwner').value.trim(),
+    dueDate:$('agendaDueDate').value,
+    duration:$('agendaDuration').value.trim(),
+    priority:$('agendaPriority').value,
+    status:$('agendaStatus').value,
+    linkedObjectiveId:$('agendaLinkedObjective').value,
+    linkedInitiativeId:$('agendaLinkedInitiative').value,
+    context:$('agendaContext').value.trim(),
+    decision:$('agendaDecision').value.trim(),
+    notes:$('agendaNotes').value.trim(),
+    createdAt:previous?.createdAt||new Date().toISOString(),
+    updatedAt:new Date().toISOString()
+  });
+  const idx=p.manualAgenda.findIndex(a=>a.id===item.id);
+  if(idx>=0)p.manualAgenda[idx]=item;else p.manualAgenda.push(item);
+  saveRaw();closeModal('manualAgendaModal');renderWorkspace();
+}
+function deleteManualAgendaItem(id){
+  const p=getPlan();if(!p)return;
+  const item=(p.manualAgenda||[]).find(a=>a.id===id);if(!item)return;
+  if(!confirm('¿Eliminar el punto de agenda "'+item.title+'"?'))return;
+  p.manualAgenda=(p.manualAgenda||[]).filter(a=>a.id!==id);
+  saveRaw();renderWorkspace();
+}
+
 
 // ─── OBJETIVOS ────────────────────────────────────────────────────────
 function renderObjetivos(){
@@ -874,7 +1013,8 @@ function openPlanningModal(id=null){
 }
 function savePlanning(){
   const name=$('pName').value.trim();if(!name)return alert('Ingresa el nombre.');
-  const p=normalizePlanning({id:state.editingPlanningId||uid(),name,vision:$('pVision').value.trim(),description:$('pDesc').value.trim(),map:$('pMap').value.trim(),owner:$('pOwner').value.trim(),startDate:$('pStart').value,endDate:$('pEnd').value,status:$('pStatus').value,governanceCadence:$('pCadence').value,committee:$('pCommittee').value,createdAt:state.editingPlanningId?(state.plannings.find(x=>x.id===state.editingPlanningId)?.createdAt):new Date().toISOString()});
+  const existingPlanning=state.editingPlanningId?state.plannings.find(x=>x.id===state.editingPlanningId):null;
+  const p=normalizePlanning({id:state.editingPlanningId||uid(),name,vision:$('pVision').value.trim(),description:$('pDesc').value.trim(),map:$('pMap').value.trim(),owner:$('pOwner').value.trim(),startDate:$('pStart').value,endDate:$('pEnd').value,status:$('pStatus').value,governanceCadence:$('pCadence').value,committee:$('pCommittee').value,manualAgenda:existingPlanning?.manualAgenda||[],createdAt:existingPlanning?.createdAt||new Date().toISOString()});
   if(state.editingPlanningId){state.plannings[state.plannings.findIndex(x=>x.id===state.editingPlanningId)]=p}else state.plannings.unshift(p);
   saveRaw();closeModal('planningModal');renderPlanningView();if(state.currentPlanningId===p.id)renderWorkspace();
 }
@@ -934,8 +1074,16 @@ function buildDictamenText(){
   const cadenceMap={Semanal:7,Mensual:30,Trimestral:90};
   const days=cadenceMap[p?.governanceCadence]||30;
   const nextReview=addDays(days);
-  return`DICTAMEN EJECUTIVO ESTRATÉGICO\n${p?.name||''}\nFecha: ${fmtDate(todayKey())} · Próxima revisión: ${fmtDate(nextReview)}\n\nIGEE: ${m.igee}%\nAvance KPI: ${m.kpi}%\nImpacto real vs esperado: ${m.impact}%\nAlineación estratégica: ${m.align}%\nRiesgo de ejecución: ${m.risk}%\nScore TOM promedio: ${m.tom}%\n\nDIAGNÓSTICO\n${m.igee>=85?'Estrategia en control.':m.igee>=70?'Estrategia viable con ajustes.':m.igee>=50?'Estrategia en riesgo.':'Estrategia críticamente desalineada.'}\n\nHALLAZGOS CLAVE\n- Objetivos evaluados: ${m.objs.length}\n- Alertas críticas: ${critical.length}\n- Acciones vencidas: ${m.overdueActions.length}\n- Iniciativas desconectadas de KPI: ${lowImpact.length}\n- Objetivos de mayor riesgo: ${topRisk.map(o=>o.name+' ('+objectiveRiskScore(o)+'%)').join(', ')||'Sin datos'}\n${lowImpact.length?'\nINICIATIVAS DESCONECTADAS (avanzan sin mover KPI):\n'+lowImpact.slice(0,6).map(x=>'- '+x).join('\n'):''}\n\nRECOMENDACIONES PARA EL COMITÉ\n${m.objs.map(o=>'- '+o.name+': '+recommendationForObjective(o)).join('\n')}\n\nACCIONES URGENTES PARA ESTA SEMANA\n${m.overdueActions.slice(0,5).map(({o,init,a})=>'- '+a.title+' ('+o.name+' → '+init.name+') · Responsable: '+(a.responsible||'—')+' · Venció: '+fmtDate(a.dueDate)).join('\n')||'Sin acciones vencidas.'}\n`;
+  const manualAgenda=(p?.manualAgenda||[]).map(normalizeManualAgendaItem).sort(sortManualAgenda);
+  const manualAgendaText=manualAgenda.length?manualAgenda.map(a=>{
+    const obj=a.linkedObjectiveId?findObjective(a.linkedObjectiveId):null;
+    const init=a.linkedObjectiveId&&a.linkedInitiativeId?findInitiative(a.linkedObjectiveId,a.linkedInitiativeId).initiative:null;
+    const rel=[obj?'Objetivo: '+obj.name:'',init?'Iniciativa: '+init.name:''].filter(Boolean).join(' · ');
+    return '- ['+a.type+' · '+a.priority+' · '+a.status+'] '+a.title+' · Responsable: '+(a.owner||'—')+(a.dueDate?' · Fecha: '+fmtDate(a.dueDate):'')+(rel?' · '+rel:'')+(a.decision?' · Decisión esperada: '+a.decision:'');
+  }).join('\n'):'Sin puntos manuales registrados.';
+  return`DICTAMEN EJECUTIVO ESTRATÉGICO\n${p?.name||''}\nFecha: ${fmtDate(todayKey())} · Próxima revisión: ${fmtDate(nextReview)}\n\nIGEE: ${m.igee}%\nAvance KPI: ${m.kpi}%\nImpacto real vs esperado: ${m.impact}%\nAlineación estratégica: ${m.align}%\nRiesgo de ejecución: ${m.risk}%\nScore TOM promedio: ${m.tom}%\n\nDIAGNÓSTICO\n${m.igee>=85?'Estrategia en control.':m.igee>=70?'Estrategia viable con ajustes.':m.igee>=50?'Estrategia en riesgo.':'Estrategia críticamente desalineada.'}\n\nHALLAZGOS CLAVE\n- Objetivos evaluados: ${m.objs.length}\n- Alertas críticas: ${critical.length}\n- Acciones vencidas: ${m.overdueActions.length}\n- Iniciativas desconectadas de KPI: ${lowImpact.length}\n- Puntos manuales de agenda: ${manualAgenda.length}\n- Objetivos de mayor riesgo: ${topRisk.map(o=>o.name+' ('+objectiveRiskScore(o)+'%)').join(', ')||'Sin datos'}\n${lowImpact.length?'\nINICIATIVAS DESCONECTADAS (avanzan sin mover KPI):\n'+lowImpact.slice(0,6).map(x=>'- '+x).join('\n'):''}\n\nAGENDA MANUAL DEL COMITÉ\n${manualAgendaText}\n\nRECOMENDACIONES PARA EL COMITÉ\n${m.objs.map(o=>'- '+o.name+': '+recommendationForObjective(o)).join('\n')}\n\nACCIONES URGENTES PARA ESTA SEMANA\n${m.overdueActions.slice(0,5).map(({o,init,a})=>'- '+a.title+' ('+o.name+' → '+init.name+') · Responsable: '+(a.responsible||'—')+' · Venció: '+fmtDate(a.dueDate)).join('\n')||'Sin acciones vencidas.'}\n`;
 }
+
 function openDictamen(){
   const m=planMetrics(),txt=buildDictamenText();
   const igeeCls=m.igee>=75?'b-green':m.igee>=55?'b-yellow':'b-red';
