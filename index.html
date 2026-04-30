@@ -613,12 +613,13 @@ function renderPlanningView(){
   $('planningCards').innerHTML=arr.map(p=>{
     const m=planMetrics(p.id);
     const igeeCls=m.igee>=75?'igee-ok':m.igee>=55?'igee-risk':'igee-critical';
-    return'<div class="plan-card"><div><h3>'+esc(p.name||'Sin nombre')+'</h3><p>'+esc(p.description||'Sin descripción')+'</p></div><div class="plan-meta"><div><strong>Visión:</strong> '+esc(p.vision||'—')+'</div><div><strong>Responsable:</strong> '+esc(p.owner||'—')+'</div><div><strong>Periodo:</strong> '+fmtDate(p.startDate)+' → '+fmtDate(p.endDate)+'</div><div><strong>Objetivos:</strong> '+m.objs.length+' · <span class="igee-pill '+igeeCls+'">IGEE '+m.igee+'%</span></div><div>'+statusBadge(p.status)+(m.criticalAlerts.length?'<span class="badge b-red" style="margin-left:6px">'+m.criticalAlerts.length+' alertas críticas</span>':'')+'</div></div><div class="actions"><button class="btn btn-primary btn-small" data-open-plan="'+p.id+'">Entrar</button><button class="btn btn-secondary btn-small" data-edit-plan="'+p.id+'">Editar</button><button class="btn btn-danger btn-small" data-del-plan="'+p.id+'">Eliminar</button></div></div>';
+    return'<div class="plan-card"><div><h3>'+esc(p.name||'Sin nombre')+'</h3><p>'+esc(p.description||'Sin descripción')+'</p></div><div class="plan-meta"><div><strong>Visión:</strong> '+esc(p.vision||'—')+'</div><div><strong>Responsable:</strong> '+esc(p.owner||'—')+'</div><div><strong>Periodo:</strong> '+fmtDate(p.startDate)+' → '+fmtDate(p.endDate)+'</div><div><strong>Objetivos:</strong> '+m.objs.length+' · <span class="igee-pill '+igeeCls+'">IGEE '+m.igee+'%</span></div><div>'+statusBadge(p.status)+(m.criticalAlerts.length?'<span class="badge b-red" style="margin-left:6px">'+m.criticalAlerts.length+' alertas críticas</span>':'')+'</div></div><div class="actions"><button class="btn btn-primary btn-small" data-open-plan="'+p.id+'">Entrar</button><button class="btn btn-secondary btn-small" data-edit-plan="'+p.id+'">Editar</button><button class="btn btn-danger btn-small" data-del-plan="'+p.id+'">Eliminar</button><button class="btn btn-secondary btn-small" data-export-plan-general="'+p.id+'">Reporte General</button></div></div>';
   }).join('');
   $('planningEmpty').classList.toggle('hidden',!!arr.length);
   document.querySelectorAll('[data-open-plan]').forEach(b=>b.onclick=()=>openWorkspace(b.dataset.openPlan));
   document.querySelectorAll('[data-edit-plan]').forEach(b=>b.onclick=()=>openPlanningModal(b.dataset.editPlan));
   document.querySelectorAll('[data-del-plan]').forEach(b=>b.onclick=()=>deletePlanning(b.dataset.delPlan));
+  document.querySelectorAll('[data-export-plan-general]').forEach(b=>b.onclick=()=>exportPlanGeneralWorkbook(b.dataset.exportPlanGeneral));
 }
 
 function openWorkspace(id){
@@ -1484,6 +1485,141 @@ function exportOperativoCsv(){
   const rows=(window.__opExportRows||[]).map(r=>[r.objAdvance+'%',(r.objective.code?r.objective.code+' · ':'')+(r.objective.name||''),r.initAdvance+'%',r.initiative.name||'',(r.action.title||'')+(r.action.detail?' - '+r.action.detail:''),r.action.responsible||r.initiative.owner||r.objective.leader||'',daysText(r.due)+' · '+fmtDate(r.due),r.status||'',r.initiative.priority||'',(r.initiative.expectedImpact||0)+'%',(r.initiative.realImpact||0)+'%',r.eff+'%',r.initiative.budget||0,r.initiative.spent||0,r.risk>=70?'Alto':r.risk>=40?'Medio':'Bajo']);
   downloadCsvRows('tablero_operativo_ximpler_edge.csv',[header,...rows]);
 }
+// ─── REPORTE GENERAL EXPORTABLE POR PLANEACIÓN ───────────────────────
+function reportText(v){
+  if(v===undefined||v===null)return '';
+  if(Array.isArray(v))return v.map(x=>reportText(x)).filter(Boolean).join(' | ');
+  if(typeof v==='object'){
+    if(v.name||v.title||v.label)return [v.name,v.title,v.label,v.url,v.type].filter(Boolean).join(' · ');
+    try{return JSON.stringify(v)}catch(e){return String(v)}
+  }
+  return String(v);
+}
+function reportMoney(v){return Number(v||0)}
+function reportBool(v){return v?'Sí':'No'}
+function reportFileName(v){return String(v||'reporte').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]+/g,'_').replace(/^_+|_+$/g,'').slice(0,80)||'reporte'}
+function withPlanningContext(planId,fn){const previous=state.currentPlanningId;state.currentPlanningId=planId;try{return fn()}finally{state.currentPlanningId=previous}}
+function generalReportObjectives(planId){return state.objectives.filter(o=>o.planningId===planId)}
+function buildPlanGeneralReportSheets(planId){
+  const plan=state.plannings.find(p=>p.id===planId);
+  if(!plan)return [];
+  return withPlanningContext(planId,()=>{
+    const objs=generalReportObjectives(planId);
+    const metrics=planMetrics(planId);
+    const allInits=objs.flatMap(o=>(o.initiatives||[]).map(i=>({o,i})));
+    const allActions=allInits.flatMap(x=>(x.i.actions||[]).map(a=>({o:x.o,i:x.i,a})));
+    const sheets=[];
+    const add=(name,rows)=>sheets.push({name,rows:rows&&rows.length?rows:[["Sin datos"]]});
+
+    add('Resumen Ejecutivo',[
+      ['Campo','Valor'],
+      ['Fecha generación',new Date().toLocaleString('es-MX')],
+      ['ID planeación',plan.id],['Planeación',plan.name],['Visión',plan.vision],['Descripción',plan.description],['Mapa / Jerarquía',plan.map],['Responsable',plan.owner],['Inicio',fmtDate(plan.startDate)],['Fecha compromiso',fmtDate(plan.endDate)],['Días a compromiso',daysText(plan.endDate)],['Estatus',plan.status],['Cadencia de gobernanza',plan.governanceCadence],['Comité responsable',plan.committee],
+      ['Objetivos',objs.length],['Indicadores',objs.reduce((a,o)=>a+(o.indicators||[]).length,0)],['Iniciativas',allInits.length],['Acciones registradas',allActions.length],['Acciones vencidas',metrics.overdueActions.length],['Acciones próximas 7 días',metrics.upcomingActions.length],['Alertas totales',metrics.alerts.length],['Alertas críticas',metrics.criticalAlerts.length],['Iniciativas desconectadas',metrics.disconnected.length],
+      ['IGEE',metrics.igee+'%'],['Avance KPI promedio',metrics.kpi+'%'],['Impacto promedio',metrics.impact+'%'],['Alineación promedio',metrics.align+'%'],['Suficiencia portafolio',metrics.suff+'%'],['Riesgo promedio',metrics.risk+'%'],['TOM promedio',metrics.tom+'%'],['Gobernanza',metrics.governance+'%']
+    ]);
+
+    add('Objetivos',[[
+      'ID','Código','Objetivo','Descripción','Tipo','Perspectiva','Nivel contribución','Tema estratégico','Resultado esperado','Objetivo padre','Líder','Creador','Invitados','Áreas','Etiquetas','Proyectos ligados','Inicio','Fecha compromiso','Días compromiso','Estatus','Presupuesto','Peso objetivo KPI','KPI score','Impacto score','Alineación score','IIE','TOM score','Suficiencia portafolio','Riesgo brecha','Punto de ruptura','Estado actual','Estado objetivo','Brecha / Gap','Nivel evidencia','Notas evidencia','Acción correctiva manual','Recomendación / decisión requerida'
+    ],...objs.map(o=>{const parent=findObjective(o.parentObjectiveId);const p=objectiveInterventionProfile(o);return[o.id,o.code,o.name,o.description,typeLabels[o.objectiveType]||o.objectiveType,o.strategicPerspective,o.contributionLevel,o.strategicTheme,o.expectedStrategicResult,parent?parent.name:'',o.leader,o.creator||o.createdBy,o.invited,reportText(o.areas),reportText(o.tags),reportText(o.linkedProjects),fmtDate(o.startDate),fmtDate(o.endDate),daysText(o.endDate),o.status,reportMoney(o.budget),o.kpiWeight||'',objectiveKpiScore(o)+'%',objectiveImpactScore(o)+'%',objectiveAlignmentScore(o)+'%',p.score+'%',tomScore(o)+'%',objectiveSufficiencyScore(o)+'%',o.gapRisk,o.gapBreakpoint,o.currentState,o.targetState,o.gap,o.evidenceLevel,o.alignmentEvidence,o.correctionAction,decisionRequiredForObjective(o)]})]);
+
+    add('Indicadores',[[
+      'ID objetivo','Objetivo','ID indicador','Indicador','Acción','Unidad','Responsable dato','Frecuencia','Valor inicial','Valor actual','Meta','Peso indicador','Oculto','Score indicador','Estado','Score objetivo KPI'
+    ],...objs.flatMap(o=>(o.indicators||[]).map(ind=>{const score=calcIndicator(ind);const st=indicatorState(score);return[o.id,o.name,ind.id,ind.name,ind.action,ind.unit,ind.owner,ind.frequency,ind.initialValue,ind.current,ind.target,ind.kpiWeight,reportBool(ind.hidden),score+'%',st.label,objectiveKpiScore(o)+'%']}))]);
+
+    add('Historial Indicadores',[[
+      'ID objetivo','Objetivo','ID indicador','Indicador','Fecha','Valor','Usuario / Responsable','Comentario','Registro JSON'
+    ],...objs.flatMap(o=>(o.indicators||[]).flatMap(ind=>(ind.valueHistory||[]).map(h=>[o.id,o.name,ind.id,ind.name,h.date||h.fecha||h.createdAt||'',h.value||h.valor||'',h.user||h.responsable||h.owner||'',h.comment||h.comentario||h.note||'',JSON.stringify(h)])))]);
+
+    add('Metas Planeadas',[[
+      'ID objetivo','Objetivo','ID indicador','Indicador','Fecha','Meta planeada','Frecuencia','Comentario','Registro JSON'
+    ],...objs.flatMap(o=>(o.indicators||[]).flatMap(ind=>(ind.metaPlan||[]).map(m=>[o.id,o.name,ind.id,ind.name,m.date||m.fecha||m.targetDate||'',m.target||m.meta||m.value||'',m.frequency||m.frecuencia||'',m.comment||m.comentario||'',JSON.stringify(m)])))]);
+
+    add('Iniciativas',[[
+      'ID objetivo','Objetivo','ID iniciativa','Iniciativa','Responsable','Fecha compromiso','Días compromiso','Estatus','Avance calculado','Acciones terminadas','Acciones totales','Impacto esperado','Impacto real','Eficiencia impacto','Prioridad','Redundante','Compite','KPI impactado','Presupuesto','Gastado','Sobregasto','Beneficio esperado','Beneficio real','Dueño beneficio','Fecha beneficio','Desconectada','Detalle / evidencia'
+    ],...allInits.map(({o,i})=>{const stats=initiativeActionsStats(i);return[o.id,o.name,i.id,i.name,i.owner,fmtDate(i.dueDate),daysText(i.dueDate),i.status,calcInitiativeProgress(i)+'%',stats.done,stats.total,(i.expectedImpact||0)+'%',(i.realImpact||0)+'%',impactEfficiency(i)+'%',i.priority,i.redundant,i.competes,i.impactKpi,reportMoney(i.budget),reportMoney(i.spent),Number(i.spent||0)>Number(i.budget||0)&&Number(i.budget||0)>0?'Sí':'No',i.benefitExpected,i.benefitReal,i.benefitOwner,fmtDate(i.benefitDate),isInitiativeDisconnected(i)?'Sí':'No',i.detail]})]);
+
+    add('Acciones',[[
+      'ID objetivo','Objetivo','ID iniciativa','Iniciativa','ID acción','Acción / Entregable','Responsable','Fecha compromiso','Días compromiso','Estatus','Avance acción','Vencida','Detalle'
+    ],...allActions.map(({o,i,a})=>[o.id,o.name,i.id,i.name,a.id,a.title,a.responsible,fmtDate(a.dueDate),daysText(a.dueDate),a.status,actionProgress(a)+'%',isOverdue(a.dueDate,a.status)?'Sí':'No',a.detail])]);
+
+    const kpiRows=objs.flatMap(o=>(o.indicators||[]).filter(ind=>!ind.hidden).map(ind=>{const score=calcIndicator(ind);const st=indicatorState(score);const iie=objectiveInterventionProfile(o).score;return[objectiveKpiScore(o)+'%',(o.code?o.code+' · ':'')+o.name,typeLabels[o.objectiveType]||o.objectiveType,o.strategicPerspective,o.kpiWeight||'',ind.name,ind.kpiWeight||100,ind.owner||reportText(o.areas)||o.leader,ind.current+' '+(ind.unit||''),ind.target+' '+(ind.unit||''),daysText(o.endDate)+' · '+fmtDate(o.endDate),score+'%',objectiveImpactScore(o)+'%',iie+'%',st.label]}));
+    add('Tablero KPI',[[ 'Medidor objetivo','Objetivo','Tipo','Perspectiva','Peso objetivo','Indicador','Peso indicador','Subárea / Dueño','Valor actual','Meta','Fecha compromiso','Avance','Impacto Obj.','IIE Obj.','Estado'],...kpiRows]);
+
+    const opRows=buildOperativoRows().map(r=>[r.objAdvance+'%',(r.objective.code?r.objective.code+' · ':'')+r.objective.name,r.initAdvance+'%',r.initiative.name,(r.action.title||'')+(r.action.detail?' - '+r.action.detail:''),r.action.responsible||r.initiative.owner||r.objective.leader||'',daysText(r.due)+' · '+fmtDate(r.due),r.status,r.initiative.priority,(r.initiative.expectedImpact||0)+'%',(r.initiative.realImpact||0)+'%',r.eff+'%',reportMoney(r.initiative.budget),reportMoney(r.initiative.spent),r.risk>=70?'Alto':r.risk>=40?'Medio':'Bajo']);
+    add('Tablero Operativo',[[ '% Obj.','Objetivo','% Inic.','Iniciativa','Acción / Entregable','Responsable','Fecha compromiso','Estatus','Prioridad','Impacto esperado','Impacto real','Eficiencia impacto','Presupuesto','Gastado','Riesgo'],...opRows]);
+
+    add('Mapa Relaciones',[[
+      'ID objetivo origen','Objetivo origen','Tipo relación','ID objetivo relacionado','Objetivo relacionado','Intensidad','Riesgo','Tiempo de impacto','Responsable relación','Modo','Justificación','Criterios / Drivers','Score riesgo sugerido'
+    ],...objs.flatMap(o=>(o.strategicRelations||[]).map(r=>{const t=findObjective(r.targetId);const ev=evaluateStrategicRelation(o,r,t);return[o.id,o.name,r.relationType,r.targetId,t?t.name:'Objetivo eliminado',r.manualOverride?r.intensity:ev.suggestedIntensity,r.manualOverride?r.riskLevel:ev.suggestedRisk,r.impactTime,r.owner,r.manualOverride?'Manual':'Sugerido',r.justification||r.evidence||ev.justification,reportText(ev.drivers),ev.riskScore]}))]);
+
+    add('Alineación',[[
+      'ID objetivo','Objetivo','Score alineación','Estado','Dimensión crítica','Presupuesto','Procesos','Estructura','Indicadores','Iniciativas','Nivel evidencia','Score evidencia','Notas evidencia','Recomendación'
+    ],...objs.map(o=>{const score=objectiveAlignmentScore(o);const st=alignmentStatus(score);const c=alignmentCriticalDimension(o);const dims=alignmentDimensionScores(o).reduce((m,d)=>(m[d.key]=d.value+' · '+d.score+'%',m),{});return[o.id,o.name,score+'%',st.label,c.label+' · '+c.value,dims.presupuesto,dims.procesos,dims.estructura,dims.indicadores,dims.iniciativas,o.evidenceLevel,evidenceScore(o.evidenceLevel)+'%',o.alignmentEvidence,alignmentRecommendation(o)]})]);
+
+    add('Impacto Portafolio',[[
+      'ID objetivo','Objetivo','ID iniciativa','Iniciativa','Avance calculado','Impacto esperado','Impacto real','Eficiencia','Prioridad','Suficiencia objetivo','Desconectada','Beneficio esperado','Beneficio real'
+    ],...allInits.map(({o,i})=>[o.id,o.name,i.id,i.name,calcInitiativeProgress(i)+'%',(i.expectedImpact||0)+'%',(i.realImpact||0)+'%',impactEfficiency(i)+'%',i.priority,objectiveSufficiencyScore(o)+'%',isInitiativeDisconnected(i)?'Sí':'No',i.benefitExpected,i.benefitReal])]);
+
+    add('Brechas IIE',[[
+      'ID objetivo','Objetivo','IIE','Nivel decisión','Factor dominante','KPI','Impacto','Alineación','TOM','Acciones','Acciones vencidas','Relaciones críticas','Riesgo gap','Punto ruptura','Estado actual','Estado objetivo','Brecha','Señales duras','Decisión requerida'
+    ],...objs.map(o=>{const p=objectiveInterventionProfile(o);const lvl=interventionDecisionLevel(p.score);return[o.id,o.name,p.score+'%',lvl.label,p.dominantComponent?p.dominantComponent.label:'',p.kpi+'%',p.impact+'%',p.alignment+'%',p.tom+'%',p.actionStats.done+'/'+p.actionStats.total,p.actionStats.overdue,p.criticalRelations.length,o.gapRisk,o.gapBreakpoint,o.currentState,o.targetState,o.gap,hardSignalsText(o),decisionRequiredForObjective(o)]})]);
+
+    add('TOM',[[
+      'ID objetivo','Objetivo','Score TOM','Nivel','Faltantes','Tipo proceso','Proceso TOM','Dueño end-to-end','Capacidades','Tecnología','Gobernanza','Flujo decisiones','Diagnóstico','Recomendación'
+    ],...objs.map(o=>{const score=tomScore(o);const level=tomLevel(score);return[o.id,o.name,score+'%',level.label,reportText(tomMissing(o)),o.tomProcessType,o.tomProcess,o.tomRole||o.leader,o.tomCapabilities,o.tomTechnology,o.tomGovernance,o.decisionFlow,tomDiagnosis(o),tomRecommendation(o)]})]);
+
+    add('Beneficios',[[
+      'ID objetivo','Objetivo','ID iniciativa','Iniciativa','Beneficio esperado','Beneficio real','Estado beneficio','Dueño beneficio','Fecha beneficio','Presupuesto','Gastado','Eficiencia impacto'
+    ],...allInits.map(({o,i})=>{const st=benefitState(i.benefitReal);return[o.id,o.name,i.id,i.name,i.benefitExpected,i.benefitReal,st.label,i.benefitOwner||i.owner,fmtDate(i.benefitDate),reportMoney(i.budget),reportMoney(i.spent),impactEfficiency(i)+'%']})]);
+
+    const alertProfiles=objs.map(objectiveAlertExecutiveProfile).filter(x=>x.items.length);
+    add('Alertas',[[
+      'ID objetivo','Objetivo','Score alerta','Nivel','Causa dominante','Qué pasa','Por qué importa','Fuentes','Decisión requerida','Señales'
+    ],...alertProfiles.map(p=>[p.objective.id,p.objective.name,p.score+'%',p.level.label,p.cause,p.what,p.why,reportText(p.sources),p.decision,p.items.map(i=>i.source+': '+i.signal+' ('+i.score+'%)').join(' | ')])]);
+
+    add('Agenda Cadencia',[[
+      'ID punto','Tipo','Título','Responsable','Fecha compromiso','Días compromiso','Duración','Prioridad','Estatus','Objetivo relacionado','Iniciativa relacionada','Contexto','Decisión esperada','Notas','Creado','Actualizado'
+    ],...(plan.manualAgenda||[]).map(a=>{const obj=a.linkedObjectiveId?findObjective(a.linkedObjectiveId):null;const init=obj&&a.linkedInitiativeId?(obj.initiatives||[]).find(i=>i.id===a.linkedInitiativeId):null;return[a.id,a.type,a.title,a.owner,fmtDate(a.dueDate),daysText(a.dueDate),a.duration,a.priority,a.status,obj?obj.name:'',init?init.name:'',a.context,a.decision,a.notes,a.createdAt,a.updatedAt]})]);
+
+    add('Áreas Etiquetas Proyectos',[[
+      'ID objetivo','Objetivo','Tipo registro','Valor','URL / Detalle'
+    ],...objs.flatMap(o=>[
+      ...(o.areas||[]).map(x=>[o.id,o.name,'Área',reportText(x),'']),
+      ...(o.tags||[]).map(x=>[o.id,o.name,'Etiqueta',reportText(x),'']),
+      ...(o.linkedProjects||[]).map(x=>[o.id,o.name,'Proyecto ligado',reportText(x),x&&typeof x==='object'?x.url||'':''])
+    ])]);
+
+    add('Links Archivos',[[
+      'ID objetivo','Objetivo','Tipo','Nombre / Descripción','URL / Archivo','Registro JSON'
+    ],...objs.flatMap(o=>[
+      ...(o.links||[]).map(x=>[o.id,o.name,'Enlace',x.title||x.name||'',x.url||'',JSON.stringify(x)]),
+      ...(o.attachments||[]).map(x=>[o.id,o.name,'Archivo adjunto',x.name||x.filename||x.title||'',x.url||x.dataUrl||x.file||'',JSON.stringify(x)]),
+      ...(o.linkedItems||[]).map(x=>[o.id,o.name,x.type||'Ligado a',x.name||x.title||'',x.url||'',JSON.stringify(x)])
+    ])]);
+
+    add('Comentarios',[[
+      'ID objetivo','Objetivo','Fecha','Autor','Comentario','Registro JSON'
+    ],...objs.flatMap(o=>(o.comments||[]).map(c=>[o.id,o.name,c.date||c.createdAt||'',c.author||c.user||'',c.text||c.comment||c.body||'',JSON.stringify(c)]))]);
+
+    add('Auditoría Historia',[[
+      'Nivel','ID','Nombre','Fecha','Usuario','Tipo evento','Detalle','Registro JSON'
+    ],...[
+      ...(plan.history||[]).map(h=>['Planeación',plan.id,plan.name,h.date||h.createdAt||'',h.user||h.author||'',h.type||h.action||'',h.detail||h.description||'',JSON.stringify(h)]),
+      ...objs.flatMap(o=>[...(o.history||[]).map(h=>['Objetivo',o.id,o.name,h.date||h.createdAt||'',h.user||h.author||'',h.type||h.action||'',h.detail||h.description||'',JSON.stringify(h)]),...(o.auditLog||[]).map(h=>['Objetivo',o.id,o.name,h.date||h.createdAt||'',h.user||h.author||'',h.type||h.action||'',h.detail||h.description||'',JSON.stringify(h)])])
+    ]]);
+
+    return sheets;
+  });
+}
+function xmlEscape(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function excelSheetName(name){return String(name||'Hoja').replace(/[\\/\?\*\[\]:]/g,' ').slice(0,31)||'Hoja'}
+function sheetToXml(sheet){const rows=sheet.rows||[];const xmlRows=rows.map(row=>'<Row>'+row.map(cell=>'<Cell><Data ss:Type="String">'+xmlEscape(cell)+'</Data></Cell>').join('')+'</Row>').join('');return '<Worksheet ss:Name="'+xmlEscape(excelSheetName(sheet.name))+'"><Table>'+xmlRows+'</Table></Worksheet>'}
+function downloadExcelWorkbook(filename,sheets){const xml='<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:html="http://www.w3.org/TR/REC-html40">'+sheets.map(sheetToXml).join('')+'</Workbook>';downloadBlob(filename,xml,'application/vnd.ms-excel;charset=utf-8')}
+function downloadBlob(name,text,type){const blob=new Blob(['\ufeff'+text],{type:type||'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
+function exportPlanGeneralWorkbook(planId){const plan=state.plannings.find(p=>p.id===planId);if(!plan)return alert('No se encontró la planeación para exportar.');const sheets=buildPlanGeneralReportSheets(planId);downloadExcelWorkbook('reporte_general_'+reportFileName(plan.name)+'_'+todayKey()+'.xls',sheets)}
+function exportPlanGeneralCsv(planId){const plan=state.plannings.find(p=>p.id===planId);if(!plan)return alert('No se encontró la planeación para exportar.');const sheets=buildPlanGeneralReportSheets(planId);const rows=[];sheets.forEach(sheet=>{rows.push(['TABLA: '+sheet.name]);sheet.rows.forEach(r=>rows.push(r));rows.push([])});downloadCsvRows('reporte_general_'+reportFileName(plan.name)+'_'+todayKey()+'.csv',rows)}
+
 function downloadCsvRows(filename,rows){const csv=rows.map(row=>row.map(cell=>'"'+String(cell??'').replace(/"/g,'""')+'"').join(',')).join('\n');downloadText(filename,csv)}
 
 // ─── MAPA ────────────────────────────────────────────────────────────
