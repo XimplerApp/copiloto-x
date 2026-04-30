@@ -1223,13 +1223,36 @@ function themeDecision(o,kind,c){
   }
   return pickDecisionTemplate(o,pack[kind]||pack.kpi||byTheme.general.kpi);
 }
+function alignmentEvidenceDecision(o,c){
+  const theme=objectiveTheme(o);
+  const ev=o.evidenceLevel||'Sin evidencia';
+  const dim=(c?.label||'soporte estratégico').toLowerCase();
+  const base={
+    comercial:['Validar soporte comercial: tablero de venta neta/margen por canal, responsables y acuerdo de seguimiento.', 'Reemplazar evidencia declarativa por datos de pipeline, rentabilidad por canal y minuta de compromisos comerciales.'],
+    logistica:['Validar soporte logístico: OTIF/costo por ruta, causas principales y responsables de recuperación.', 'Documentar evidencia operativa de entregas, capacidad, rutas y compromisos de mejora.'],
+    inventario:['Validar soporte de inventario: rotación, obsolescencia, cobertura y plan de salida por familia o SKU crítico.', 'Documentar evidencia de forecast, compras y rotación antes de cerrar el objetivo como alineado.'],
+    cliente:['Validar soporte de experiencia: quejas, tiempos de cierre, responsables y evidencia de recuperación de clientes/distribuidores.', 'Sustituir percepción de satisfacción por evidencia de SLA, casos cerrados y aprendizaje aplicado.'],
+    sop:['Validar soporte S&OP: calendario, responsables, forecast aprobado y acuerdos trazables del ciclo.', 'Documentar entradas, decisiones y responsables del ciclo forecast-demanda antes del siguiente comité.'],
+    calidad:['Validar soporte de calidad: causa-raíz, recurrencia, contención y evidencia de no repetición.', 'Documentar casos de garantía, responsables y acciones preventivas antes de declarar alineación suficiente.'],
+    digital:['Validar soporte digital: uso real del tablero, calidad del dato, responsables cargados y decisiones tomadas con evidencia.', 'Documentar adopción, registros y trazabilidad antes de cerrar como objetivo alineado.'],
+    cobranza:['Validar soporte de cartera: antigüedad, monto, responsables de recuperación y acuerdos de crédito/cobranza.', 'Sustituir evidencia declarativa por tablero de cartera y compromisos de recuperación por tramo.'],
+    talento:['Validar soporte de capacidades: matriz de competencias, evaluación por rol y evidencia de aplicación operativa.', 'Documentar brechas de habilidad, responsables y seguimiento de aprendizaje aplicado.'],
+    general:['Validar evidencia mínima: tablero, minuta, archivo o liga trazable antes de cerrar como alineado.', 'Sustituir evidencia declarativa por soporte documentado y verificable con responsable asignado.']
+  };
+  const prefix=ev==='Sin evidencia'?'Registrar evidencia antes de cerrar alineación: ':'Validar evidencia antes de cerrar alineación: ';
+  const arr=base[theme]||base.general;
+  const msg=pickDecisionTemplate(o,arr);
+  if(dim.includes('procesos')||dim.includes('estructura'))return prefix+msg+' Confirmar además que procesos y responsables estén formalizados.';
+  if(dim.includes('presupuesto'))return prefix+msg+' Confirmar suficiencia presupuestal o ajuste de alcance.';
+  if(dim.includes('indicadores'))return prefix+msg+' Confirmar KPI, meta, frecuencia y responsable del dato.';
+  return prefix+msg;
+}
 function alignmentRecommendation(o){
   const score=objectiveAlignmentScore(o);
   const kpi=objectiveKpiScore(o);
   const tom=tomScore(o);
   const c=alignmentCriticalDimension(o);
-  const ev=o.evidenceLevel||'Sin evidencia';
-  const evScore=evidenceScore(ev);
+  const evScore=evidenceScore(o.evidenceLevel||'Sin evidencia');
   const overdue=objectiveOverdueActionCount(o);
   const dueSoon=objectiveDueSoonActionCount(o);
   const disconnected=objectiveDisconnectedInitiativeCount(o);
@@ -1239,33 +1262,39 @@ function alignmentRecommendation(o){
   const noKpi=!(o.indicators||[]).length;
   const noInits=!(o.initiatives||[]).length;
 
-  // 1) Bloqueos de diseño: no deberían llegar a comité como objetivos aprobables.
+  // Criterio corregido: esta vista decide por ALINEACIÓN, no por brecha.
+  // gapRisk queda como señal secundaria para no contaminar la recomendación.
   if(noKpi)return'No aprobar como objetivo estratégico hasta definir KPI rector, meta, frecuencia y responsable del dato.';
-  if(noInits)return'Definir portafolio mínimo de ejecución: 2 a 3 iniciativas, responsable, fecha y KPI impactado.';
+  if(noInits)return'Definir portafolio mínimo de ejecución: 2 a 3 iniciativas con responsable, fecha y KPI impactado.';
 
-  // 2) Señales críticas de ejecución: requieren decisión inmediata, no solo documentación.
-  if(disconnected>0)return'Reorientar, cancelar o sustituir iniciativas que avanzan sin mover el KPI; conservar solo las que demuestren impacto.';
-  if(overdue>0)return'Reasignar responsable o redefinir fecha compromiso de acciones vencidas; bloquear nuevas iniciativas hasta cerrar atrasos críticos.';
-  if(gapRisk==='Crítico'||gapRisk==='Critico')return'Abrir mesa de resolución ejecutiva con responsables clave; la brecha crítica puede bloquear el resultado esperado.';
-  if(gapRisk==='Alto')return'Priorizar cierre de brecha: decisión de recursos, responsables o alcance antes del siguiente comité.';
-  if(tom<50)return'Completar modelo operativo antes de seguir ejecutando: proceso, dueño end-to-end, capacidades, tecnología y escalamiento.';
-
-  // 3) Desviación de KPI: la recomendación cambia según el tema del objetivo para evitar texto genérico.
-  if(kpi<50)return themeDecision(o,'kpi',c);
-  if(kpi<70&&score<85)return themeDecision(o,'dimension',c);
-
-  // 4) Alineación: usar la dimensión más débil solo cuando realmente es el problema dominante.
+  // Primero se atiende la dimensión crítica de alineación.
   if(c.score<60)return themeDecision(o,'dimension',c);
-  if(tom<70&&score<85)return'Cerrar faltantes del TOM y validar si el diseño operativo realmente soporta la meta.';
-  if(endSoon&&kpi<85)return'Revisar viabilidad de cierre: confirmar entregables, replantear alcance o mover fecha con justificación ejecutiva.';
-  if(dueSoon>0&&score<85)return'Confirmar compromisos próximos y validar si son suficientes para corregir la dimensión crítica.';
+  if(score<70)return themeDecision(o,'dimension',c);
 
-  // 5) Evidencia: ya no domina toda la recomendación; solo aplica si la operación está razonablemente controlada.
-  if(score>=85&&evScore>=85&&kpi>=80)return'Mantener seguimiento; no requiere decisión de comité salvo cambio de alcance, riesgo o prioridad.';
-  if(score>=85&&evScore<60&&kpi>=70)return'Validar evidencia mínima antes de declarar el objetivo alineado: tablero, minuta, archivo o liga trazable.';
-  if(score>=85)return'Conservar alineación actual y revisar únicamente desviaciones relevantes en el siguiente corte.';
-  if(score>=70)return'Ajustar la dimensión más débil y revisar avance en el siguiente corte de cadencia.';
-  return'Llevar a comité como tema de decisión: ajustar alcance, dueño, recursos o fecha compromiso.';
+  // Score intermedio: requiere ajuste de soporte, no necesariamente comité por brecha.
+  if(score<85){
+    if(evScore<35)return alignmentEvidenceDecision(o,c);
+    if(disconnected>0)return'Revisar conexión iniciativa-KPI dentro del soporte estratégico: conservar solo iniciativas con impacto demostrable.';
+    if(tom<65)return'Cerrar faltantes de TOM que debilitan la alineación: dueño, flujo operativo, gobernanza o escalamiento.';
+    if(kpi<70)return themeDecision(o,'dimension',c);
+    if(overdue>0)return'Actualizar compromisos vencidos relacionados con la dimensión crítica y registrar evidencia de recuperación.';
+    return'Ajustar la dimensión más débil de alineación y validar avance en el siguiente corte de cadencia.';
+  }
+
+  // Score alto: no se debe forzar una decisión de brecha; se controla evidencia, seguimiento o desviaciones puntuales.
+  if(score>=85){
+    if(evScore<60)return alignmentEvidenceDecision(o,c);
+    if(disconnected>0)return'Revisar iniciativas desconectadas: la alineación estructural existe, pero el portafolio no está demostrando impacto proporcional.';
+    if(kpi<50)return'La alineación estratégica parece suficiente; trasladar la desviación a Impacto/Brechas para rediseñar ejecución, no el soporte del objetivo.';
+    if(kpi<70)return'Conservar soporte estratégico y revisar en Impacto si las iniciativas explican la desviación del KPI.';
+    if(tom<70)return'La alineación es sólida; completar TOM para asegurar que el diseño pueda operar con control y escalamiento.';
+    if(endSoon&&kpi<85)return'Revisar cierre ejecutivo: la alineación es suficiente, pero la fecha exige confirmar entregables y evidencia final.';
+    if(dueSoon>0&&overdue===0)return'Confirmar compromisos próximos y documentar avance; no requiere cambiar la alineación del objetivo.';
+    if(['Alto','Crítico','Critico'].includes(gapRisk))return'La alineación es suficiente; atender el riesgo de brecha en el Mapa de Brechas sin modificar el soporte estratégico por ahora.';
+    return'Mantener seguimiento; no requiere decisión de comité salvo cambio de alcance, riesgo o prioridad.';
+  }
+
+  return themeDecision(o,'dimension',c);
 }
 function alignmentDetailPanel(o){
   const c=alignmentCriticalDimension(o),score=objectiveAlignmentScore(o),st=alignmentStatus(score);
