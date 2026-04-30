@@ -17,8 +17,140 @@
     function isDone(s){return ['terminada','terminado','cumplido','completado'].includes(String(s||'').toLowerCase())} function isOverdue(d,s){if(!d||isDone(s))return false;return new Date(d+'T00:00:00')<new Date(todayKey()+'T00:00:00')} function actionScore(a){return isDone(a.status)?100:0} function initScore(i){if(!i.actions.length)return isDone(i.status)?100:clamp(i.progress);return Math.round(i.actions.reduce((a,x)=>a+actionScore(x),0)/i.actions.length)} function objScore(o){if(!o.initiatives.length)return 0;return Math.round(o.initiatives.reduce((a,i)=>a+initScore(i),0)/o.initiatives.length)} function impactEff(i){return i.expectedImpact>0?Math.round(clamp(i.realImpact/i.expectedImpact*100)):clamp(i.progress)} function riskFor(i,a){let r=0;if(isOverdue(a?.dueDate||i.dueDate,a?.status||i.status))r+=45;if(i.redundant==='Sí')r+=15;if(i.competes==='Sí')r+=20;if(Number(i.progress)>65&&impactEff(i)<45)r+=20;if(i.budget&&i.spent>i.budget)r+=20;return clamp(r)} function ring(v){v=clamp(v);const c=v>=80?'var(--green2)':v>=50?'var(--yellow)':'var(--red)';return'<div class="ring" style="--val:'+v+';--color:'+c+'"><span>'+v+'%</span></div>'} function badge(t,c){return'<span class="badge b-'+(c||'blue')+'">'+esc(t)+'</span>'} function statusColor(s){s=String(s||'').toLowerCase();if(s.includes('venc'))return'red';if(s.includes('termin'))return'green';if(s.includes('progreso'))return'blue';if(s.includes('paus'))return'yellow';return'gray'} function riskBadge(v){return badge(v>=70?'Alto':v>=40?'Medio':'Bajo',v>=70?'red':v>=40?'yellow':'green')}
     function loadData(){plannings=load(PLANNINGS_KEY);objectives=load(OBJECTIVES_KEY).map(normObj);if(!planningId&&plannings.length)planningId=plannings[0].id;localStorage.setItem('ximpler_current_planning_id',planningId)} function visible(){return objectives.filter(o=>!planningId||o.planningId===planningId)}
     function buildRows(){const rows=[];visible().forEach(o=>{o.initiatives.forEach(i=>{const acts=i.actions.length?i.actions:[{title:'Sin acciones asignadas',responsible:i.owner||o.leader,dueDate:i.dueDate,status:i.status,detail:i.detail||'La iniciativa todavía no tiene acciones tácticas registradas.'}];acts.forEach(a=>{const venc=isOverdue(a.dueDate||i.dueDate,a.status||i.status);rows.push({objective:o,initiative:i,action:a,status:venc?'Vencida':(a.status||i.status),due:a.dueDate||i.dueDate,risk:riskFor(i,a),objAdvance:objScore(o),initAdvance:initScore(i),eff:impactEff(i)})})})});return rows}
-    function render(loadAgain=true){if(loadAgain)loadData();const plan=plannings.find(p=>p.id===planningId)||{};const all=buildRows();const objCount=visible().length,initCount=visible().reduce((a,o)=>a+o.initiatives.length,0),actCount=all.filter(r=>r.initiative.actions.length).length,overdue=all.filter(r=>r.status==='Vencida').length,op=visible().length?Math.round(visible().reduce((a,o)=>a+objScore(o),0)/visible().length):0,impact=initCount?Math.round(visible().flatMap(o=>o.initiatives).reduce((a,i)=>a+impactEff(i),0)/initCount):0;$('subtitle').textContent=(plan.name||'Planeación')+' · Concentrado operativo con impacto y eficiencia.';$('summary').innerHTML=[['Objetivos',objCount,'Mapa operativo'],['Iniciativas',initCount,'Portafolio activo'],['Acciones',actCount,'Tácticas registradas'],['Vencidas',overdue,'Fuera de tiempo'],['% Operativo',op+'%','Ejecución'],['Impacto',impact+'%','Real vs esperado']].map(x=>'<div class="sum"><div class="sum-l">'+x[0]+'</div><div class="sum-v">'+x[1]+'</div><div class="sum-n">'+x[2]+'</div></div>').join('');const q=$('search').value.toLowerCase(),sf=$('statusFilter').value,pf=$('priorityFilter').value,ifil=$('impactFilter').value;const rows=all.filter(r=>{const hay=[r.objective.name,r.objective.code,r.initiative.name,r.action.title,r.action.detail,r.action.responsible,r.initiative.owner,r.status].join(' ').toLowerCase();if(q&&!hay.includes(q))return false;if(sf!=='all'&&r.status!==sf)return false;if(pf!=='all'&&r.initiative.priority!==pf)return false;if(ifil==='low'&&!(r.eff<50))return false;if(ifil==='efficient'&&!(r.eff>=80))return false;if(ifil==='overrun'&&!(r.initiative.budget&&r.initiative.spent>r.initiative.budget))return false;return true});$('body').innerHTML=rows.map(r=>'<tr><td>'+ring(r.objAdvance)+'</td><td><div class="group objective"><div class="g-k">Objetivo</div><div class="g-t">'+esc(r.objective.code?r.objective.code+' · ':'')+esc(r.objective.name)+'</div><div class="g-s">'+esc(r.objective.leader||'—')+'</div></div></td><td>'+ring(r.initAdvance)+'</td><td><div class="group init"><div class="g-k">Iniciativa</div><div class="g-t" style="color:var(--blue)">'+esc(r.initiative.name)+'</div><div class="g-s">Beneficio: '+esc(r.initiative.benefitExpected||'—')+'</div></div></td><td><strong>'+esc(r.action.title)+'</strong><div class="detail">'+esc(r.action.detail||r.initiative.detail||'')+'</div></td><td>'+esc(r.action.responsible||r.initiative.owner||r.objective.leader||'—')+'</td><td><strong>'+daysText(r.due)+'</strong><div class="muted">'+fmtDate(r.due)+'</div></td><td>'+badge(r.status,statusColor(r.status))+'</td><td>'+badge(r.initiative.priority,r.initiative.priority==='Crítica'?'red':r.initiative.priority==='Alta'?'yellow':'blue')+'</td><td class="mono">'+(r.initiative.expectedImpact||0)+'%</td><td class="mono">'+(r.initiative.realImpact||0)+'%</td><td>'+ring(r.eff)+'</td><td>'+money(r.initiative.budget)+'</td><td>'+money(r.initiative.spent)+'</td><td>'+riskBadge(r.risk)+'</td></tr>').join('')||'<tr><td colspan="15" class="muted">Sin acciones con los filtros actuales.</td></tr>'}
-    function exportCsv(){const rows=[...document.querySelectorAll('#opTable tr')].map(tr=>[...tr.children].map(td=>'"'+td.innerText.replace(/"/g,'""')+'"').join(',')).join('\n');const blob=new Blob(['\ufeff'+rows],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='tablero_operativo_ximpler_edge.csv';a.click();URL.revokeObjectURL(a.href)}
+    function render(loadAgain=true){
+      if(loadAgain) loadData();
+
+      const plan = plannings.find(p=>p.id===planningId) || {};
+      const all = buildRows();
+
+      const objCount = visible().length;
+      const initCount = visible().reduce((a,o)=>a+o.initiatives.length,0);
+      const actCount = all.filter(r=>r.initiative.actions.length).length;
+      const overdue = all.filter(r=>r.status==='Vencida').length;
+      const op = visible().length ? Math.round(visible().reduce((a,o)=>a+objScore(o),0)/visible().length) : 0;
+      const impact = initCount ? Math.round(visible().flatMap(o=>o.initiatives).reduce((a,i)=>a+impactEff(i),0)/initCount) : 0;
+
+      $('subtitle').textContent = (plan.name||'Planeación') + ' · Concentrado operativo con impacto y eficiencia.';
+      $('summary').innerHTML = [
+        ['Objetivos',objCount,'Mapa operativo'],
+        ['Iniciativas',initCount,'Portafolio activo'],
+        ['Acciones',actCount,'Tácticas registradas'],
+        ['Vencidas',overdue,'Fuera de tiempo'],
+        ['% Operativo',op+'%','Ejecución'],
+        ['Impacto',impact+'%','Real vs esperado']
+      ].map(x=>'<div class="sum"><div class="sum-l">'+x[0]+'</div><div class="sum-v">'+x[1]+'</div><div class="sum-n">'+x[2]+'</div></div>').join('');
+
+      const q = $('search').value.toLowerCase();
+      const sf = $('statusFilter').value;
+      const pf = $('priorityFilter').value;
+      const ifil = $('impactFilter').value;
+
+      const rows = all.filter(r=>{
+        const hay = [
+          r.objective.name,
+          r.objective.code,
+          r.initiative.name,
+          r.action.title,
+          r.action.detail,
+          r.action.responsible,
+          r.initiative.owner,
+          r.status
+        ].join(' ').toLowerCase();
+
+        if(q && !hay.includes(q)) return false;
+        if(sf !== 'all' && r.status !== sf) return false;
+        if(pf !== 'all' && r.initiative.priority !== pf) return false;
+        if(ifil === 'low' && !(r.eff < 50)) return false;
+        if(ifil === 'efficient' && !(r.eff >= 80)) return false;
+        if(ifil === 'overrun' && !(r.initiative.budget && r.initiative.spent > r.initiative.budget)) return false;
+        return true;
+      });
+
+      // Filas completas para exportar CSV sin perder columnas por los rowspan visuales.
+      window.__opExportRows = rows;
+
+      function objectiveKey(row){
+        return row.objective.id || row.objective.code || row.objective.name;
+      }
+
+      function initiativeKey(row){
+        return objectiveKey(row) + '::' + (row.initiative.id || row.initiative.name);
+      }
+
+      function countConsecutive(fromIndex, keyFn){
+        const key = keyFn(rows[fromIndex]);
+        let count = 0;
+        for(let i=fromIndex; i<rows.length; i++){
+          if(keyFn(rows[i]) !== key) break;
+          count++;
+        }
+        return count;
+      }
+
+      const html = rows.map((r,idx)=>{
+        const showObjective = idx === 0 || objectiveKey(rows[idx-1]) !== objectiveKey(r);
+        const showInitiative = idx === 0 || initiativeKey(rows[idx-1]) !== initiativeKey(r);
+        const objSpan = showObjective ? countConsecutive(idx, objectiveKey) : 0;
+        const initSpan = showInitiative ? countConsecutive(idx, initiativeKey) : 0;
+
+        return '<tr>'+
+          (showObjective ? '<td rowspan="'+objSpan+'">'+ring(r.objAdvance)+'</td>'+
+            '<td rowspan="'+objSpan+'"><div class="group objective"><div class="g-k">Objetivo</div><div class="g-t">'+esc(r.objective.code?r.objective.code+' · ':'')+esc(r.objective.name)+'</div><div class="g-s">'+esc(r.objective.leader||'—')+'</div></div></td>' : '')+
+          (showInitiative ? '<td rowspan="'+initSpan+'">'+ring(r.initAdvance)+'</td>'+
+            '<td rowspan="'+initSpan+'"><div class="group init"><div class="g-k">Iniciativa</div><div class="g-t" style="color:var(--blue)">'+esc(r.initiative.name)+'</div><div class="g-s">Beneficio: '+esc(r.initiative.benefitExpected||'—')+'</div></div></td>' : '')+
+          '<td><strong>'+esc(r.action.title)+'</strong><div class="detail">'+esc(r.action.detail||r.initiative.detail||'')+'</div></td>'+
+          '<td>'+esc(r.action.responsible||r.initiative.owner||r.objective.leader||'—')+'</td>'+
+          '<td><strong>'+daysText(r.due)+'</strong><div class="muted">'+fmtDate(r.due)+'</div></td>'+
+          '<td>'+badge(r.status,statusColor(r.status))+'</td>'+
+          '<td>'+badge(r.initiative.priority,r.initiative.priority==='Crítica'?'red':r.initiative.priority==='Alta'?'yellow':'blue')+'</td>'+
+          '<td class="mono">'+(r.initiative.expectedImpact||0)+'%</td>'+
+          '<td class="mono">'+(r.initiative.realImpact||0)+'%</td>'+
+          '<td>'+ring(r.eff)+'</td>'+
+          '<td>'+money(r.initiative.budget)+'</td>'+
+          '<td>'+money(r.initiative.spent)+'</td>'+
+          '<td>'+riskBadge(r.risk)+'</td>'+
+        '</tr>';
+      }).join('');
+
+      $('body').innerHTML = html || '<tr><td colspan="15" class="muted">Sin acciones con los filtros actuales.</td></tr>';
+    }
+    function exportCsv(){
+      const header = [
+        '% Obj.', 'Objetivo', '% Inic.', 'Iniciativa', 'Acción / Entregable',
+        'Responsable', 'Fecha compromiso', 'Estatus', 'Prioridad',
+        'Impacto esperado', 'Impacto real', 'Eficiencia impacto',
+        'Presupuesto', 'Gastado', 'Riesgo'
+      ];
+
+      const rows = (window.__opExportRows || []).map(r=>[
+        r.objAdvance + '%',
+        (r.objective.code ? r.objective.code + ' · ' : '') + (r.objective.name || ''),
+        r.initAdvance + '%',
+        r.initiative.name || '',
+        (r.action.title || '') + (r.action.detail ? ' - ' + r.action.detail : ''),
+        r.action.responsible || r.initiative.owner || r.objective.leader || '',
+        daysText(r.due) + ' · ' + fmtDate(r.due),
+        r.status || '',
+        r.initiative.priority || '',
+        (r.initiative.expectedImpact || 0) + '%',
+        (r.initiative.realImpact || 0) + '%',
+        r.eff + '%',
+        r.initiative.budget || 0,
+        r.initiative.spent || 0,
+        r.risk >= 70 ? 'Alto' : r.risk >= 40 ? 'Medio' : 'Bajo'
+      ]);
+
+      const csv = [header, ...rows]
+        .map(row=>row.map(cell=>'"'+String(cell ?? '').replace(/"/g,'""')+'"').join(','))
+        .join('\n');
+
+      const blob = new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'tablero_operativo_ximpler_edge.csv';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
     ['search','statusFilter','priorityFilter','impactFilter'].forEach(id=>$(id).addEventListener('input',()=>render(false)));$('refreshBtn').onclick=()=>render(true);$('exportBtn').onclick=exportCsv;$('backBtn').onclick=()=>history.length>1?history.back():location.href='index_ximpler_edge_copiloto.html';render(true);
   </script>
 </body>
