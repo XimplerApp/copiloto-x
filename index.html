@@ -21,6 +21,13 @@
     .btn{border-radius:11px;font-weight:800;cursor:pointer;font-size:13px;transition:.15s ease;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 14px;border:1px solid transparent;background:#fff;color:var(--text)}
     .btn:hover{transform:translateY(-1px)}.btn-primary{background:var(--green);color:#fff;box-shadow:var(--shadow)}.btn-secondary{border-color:var(--line2)}.btn-danger{border-color:#fecdca;background:#fff;color:var(--red)}.btn-small{padding:7px 9px;font-size:12px}.btn-ghost{border:none;background:transparent;color:var(--green);font-weight:900;padding:6px 0}
     .btn-exec{background:#0f5ea9;color:#fff;box-shadow:var(--shadow)}
+    .btn-basic{background:var(--purple);color:#fff;box-shadow:var(--shadow);border-color:var(--purple)}
+    .btn-basic:hover{background:#5a35ad;color:#fff}
+    .nav-tabs a.tab{text-decoration:none}
+    .tab.tab-dashboard{border-color:#0f5ea9;color:#0f5ea9;background:#fff}
+    .tab.tab-dashboard:hover{background:#eef5ff}
+    .tab.tab-dictamen{border-color:#6941c6;color:#6941c6;background:#fff}
+    .tab.tab-dictamen:hover{background:#f4f3ff}
     .hidden{display:none!important}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}.card-pad{padding:18px}
     .filters{display:grid;grid-template-columns:1fr 220px 220px;gap:12px;padding:16px;border-bottom:1px solid var(--line)}
     .input,.select,.textarea{width:100%;border:1px solid var(--line2);border-radius:11px;padding:11px 12px;background:#fff;color:var(--text);font-size:14px;outline:none}.textarea{min-height:92px;resize:vertical}.input:focus,.select:focus,.textarea:focus{border-color:#84c5ff;box-shadow:0 0 0 3px rgba(15,94,169,.12)}
@@ -216,10 +223,7 @@
       <div class="actions">
         <button id="newObjectiveQuickBtn" class="btn btn-exec">+ Objetivo Rápido</button>
         <button id="newObjectiveBtn" class="btn btn-primary">Nuevo Objetivo Completo +</button>
-        <a id="kpiLink" class="btn btn-secondary" href="#">Tablero KPI´s</a>
-        <a id="opLink" class="btn btn-secondary" href="#">Tablero Operativo</a>
-        <button id="dictamenBtn" class="btn btn-secondary">Dictamen</button>
-        <a id="basicLink" class="btn btn-secondary" href="#">Versión Básica</a>
+        <a id="basicLink" class="btn btn-basic" href="#">Versión Básica</a>
       </div>
     </div>
     <div id="summaryGrid" class="summary-grid"></div>
@@ -276,16 +280,19 @@ const SAVE_COUNTER_KEY='ximpler_save_counter';
 const typeLabels={vision:'Visión/Resultado superior',resultado:'Resultado',cliente:'Cliente/Población',impulsor:'Impulsor/Operación',habilitador:'Habilitador/Capacidades'};
 const typeOrder=['vision','resultado','cliente','impulsor','habilitador'];
 const tabs=[
-  ['ejecucion','🎯 Ejecución',true],
-  ['objetivos','Objetivos',false],
-  ['mapa','Mapa Estratégico',false],
-  ['alineacion','Alineación',false],
-  ['impacto','Impacto / Portafolio',false],
-  ['brechas','Brechas',false],
-  ['tom','TOM',false],
-  ['beneficios','Beneficios',false],
-  ['alertas','Alertas',false],
-  ['cadencia','Cadencia',false]
+  ['ejecucion','🎯 Ejecución',true,'view'],
+  ['objetivos','Objetivos',false,'view'],
+  ['kpi','Tablero KPI´s',false,'link'],
+  ['operativo','Tablero Operativo',false,'link'],
+  ['mapa','Mapa Estratégico',false,'view'],
+  ['alineacion','Alineación',false,'view'],
+  ['impacto','Impacto / Portafolio',false,'view'],
+  ['brechas','Brechas',false,'view'],
+  ['tom','TOM',false,'view'],
+  ['beneficios','Beneficios',false,'view'],
+  ['alertas','Alertas',false,'view'],
+  ['cadencia','Cadencia',false,'view'],
+  ['dictamen','Dictamen',false,'action']
 ];
 
 let state={
@@ -573,7 +580,7 @@ function bindBaseEvents(){
   $('addRelation').onclick=()=>addRelationRow();
   $('closeDetail').onclick=()=>closeModal('detailModal');
   $('editDetail').onclick=()=>{closeModal('detailModal');openObjectiveModal(state.detailObjectiveId)};
-  $('dictamenBtn').onclick=openDictamen;
+  if($('dictamenBtn'))$('dictamenBtn').onclick=openDictamen;
   $('closeDictamen').onclick=()=>closeModal('dictamenModal');
   $('copyDictamen').onclick=()=>navigator.clipboard?.writeText(buildDictamenText()).then(()=>alert('Dictamen copiado.'));
   $('exportDictamen').onclick=()=>downloadText('dictamen_estrategico.txt',buildDictamenText());
@@ -626,9 +633,10 @@ function renderWorkspace(){
   const p=getPlan();if(!p)return;
   $('workspaceTitle').textContent=p.name;
   $('workspaceSubtitle').textContent=(p.vision?('Visión: '+p.vision+' · '):'')+'Periodo: '+fmtDate(p.startDate)+' → '+fmtDate(p.endDate);
-  $('kpiLink').href='tablero_kpis_ximpler_edge.html?planningId='+encodeURIComponent(p.id);
-  $('opLink').href='tablero_operativo_ximpler_edge.html?planningId='+encodeURIComponent(p.id);
-  $('basicLink').href='version_basica.html?planningId='+encodeURIComponent(p.id);
+  const planningParam=encodeURIComponent(p.id);
+  if($('kpiLink'))$('kpiLink').href='tablero_kpis_ximpler_edge.html?planningId='+planningParam;
+  if($('opLink'))$('opLink').href='tablero_operativo_ximpler_edge.html?planningId='+planningParam;
+  $('basicLink').href='version_basica.html?planningId='+planningParam;
   const m=planMetrics();
   const igeeCls=m.igee>=75?'#22a652':m.igee>=55?'#b7791f':'#d92d20';
   $('summaryGrid').innerHTML=[
@@ -640,8 +648,17 @@ function renderWorkspace(){
     ['Alertas críticas','<span style="color:'+(m.criticalAlerts.length?'var(--red)':'var(--green2)')+';font-size:24px;font-weight:900">'+m.criticalAlerts.length+'</span>','Requieren atención'],
     ['Desconectadas','<span style="color:'+(m.disconnected.length?'var(--purple)':'var(--green2)')+';font-size:24px;font-weight:900">'+m.disconnected.length+'</span>','Iniciativas sin impacto KPI']
   ].map(x=>'<div class="summary-card"><div class="summary-label">'+x[0]+'</div><div class="summary-value">'+x[1]+'</div><div class="summary-note">'+x[2]+'</div></div>').join('');
-  $('mainTabs').innerHTML=tabs.map(t=>'<button class="tab '+(t[2]?'tab-exec':'')+' '+(state.currentTab===t[0]?'active':'')+'" data-tab="'+t[0]+'">'+t[1]+'</button>').join('');
+  $('mainTabs').innerHTML=tabs.map(t=>{
+    const type=t[3]||'view';
+    if(type==='link'){
+      const href=t[0]==='kpi'?'tablero_kpis_ximpler_edge.html?planningId='+planningParam:'tablero_operativo_ximpler_edge.html?planningId='+planningParam;
+      return '<a class="tab tab-dashboard" href="'+href+'">'+t[1]+'</a>';
+    }
+    if(type==='action')return '<button class="tab tab-dictamen" data-open-dictamen="1">'+t[1]+'</button>';
+    return '<button class="tab '+(t[2]?'tab-exec':'')+' '+(state.currentTab===t[0]?'active':'')+'" data-tab="'+t[0]+'">'+t[1]+'</button>';
+  }).join('');
   document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{state.currentTab=b.dataset.tab;renderWorkspace()});
+  document.querySelectorAll('[data-open-dictamen]').forEach(b=>b.onclick=openDictamen);
   document.querySelectorAll('.view-panel').forEach(v=>v.classList.add('hidden'));
   const viewIds={ejecucion:'viewEjecucion',objetivos:'viewObjetivos',mapa:'viewMapa',alineacion:'viewAlineacion',impacto:'viewImpacto',brechas:'viewBrechas',tom:'viewTOM',beneficios:'viewBeneficios',alertas:'viewAlertas',cadencia:'viewCadencia'};
   $(viewIds[state.currentTab]).classList.remove('hidden');
