@@ -123,6 +123,33 @@
     .impact-status-watch{background:var(--yellowSoft);color:var(--yellow)}
     .impact-portafolio-note{font-size:12px;color:#475467;line-height:1.35}
 
+
+    /* BENEFICIOS ESTRATÉGICOS */
+    .benefit-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+    .benefit-summary-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 15px;box-shadow:var(--shadow)}
+    .benefit-summary-label{font-size:11px;color:var(--muted);font-weight:900;text-transform:uppercase;margin-bottom:6px}
+    .benefit-summary-value{font-size:24px;font-weight:900;line-height:1;color:#1f2937}
+    .benefit-summary-note{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.35}
+    .benefit-explain{border:1px solid var(--line);border-radius:16px;background:linear-gradient(90deg,#fbfcfd,#ffffff);padding:14px 16px;margin-bottom:16px}
+    .benefit-explain h3{margin:0 0 7px;font-size:15px}.benefit-explain p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+    .benefit-board{display:grid;gap:16px}
+    .benefit-objective-card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+    .benefit-objective-head{display:grid;grid-template-columns:1.25fr 1.35fr auto;gap:16px;align-items:start;padding:16px 18px;background:linear-gradient(180deg,#fff,#fbfcfd);border-bottom:1px solid var(--line)}
+    .benefit-objective-title{font-size:16px;font-weight:900;line-height:1.2;margin-bottom:5px;color:#1f2937}
+    .benefit-objective-meta{font-size:12px;color:var(--muted);line-height:1.45}
+    .benefit-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+    .benefit-kpi{border:1px solid var(--line);border-radius:13px;padding:10px;background:#fff;min-height:62px}
+    .benefit-kpi-label{font-size:10px;text-transform:uppercase;font-weight:900;color:var(--muted);margin-bottom:5px;line-height:1.15}
+    .benefit-kpi-value{font-size:15px;font-weight:900;color:#1f2937;line-height:1.2}.benefit-kpi-value.money{font-variant-numeric:tabular-nums}
+    .benefit-objective-actions{display:flex;gap:8px;align-items:flex-start;justify-content:flex-end;flex-wrap:wrap}
+    .benefit-table-wrap{overflow:auto;padding:0 0 2px}.benefit-table{width:100%;border-collapse:collapse;min-width:1060px}
+    .benefit-table th{background:#f8fafc;color:#667085;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.02em;font-weight:900;padding:11px 13px;border-bottom:1px solid var(--line)}
+    .benefit-table td{font-size:13px;line-height:1.35;padding:13px;border-bottom:1px solid var(--line);vertical-align:top}.benefit-table tr:last-child td{border-bottom:none}
+    .benefit-init-title{font-weight:900;color:#1f2937;line-height:1.25}.benefit-init-sub{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.35}
+    .benefit-real{display:inline-flex;align-items:center;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900;line-height:1.1;margin-bottom:6px}
+    .benefit-real-pending{background:#f2f4f7;color:#667085}.benefit-real-partial{background:var(--yellowSoft);color:var(--yellow)}.benefit-real-ok{background:var(--greenSoft);color:var(--green2)}.benefit-real-neutral{background:var(--blueSoft);color:var(--blue)}
+    .benefit-real-text{font-size:12px;color:#344054;line-height:1.35}.benefit-money{font-weight:900;white-space:nowrap;font-variant-numeric:tabular-nums}.benefit-empty{border:1px dashed var(--line2);border-radius:16px;padding:22px;background:#fbfcfd;color:var(--muted);text-align:center}
+
     /* MODO RAPIDO */
     .quick-mode-banner{background:linear-gradient(90deg,#eef5ff,#e8f7ee);border:1px solid #b5d4f4;border-radius:14px;padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:14px}.quick-mode-text{font-size:13px;color:#0f5ea9;font-weight:700}.quick-form{display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr auto;gap:10px;align-items:end}
     /* STORAGE */
@@ -153,7 +180,7 @@
     /* BRECHAS DECISIÓN REQUERIDA */
     .brecha-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.brecha-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 15px;box-shadow:var(--shadow)}.brecha-label{font-size:11px;color:var(--muted);font-weight:900;text-transform:uppercase;margin-bottom:6px}.brecha-value{font-size:26px;font-weight:900;line-height:1}.brecha-note{font-size:12px;color:var(--muted);margin-top:4px}.brecha-explain{border:1px solid var(--line);border-radius:16px;background:#fbfcfd;padding:14px;margin-bottom:16px}.brecha-explain h3{margin:0 0 7px;font-size:15px}.brecha-explain p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}.brecha-table{min-width:1500px}.brecha-table th{white-space:nowrap}.brecha-table td{line-height:1.35}.brecha-state{font-size:12px;color:#344054;margin-bottom:7px}.brecha-risk-score{font-size:24px;font-weight:900}.brecha-signals{display:flex;flex-wrap:wrap;gap:6px;max-width:300px}.brecha-signals span{display:inline-flex;align-items:center;background:#f2f4f7;border:1px solid #e4e7ec;border-radius:999px;padding:5px 7px;font-size:11px;font-weight:800;color:#475467}
 
-    @media(max-width:1100px){.grid-2,.grid-3,.grid-4,.grid-5,.summary-grid,.detail-layout,.dictamen,.filters,.action-editor-grid,.initiative-editor-grid,.detail-grid,.exec-stats,.quick-form,.impact-summary,.impact-objective-head{grid-template-columns:1fr}.initiative-editor-grid .span-2,.initiative-editor-grid .span-3,.detail-box-full{grid-column:auto}.detail-left{border-right:none}.topbar{flex-direction:column}.page{padding:16px}.initiative-cascade-card{grid-template-columns:1fr}.initiative-cascade-actions{justify-content:flex-start}.tom-summary-grid,.tom-mini-grid,.brecha-summary-grid{grid-template-columns:1fr}}
+    @media(max-width:1100px){.grid-2,.grid-3,.grid-4,.grid-5,.summary-grid,.detail-layout,.dictamen,.filters,.action-editor-grid,.initiative-editor-grid,.detail-grid,.exec-stats,.quick-form,.impact-summary,.impact-objective-head,.benefit-summary-grid,.benefit-objective-head,.benefit-kpis{grid-template-columns:1fr}.initiative-editor-grid .span-2,.initiative-editor-grid .span-3,.detail-box-full{grid-column:auto}.detail-left{border-right:none}.topbar{flex-direction:column}.page{padding:16px}.initiative-cascade-card{grid-template-columns:1fr}.initiative-cascade-actions{justify-content:flex-start}.tom-summary-grid,.tom-mini-grid,.brecha-summary-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -1682,7 +1709,71 @@ function renderTOM(){
   document.querySelectorAll('[data-edit-tom]').forEach(b=>b.onclick=()=>openObjectiveModal(b.dataset.editTom));
   document.querySelectorAll('[data-tom-detail]').forEach(b=>b.onclick=()=>openDetail(b.dataset.tomDetail));
 }
-function renderBeneficios(){const rows=planObjectives().flatMap(o=>(o.initiatives||[]).map(i=>[o.name,i.name,i.benefitExpected||'—',i.benefitReal||'—',i.benefitOwner||i.owner||'—',fmtDate(i.benefitDate),money(i.budget),money(i.spent)]));$('viewBeneficios').innerHTML=matrixCard('Gestión de Beneficios Estratégicos',['Objetivo','Iniciativa','Beneficio esperado','Beneficio real','Dueño beneficio','Fecha realización','Presupuesto','Gastado'],rows)}
+function benefitState(text){
+  const t=String(text||'').toLowerCase();
+  if(!t||t==='—')return{label:'Sin registro',cls:'benefit-real-pending'};
+  if(t.includes('aún sin')||t.includes('aun sin')||t.includes('sin beneficio')||t.includes('no materializado'))return{label:'Sin materializar',cls:'benefit-real-pending'};
+  if(t.includes('parcial')||t.includes('piloto')||t.includes('validación')||t.includes('validacion'))return{label:'Parcial / validación',cls:'benefit-real-partial'};
+  if(t.includes('logrado')||t.includes('realizado')||t.includes('materializado')||t.includes('cumplido')||t.includes('capturado'))return{label:'Realizado',cls:'benefit-real-ok'};
+  return{label:'Registrado',cls:'benefit-real-neutral'};
+}
+function benefitNextDate(inits){
+  const dates=(inits||[]).map(i=>i.benefitDate).filter(Boolean).sort();
+  return dates[0]||'';
+}
+function benefitCsvRows(){
+  const rows=[['Objetivo','Iniciativa','Beneficio esperado','Beneficio real','Dueño beneficio','Fecha realización','Presupuesto','Gastado']];
+  planObjectives().forEach(o=>{
+    (o.initiatives||[]).forEach(i=>rows.push([o.name,i.name,i.benefitExpected||'—',i.benefitReal||'—',i.benefitOwner||i.owner||'—',fmtDate(i.benefitDate),money(i.budget),money(i.spent)]));
+  });
+  return rows;
+}
+function exportBenefitsCSV(){
+  const csv=benefitCsvRows().map(r=>r.map(c=>'"'+String(c??'').replace(/"/g,'""')+'"').join(',')).join('\n');
+  downloadText('gestion_beneficios_estrategicos.csv',csv);
+}
+function renderBeneficios(){
+  const objs=planObjectives();
+  const allInits=objs.flatMap(o=>(o.initiatives||[]).map(i=>({objective:o,initiative:i})));
+  const totalBudget=allInits.reduce((a,x)=>a+Number(x.initiative.budget||0),0);
+  const totalSpent=allInits.reduce((a,x)=>a+Number(x.initiative.spent||0),0);
+  const pending=allInits.filter(x=>benefitState(x.initiative.benefitReal).cls==='benefit-real-pending').length;
+  const partial=allInits.filter(x=>benefitState(x.initiative.benefitReal).cls==='benefit-real-partial').length;
+  let html='<div class="benefit-summary-grid">'+
+    '<div class="benefit-summary-card"><div class="benefit-summary-label">Objetivos con beneficios</div><div class="benefit-summary-value">'+objs.filter(o=>(o.initiatives||[]).length).length+'</div><div class="benefit-summary-note">Agrupados para evitar repetición</div></div>'+
+    '<div class="benefit-summary-card"><div class="benefit-summary-label">Iniciativas evaluadas</div><div class="benefit-summary-value">'+allInits.length+'</div><div class="benefit-summary-note">Con beneficio, dueño, fecha y presupuesto</div></div>'+
+    '<div class="benefit-summary-card"><div class="benefit-summary-label">Presupuesto total</div><div class="benefit-summary-value">'+money(totalBudget)+'</div><div class="benefit-summary-note">Suma de presupuestos registrados</div></div>'+
+    '<div class="benefit-summary-card"><div class="benefit-summary-label">Gastado total</div><div class="benefit-summary-value">'+money(totalSpent)+'</div><div class="benefit-summary-note">Pendientes: '+pending+' · Parciales: '+partial+'</div></div>'+
+  '</div>';
+  html+='<div class="benefit-explain"><h3>Gestión de Beneficios Estratégicos</h3><p>Vista agrupada por objetivo. La información se conserva igual, pero cada objetivo aparece una sola vez y sus iniciativas se muestran como portafolio de beneficios asociado.</p></div>';
+  html+='<div class="card"><div class="card-pad"><div class="topbar" style="margin:0"><h2 style="margin:0;font-size:22px">Gestión de Beneficios Estratégicos</h2><button class="btn btn-secondary btn-small" onclick="exportBenefitsCSV()">Exportar CSV</button></div></div><div class="card-pad" style="padding-top:0"><div class="benefit-board">';
+  if(!objs.length){html+='<div class="benefit-empty">Sin objetivos registrados.</div>'}
+  objs.forEach(o=>{
+    const inits=o.initiatives||[];
+    if(!inits.length){return;}
+    const budget=inits.reduce((a,i)=>a+Number(i.budget||0),0);
+    const spent=inits.reduce((a,i)=>a+Number(i.spent||0),0);
+    const nextDate=benefitNextDate(inits);
+    const realized=inits.filter(i=>benefitState(i.benefitReal).cls==='benefit-real-ok').length;
+    html+='<div class="benefit-objective-card"><div class="benefit-objective-head"><div><div class="benefit-objective-title">'+esc(o.name)+'</div><div class="benefit-objective-meta">'+esc(o.code?o.code+' · ':'')+esc(typeLabels[o.objectiveType]||o.objectiveType)+' · Responsable: '+esc(o.leader||'—')+'</div></div><div class="benefit-kpis">'+
+      '<div class="benefit-kpi"><div class="benefit-kpi-label">Iniciativas</div><div class="benefit-kpi-value">'+inits.length+'</div></div>'+
+      '<div class="benefit-kpi"><div class="benefit-kpi-label">Realizados</div><div class="benefit-kpi-value">'+realized+'</div></div>'+
+      '<div class="benefit-kpi"><div class="benefit-kpi-label">Presupuesto</div><div class="benefit-kpi-value money">'+money(budget)+'</div></div>'+
+      '<div class="benefit-kpi"><div class="benefit-kpi-label">Gastado</div><div class="benefit-kpi-value money">'+money(spent)+'</div></div>'+
+    '</div><div class="benefit-objective-actions"><button class="btn btn-secondary btn-small" data-benefit-detail="'+o.id+'">Ver detalle</button><button class="btn btn-secondary btn-small" data-benefit-edit="'+o.id+'">Editar</button><div class="small muted" style="width:100%;text-align:right;margin-top:4px">Próxima realización: '+fmtDate(nextDate)+'</div></div></div>';
+    html+='<div class="benefit-table-wrap"><table class="benefit-table"><thead><tr><th>Iniciativa</th><th>Beneficio esperado</th><th>Beneficio real</th><th>Dueño beneficio</th><th>Fecha realización</th><th>Presupuesto</th><th>Gastado</th></tr></thead><tbody>';
+    html+=inits.map(i=>{
+      const st=benefitState(i.benefitReal);
+      return '<tr><td><div class="benefit-init-title">'+esc(i.name||'—')+'</div><div class="benefit-init-sub">Prioridad: '+esc(i.priority||'—')+' · Estatus: '+esc(i.status||'—')+'</div></td><td>'+esc(i.benefitExpected||'—')+'</td><td><span class="benefit-real '+st.cls+'">'+esc(st.label)+'</span><div class="benefit-real-text">'+esc(i.benefitReal||'—')+'</div></td><td><strong>'+esc(i.benefitOwner||i.owner||'—')+'</strong></td><td>'+fmtDate(i.benefitDate)+'</td><td><span class="benefit-money">'+money(i.budget)+'</span></td><td><span class="benefit-money">'+money(i.spent)+'</span></td></tr>';
+    }).join('');
+    html+='</tbody></table></div></div>';
+  });
+  if(objs.length && !allInits.length){html+='<div class="benefit-empty">No hay iniciativas con beneficios registrados todavía.</div>'}
+  html+='</div></div></div>';
+  $('viewBeneficios').innerHTML=html;
+  document.querySelectorAll('[data-benefit-detail]').forEach(b=>b.onclick=()=>openDetail(b.dataset.benefitDetail));
+  document.querySelectorAll('[data-benefit-edit]').forEach(b=>b.onclick=()=>openObjectiveModal(b.dataset.benefitEdit));
+}
 function money(n){n=Number(n||0);return n?new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN'}).format(n):'—'}
 function matrixCard(title,headers,rows){return'<div class="card"><div class="card-pad"><div class="topbar" style="margin:0"><h2 style="margin:0;font-size:22px">'+esc(title)+'</h2><button class="btn btn-secondary btn-small" onclick="exportCurrentTable()">Exportar CSV</button></div></div><div class="table-wrap"><table id="currentMatrix"><thead><tr>'+headers.map(h=>'<th>'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+(rows.length?rows.map(r=>'<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>').join(''):'<tr><td colspan="'+headers.length+'" class="muted">Sin registros.</td></tr>')+'</tbody></table></div></div>'}
 
