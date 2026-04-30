@@ -147,7 +147,7 @@
   <div class="section"><h3>2. Arquitectura estratégica</h3><div class="grid-4"><div class="field"><label>Tipo de objetivo</label><select id="oType" class="select"><option value="vision">Visión / Resultado superior</option><option value="resultado" selected>Objetivo de resultados</option><option value="cliente">Objetivo de clientes / población objetivo</option><option value="impulsor">Objetivo impulsor / operación</option><option value="habilitador">Objetivo habilitador / capacidades</option></select></div><div class="field"><label>Perspectiva</label><select id="oPerspective" class="select"><option value="financiera">Financiera / Resultado</option><option value="cliente">Cliente / Mercado</option><option value="procesos">Procesos internos</option><option value="capacidades">Capital humano / Tecnología</option></select></div><div class="field"><label>Nivel de contribución</label><select id="oLevel" class="select"><option>Corporativo</option><option>Unidad</option><option>Área</option><option>Equipo</option><option>Individual</option></select></div><div class="field"><label>Objetivo padre</label><select id="oParent" class="select"></select></div></div><div class="grid-2"><div class="field"><label>Tema estratégico</label><input id="oTheme" class="input" placeholder="Ej. Velocidad operativa"></div><div class="field"><label>Resultado estratégico esperado</label><input id="oExpectedResult" class="input" placeholder="Ej. 92% entregas a tiempo"></div></div></div>
   <div class="section"><h3>3. Indicadores cuantitativos <button id="addIndicator" class="btn btn-secondary btn-small" type="button">Agregar indicador +</button></h3><div id="indicatorsBox" class="repeat"></div></div>
   <div class="section"><h3>4. Iniciativas estratégicas <button id="addInitiative" class="btn btn-secondary btn-small" type="button">Agregar iniciativa +</button></h3><div id="initiativesBox" class="repeat"></div></div>
-  <div class="section"><h3>5. Alineación, Brechas y TOM</h3><div class="grid-5"><div class="field"><label>Presupuesto</label><input id="oBudget" class="input" type="number" step="0.01"></div><div class="field"><label>Alineación presupuesto</label><select id="oBudgetAlignment" class="select"><option>Bajo</option><option selected>Medio</option><option>Alto</option></select></div><div class="field"><label>Alineación procesos</label><select id="oProcessAlignment" class="select"><option>Bajo</option><option selected>Medio</option><option>Alto</option></select></div><div class="field"><label>Alineación estructura</label><select id="oStructureAlignment" class="select"><option>Bajo</option><option selected>Medio</option><option>Alto</option></select></div><div class="field"><label>Alineación indicadores</label><select id="oIndicatorAlignment" class="select"><option>Bajo</option><option selected>Medio</option><option>Alto</option></select></div></div><div class="grid-3"><div class="field"><label>Nivel de evidencia</label><select id="oEvidenceLevel" class="select"><option>Sin evidencia</option><option>Declarativa</option><option>Parcial</option><option>Documentada</option><option>Validada</option></select><div class="hint">Campo estructurado para evitar criterios abiertos en comité.</div></div><div class="field"><label>Notas de evidencia (opcional)</label><textarea id="oAlignmentEvidence" class="textarea" placeholder="Minuta, tablero, archivo, liga o soporte disponible."></textarea></div><div class="field"><label>Acción correctiva manual (opcional)</label><textarea id="oCorrectionAction" class="textarea" placeholder="Solo úsala si necesitas complementar la recomendación automática."></textarea></div></div><div class="grid-3"><div class="field"><label>Estado actual</label><textarea id="oCurrentState" class="textarea"></textarea></div><div class="field"><label>Estado objetivo</label><textarea id="oTargetState" class="textarea"></textarea></div><div class="field"><label>Brecha / Gap</label><textarea id="oGap" class="textarea"></textarea></div></div><div class="grid-4"><div class="field"><label>Riesgo del gap</label><select id="oGapRisk" class="select"><option>Bajo</option><option selected>Medio</option><option>Alto</option><option>Crítico</option></select></div><div class="field"><label>Punto de ruptura</label><input id="oBreakpoint" class="input" placeholder="Ej. Asignación de pedidos"></div><div class="field"><label>Tipo de proceso TOM</label><select id="oTomType" class="select"><option>Central</option><option>Soporte</option><option>Gobernanza</option></select></div><div class="field"><label>Dueño end-to-end</label><input id="oTomRole" class="input"></div></div><div class="grid-3"><div class="field"><label>Proceso TOM</label><textarea id="oTomProcess" class="textarea"></textarea></div><div class="field"><label>Capacidades requeridas</label><textarea id="oTomCapabilities" class="textarea"></textarea></div><div class="field"><label>Tecnología habilitadora</label><textarea id="oTomTech" class="textarea"></textarea></div></div><div class="grid-2"><div class="field"><label>Gobernanza / escalamiento</label><textarea id="oTomGovernance" class="textarea"></textarea></div><div class="field"><label>Flujo de decisiones</label><textarea id="oDecisionFlow" class="textarea"></textarea></div></div></div>
+  <div class="section"><h3>5. Alineación, Brechas y TOM</h3><div class="grid-5"><div class="field"><label>Presupuesto</label><input id="oBudget" class="input" type="number" step="0.01"></div><div class="field"><label>Alineación presupuesto</label><select id="oBudgetAlignment" class="select"><option>Bajo</option><option selected>Medio</option><option>Alto</option></select></div><div class="field"><label>Alineación procesos</label><select id="oProcessAlignment" class="select"><option>Bajo</option><option selected>Medio</option><option>Alto</option></select></div><div class="field"><label>Alineación estructura</label><select id="oStructureAlignment" class="select"><option>Bajo</option><option selected>Medio</option><option>Alto</option></select></div><div class="field"><label>Alineación indicadores</label><select id="oIndicatorAlignment" class="select"><option>Bajo</option><option selected>Medio</option><option>Alto</option></select></div></div><div class="grid-3"><div class="field"><label>Nivel de evidencia</label><select id="oEvidenceLevel" class="select"><option>Sin evidencia</option><option>Declarativa</option><option>Parcial</option><option>Documentada</option><option>Validada</option></select><div class="hint">Campo estructurado para evitar criterios abiertos en comité.</div></div><div class="field"><label>Notas de evidencia (opcional)</label><textarea id="oAlignmentEvidence" class="textarea" placeholder="Minuta, tablero, archivo, liga o soporte disponible."></textarea></div><div class="field"><label>Acción correctiva manual (opcional)</label><textarea id="oCorrectionAction" class="textarea" placeholder="Solo úsala si necesitas complementar la decisión sugerida."></textarea></div></div><div class="grid-3"><div class="field"><label>Estado actual</label><textarea id="oCurrentState" class="textarea"></textarea></div><div class="field"><label>Estado objetivo</label><textarea id="oTargetState" class="textarea"></textarea></div><div class="field"><label>Brecha / Gap</label><textarea id="oGap" class="textarea"></textarea></div></div><div class="grid-4"><div class="field"><label>Riesgo del gap</label><select id="oGapRisk" class="select"><option>Bajo</option><option selected>Medio</option><option>Alto</option><option>Crítico</option></select></div><div class="field"><label>Punto de ruptura</label><input id="oBreakpoint" class="input" placeholder="Ej. Asignación de pedidos"></div><div class="field"><label>Tipo de proceso TOM</label><select id="oTomType" class="select"><option>Central</option><option>Soporte</option><option>Gobernanza</option></select></div><div class="field"><label>Dueño end-to-end</label><input id="oTomRole" class="input"></div></div><div class="grid-3"><div class="field"><label>Proceso TOM</label><textarea id="oTomProcess" class="textarea"></textarea></div><div class="field"><label>Capacidades requeridas</label><textarea id="oTomCapabilities" class="textarea"></textarea></div><div class="field"><label>Tecnología habilitadora</label><textarea id="oTomTech" class="textarea"></textarea></div></div><div class="grid-2"><div class="field"><label>Gobernanza / escalamiento</label><textarea id="oTomGovernance" class="textarea"></textarea></div><div class="field"><label>Flujo de decisiones</label><textarea id="oDecisionFlow" class="textarea"></textarea></div></div></div>
   <div class="section"><h3>6. Relaciones estratégicas <button id="addRelation" class="btn btn-secondary btn-small" type="button">Agregar relación +</button></h3><div id="relationsBox" class="repeat"></div><div class="hint">Define si este objetivo depende, impacta, habilita, bloquea, duplica o compite con otros objetivos.</div></div>
 </div></div></div>
 
@@ -942,26 +942,85 @@ function alignmentCriticalDimension(o){
   const tied=dims.filter(d=>d.score===min.score).slice(0,2);
   return{label:tied.map(d=>d.label).join(' / '),value:min.value,score:min.score,key:min.key,all:dims};
 }
-function alignmentRecommendation(o){
-  if(!(o.indicators||[]).length)return'Definir KPI, meta, frecuencia de medición y responsable del dato antes del próximo corte.';
-  if(!(o.initiatives||[]).length)return'Vincular al menos una iniciativa de ejecución; sin portafolio el objetivo no tiene camino operativo claro.';
-  const c=alignmentCriticalDimension(o);
-  const map={
-    presupuesto:'Validar suficiencia presupuestal y reasignar recursos si el objetivo es prioritario.',
-    procesos:'Rediseñar el flujo operativo, eliminar cuellos de botella y documentar responsables por etapa.',
-    estructura:'Asignar dueño end-to-end, clarificar roles y definir mecanismo de escalamiento.',
-    indicadores:'Ajustar KPI, meta, frecuencia y responsable del dato para medir avance real.',
-    iniciativas:'Depurar o reforzar iniciativas; asegurar que cada una impacte un KPI específico.'
-  };
+function objectiveOverdueActionCount(o){
+  return (o.initiatives||[]).reduce((total,init)=>total+(init.actions||[]).filter(a=>isOverdue(a.dueDate,a.status)).length,0);
+}
+function objectiveDueSoonActionCount(o){
+  return (o.initiatives||[]).reduce((total,init)=>total+(init.actions||[]).filter(a=>!isOverdue(a.dueDate,a.status)&&isDueWithin(a.dueDate,7)).length,0);
+}
+function objectiveDisconnectedInitiativeCount(o){
+  return disconnectedInitiatives([o]).length;
+}
+function alignmentEvidenceNudge(o){
   const ev=o.evidenceLevel||'Sin evidencia';
-  if(evidenceScore(ev)<60&&objectiveAlignmentScore(o)>=70)return'Documentar evidencia mínima validable: tablero, minuta, archivo o liga antes de cerrar el punto como alineado.';
-  if(objectiveAlignmentScore(o)>=85)return'Mantener seguimiento mensual y conservar evidencia trazable para comité.';
-  return map[c.key]||'Revisar alineación estratégica y definir acción correctiva puntual.';
+  if(evidenceScore(ev)>=60)return'';
+  if(ev==='Sin evidencia')return'Registrar evidencia mínima: tablero, minuta, archivo o liga ligada al objetivo.';
+  if(ev==='Declarativa')return'Sustituir evidencia declarativa por soporte documentado y trazable.';
+  return'Completar soporte y validarlo con el responsable del dato.';
+}
+function alignmentRecommendation(o){
+  const score=objectiveAlignmentScore(o);
+  const kpi=objectiveKpiScore(o);
+  const tom=tomScore(o);
+  const c=alignmentCriticalDimension(o);
+  const ev=o.evidenceLevel||'Sin evidencia';
+  const evScore=evidenceScore(ev);
+  const overdue=objectiveOverdueActionCount(o);
+  const dueSoon=objectiveDueSoonActionCount(o);
+  const disconnected=objectiveDisconnectedInitiativeCount(o);
+  const gapRisk=String(o.gapRisk||'Medio');
+  const endSoon=isDueWithin(o.endDate,30)&&String(o.status||'').toLowerCase()!=='cumplido';
+  let decision='';
+
+  if(!(o.indicators||[]).length){
+    decision='No aprobar como objetivo estratégico hasta definir KPI rector, meta, frecuencia y responsable del dato.';
+  }else if(!(o.initiatives||[]).length){
+    decision='Definir portafolio mínimo de iniciativas y asignar una primera acción con responsable y fecha.';
+  }else if(overdue>0&&kpi<70){
+    decision='Destrabar acciones vencidas y reasignar responsables; el atraso ya está afectando el avance del objetivo.';
+  }else if(disconnected>0){
+    decision='Revisar portafolio: cancelar, reorientar o sustituir iniciativas que avanzan sin mover el KPI.';
+  }else if(kpi<50){
+    decision='Escalar desviación al comité y redefinir acciones críticas con dueño, fecha y criterio de recuperación.';
+  }else if(gapRisk==='Crítico'||gapRisk==='Critico'){
+    decision='Abrir mesa ejecutiva de resolución; la brecha crítica puede bloquear el resultado esperado.';
+  }else if(gapRisk==='Alto'){
+    decision='Priorizar cierre de brecha y validar en comité las decisiones, recursos o responsables faltantes.';
+  }else if(tom<50){
+    decision='Completar TOM antes de exigir resultados: proceso, dueño end-to-end, capacidades, tecnología y escalamiento.';
+  }else if(tom<70&&score<85){
+    decision='Cerrar faltantes del TOM y validar si el diseño operativo realmente soporta la meta.';
+  }else if(endSoon&&kpi<85){
+    decision='Revisar viabilidad de cierre: ajustar alcance, fecha compromiso o plan de recuperación.';
+  }else if(dueSoon>0&&score<85){
+    decision='Actualizar compromisos próximos y confirmar si las acciones abiertas son suficientes para cerrar la brecha.';
+  }else if(c.score<60){
+    const map={
+      presupuesto:'Decidir si se fondea, se reduce alcance o se pausa el objetivo por insuficiencia presupuestal.',
+      procesos:'Rediseñar flujo operativo, eliminar cuellos de botella y fijar responsables por etapa.',
+      estructura:'Asignar dueño end-to-end, clarificar roles entre áreas y definir mecanismo de escalamiento.',
+      indicadores:'Ajustar KPI, meta, frecuencia y responsable del dato para medir avance real.',
+      iniciativas:'Reforzar el portafolio de iniciativas y asegurar que cada una impacte un KPI específico.'
+    };
+    decision=map[c.key]||'Corregir la dimensión más débil antes del próximo corte de cadencia.';
+  }else if(score>=85&&evScore>=85&&kpi>=80){
+    decision='Mantener seguimiento; no requiere decisión de comité salvo cambio de alcance, riesgo o prioridad.';
+  }else if(score>=85&&evScore<60){
+    decision='Conservar la alineación actual y convertir la evidencia en soporte documentado antes del cierre ejecutivo.';
+  }else if(score>=70){
+    decision='Ajustar la dimensión más débil y revisar avance en el siguiente corte de cadencia.';
+  }else{
+    decision='Llevar a comité como tema de decisión: ajustar alcance, dueño, recursos o fecha compromiso.';
+  }
+
+  const nudge=alignmentEvidenceNudge(o);
+  if(nudge&&!/(evidencia|soporte|documentad|trazable)/i.test(decision))decision+=' '+nudge;
+  return decision;
 }
 function alignmentDetailPanel(o){
   const c=alignmentCriticalDimension(o),score=objectiveAlignmentScore(o),st=alignmentStatus(score);
   const dims=alignmentDimensionScores(o).map(d=>'<div class="kv-item"><div class="kv-label">'+esc(d.label)+'</div><div class="kv-value">'+esc(d.value)+' · '+d.score+'%</div></div>').join('');
-  return'<div class="panel"><h3>Alineación ejecutiva</h3><div class="kv">'+dims+'<div class="kv-item"><div class="kv-label">Evidencia</div><div class="kv-value">'+esc(o.evidenceLevel||'Sin evidencia')+' · '+evidenceScore(o.evidenceLevel||'Sin evidencia')+'%</div></div></div><div class="mini-card" style="margin-top:12px"><strong>Estado:</strong> '+badge(st.label,st.color)+' <span class="small muted">Score '+score+'%</span></div><div class="mini-card"><strong>Dimensión crítica:</strong><div class="small muted">'+esc(c.label)+' · '+esc(c.value)+'</div></div><div class="mini-card"><strong>Recomendación automática:</strong><div class="small muted">'+esc(alignmentRecommendation(o))+'</div></div><div class="mini-card"><strong>Notas de evidencia:</strong><div class="small muted">'+esc(o.alignmentEvidence||'Sin notas registradas.')+'</div></div><div class="mini-card"><strong>Acción correctiva manual:</strong><div class="small muted">'+esc(o.correctionAction||'Sin acción manual. Usar recomendación automática.')+'</div></div></div>'
+  return'<div class="panel"><h3>Alineación ejecutiva</h3><div class="kv">'+dims+'<div class="kv-item"><div class="kv-label">Evidencia</div><div class="kv-value">'+esc(o.evidenceLevel||'Sin evidencia')+' · '+evidenceScore(o.evidenceLevel||'Sin evidencia')+'%</div></div></div><div class="mini-card" style="margin-top:12px"><strong>Estado:</strong> '+badge(st.label,st.color)+' <span class="small muted">Score '+score+'%</span></div><div class="mini-card"><strong>Dimensión crítica:</strong><div class="small muted">'+esc(c.label)+' · '+esc(c.value)+'</div></div><div class="mini-card"><strong>Siguiente decisión sugerida:</strong><div class="small muted">'+esc(alignmentRecommendation(o))+'</div></div><div class="mini-card"><strong>Notas de evidencia:</strong><div class="small muted">'+esc(o.alignmentEvidence||'Sin notas registradas.')+'</div></div><div class="mini-card"><strong>Acción correctiva manual:</strong><div class="small muted">'+esc(o.correctionAction||'Sin acción manual. Usar la decisión sugerida.')+'</div></div></div>'
 }
 function recommendationForObjective(o){
   if(!(o.indicators||[]).length)return'Definir KPIs de resultado.';
@@ -994,10 +1053,10 @@ function renderAlineacion(){
     </div>
     <div class="align-explain">
       <h3>Matriz ejecutiva simplificada</h3>
-      <p>Esta vista ya no muestra presupuesto, procesos, estructura, indicadores, evidencia y acción correctiva como columnas abiertas. Esos datos siguen alimentando el score, pero aquí se resumen en: estado, dimensión crítica y recomendación automática. El detalle completo queda dentro de cada objetivo.</p>
+      <p>Esta vista ya no muestra presupuesto, procesos, estructura, indicadores, evidencia y acción correctiva como columnas abiertas. Esos datos siguen alimentando el score, pero aquí se resumen en: estado, dimensión crítica y siguiente decisión sugerida. El detalle completo queda dentro de cada objetivo.</p>
     </div>
     <div class="card"><div class="card-pad"><div class="topbar" style="margin:0"><h2 style="margin:0;font-size:22px">Matriz de Alineación Estratégica</h2><button class="btn btn-secondary btn-small" onclick="exportCurrentTable()">Exportar CSV</button></div></div>
-      <div class="table-wrap"><table id="currentMatrix"><thead><tr><th>Objetivo</th><th>Score</th><th>Estado</th><th>Dimensión crítica</th><th>Recomendación automática</th><th>Responsable / Fecha</th><th>Acción</th></tr></thead><tbody>
+      <div class="table-wrap"><table id="currentMatrix"><thead><tr><th>Objetivo</th><th>Score</th><th>Estado</th><th>Dimensión crítica</th><th>Siguiente decisión sugerida</th><th>Responsable / Fecha</th><th>Acción</th></tr></thead><tbody>
       ${objs.length?objs.map(o=>{const score=objectiveAlignmentScore(o);const st=alignmentStatus(score);const c=alignmentCriticalDimension(o);return`<tr><td><strong>${esc(o.name)}</strong><div class="small muted">${esc(o.code||'')} ${esc(typeLabels[o.objectiveType]||o.objectiveType)} · Evidencia: ${esc(o.evidenceLevel||'Sin evidencia')}</div></td><td>${ring(score)}</td><td>${badge(st.label,st.color)}</td><td><div class="align-critical">${esc(c.label)}</div><div class="align-dim-note">${esc(c.value)} · ${c.score}%</div></td><td><div class="align-reco">${esc(alignmentRecommendation(o))}</div></td><td><strong>${esc(o.leader||'—')}</strong><div class="small muted">${fmtDate(o.endDate)} · ${daysText(o.endDate)}</div></td><td><div class="align-actions"><button class="btn btn-secondary btn-small" data-detail="${o.id}">Ver detalle</button><button class="btn btn-secondary btn-small" data-edit="${o.id}">Editar</button></div></td></tr>`}).join(''):`<tr><td colspan="7" class="muted">Sin objetivos.</td></tr>`}
       </tbody></table></div>
     </div>`;
