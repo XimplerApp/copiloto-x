@@ -62,8 +62,6 @@
     /* IGEE gauge */
     .igee-pill{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;font-weight:900;font-size:13px}
     .igee-critical{background:var(--redSoft);color:var(--red)}.igee-risk{background:var(--yellowSoft);color:var(--yellow)}.igee-ok{background:var(--greenSoft);color:var(--green2)}
-    /* CHECKLIST */
-    .checklist-wrap{padding:16px}.checklist-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}.checklist-item:last-child{border-bottom:none}.checklist-cb{width:18px;height:18px;accent-color:var(--green);cursor:pointer}
     /* AGENDA MANUAL */
     .cadence-toolbar{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:12px}
     .manual-agenda-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}
@@ -602,30 +600,9 @@ function renderCadencia(){
   const m=planMetrics();
   const manualAgenda=(p?.manualAgenda||[]).map(normalizeManualAgendaItem).sort(sortManualAgenda);
 
-  // Checklist para la próxima sesión
-  const checkItems=[
-    {label:'Revisar IGEE y alertas críticas',done:false},
-    {label:'Actualizar avance de acciones vencidas ('+m.overdueActions.length+')',done:m.overdueActions.length===0},
-    {label:'Revisar iniciativas desconectadas de KPI ('+m.disconnected.length+')',done:m.disconnected.length===0},
-    {label:'Actualizar valor actual de indicadores',done:objs.every(o=>(o.indicators||[]).every(i=>i.current>0))},
-    {label:'Validar que todos los objetivos tienen KPI',done:objs.every(o=>(o.indicators||[]).length>0)},
-    {label:'Validar que todos los objetivos tienen iniciativas',done:objs.every(o=>(o.initiatives||[]).length>0)},
-    {label:'Completar TOM de objetivos débiles',done:objs.every(o=>tomScore(o)>=60)},
-    {label:'Revisar agenda manual del comité ('+manualAgenda.filter(a=>!['Resuelto','Aprobado','Rechazado'].includes(a.status)).length+' pendiente/s)',done:manualAgenda.length===0||manualAgenda.every(a=>['Resuelto','Aprobado','Rechazado'].includes(a.status))},
-    {label:'Exportar dictamen ejecutivo para presentar',done:false},
-  ];
-  const doneCnt=checkItems.filter(c=>c.done).length;
-
   let html=`<div class="cadence-box">
     <div class="cadence-title">Cadencia: ${esc(p?.governanceCadence||'Mensual')} · Comité: ${esc(p?.committee||'No definido')}</div>
-    <p style="font-size:13px;color:var(--muted);margin:0 0 12px">Próxima revisión: <strong>${fmtDate(nextReview)}</strong> (${daysText(nextReview)})</p>
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-      <div style="flex:1;background:#edf1f5;border-radius:6px;height:10px;overflow:hidden"><div style="height:100%;border-radius:6px;background:var(--green2);width:${Math.round((doneCnt/checkItems.length)*100)}%"></div></div>
-      <span style="font-size:13px;font-weight:900">${doneCnt}/${checkItems.length} listo</span>
-    </div>
-    <div class="checklist-wrap">
-      ${checkItems.map((c,i)=>`<div class="checklist-item"><input type="checkbox" class="checklist-cb" ${c.done?'checked':''} onchange="this.checked=this.checked" id="chk${i}"><label for="chk${i}" style="${c.done?'text-decoration:line-through;color:var(--muted)':''}">${esc(c.label)}</label></div>`).join('')}
-    </div>
+    <p style="font-size:13px;color:var(--muted);margin:0">Próxima revisión: <strong>${fmtDate(nextReview)}</strong> (${daysText(nextReview)})</p>
   </div>`;
 
   // Agenda manual del comité
