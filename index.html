@@ -47,6 +47,14 @@
     /* BRECHAS DECISIÓN REQUERIDA */
     .brecha-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.brecha-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 15px;box-shadow:var(--shadow)}.brecha-label{font-size:11px;color:var(--muted);font-weight:900;text-transform:uppercase;margin-bottom:6px}.brecha-value{font-size:26px;font-weight:900;line-height:1}.brecha-note{font-size:12px;color:var(--muted);margin-top:4px}.brecha-explain{border:1px solid var(--line);border-radius:16px;background:#fbfcfd;padding:14px;margin-bottom:16px}.brecha-explain h3{margin:0 0 7px;font-size:15px}.brecha-explain p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}.brecha-table{min-width:1500px}.brecha-table th{white-space:nowrap}.brecha-table td{line-height:1.35}.brecha-state{font-size:12px;color:#344054;margin-bottom:7px}.brecha-risk-score{font-size:24px;font-weight:900}.brecha-signals{display:flex;flex-wrap:wrap;gap:6px;max-width:300px}.brecha-signals span{display:inline-flex;align-items:center;background:#f2f4f7;border:1px solid #e4e7ec;border-radius:999px;padding:5px 7px;font-size:11px;font-weight:800;color:#475467}
 
+
+    /* CENTRO DE ALERTAS EJECUTIVAS */
+    .alert-center-hero{background:linear-gradient(135deg,#fff 0%,#f8fafc 55%,#eef5ff 100%);border:1px solid var(--line);border-radius:18px;padding:18px 20px;margin-bottom:16px;box-shadow:var(--shadow)}
+    .alert-center-hero h2{margin:0 0 6px;font-size:24px}.alert-center-hero p{margin:0;color:var(--muted);font-size:13px;line-height:1.45;max-width:980px}
+    .alert-summary-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}.alert-summary-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 15px;box-shadow:var(--shadow)}.alert-summary-label{font-size:11px;color:var(--muted);font-weight:900;text-transform:uppercase;margin-bottom:6px}.alert-summary-value{font-size:26px;font-weight:900;line-height:1}.alert-summary-note{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.3}
+    .alert-board{display:grid;gap:14px}.alert-exec-card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}.alert-exec-card.critical{border-left:6px solid var(--red)}.alert-exec-card.committee{border-left:6px solid var(--yellow)}.alert-exec-card.adjust{border-left:6px solid var(--blue)}.alert-exec-card.follow{border-left:6px solid var(--green2)}
+    .alert-exec-head{display:grid;grid-template-columns:minmax(260px,1.25fr) minmax(240px,1fr) auto;gap:16px;align-items:start;padding:16px 18px;border-bottom:1px solid var(--line);background:#fbfcfd}.alert-objective-title{font-size:17px;font-weight:900;line-height:1.15}.alert-objective-meta{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.35}.alert-cause{font-size:13px;color:#344054;line-height:1.4}.alert-cause strong{color:var(--text)}.alert-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.alert-exec-body{padding:14px 18px;display:grid;grid-template-columns:1fr 1fr;gap:16px}.alert-panel{border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px}.alert-panel-title{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:900;margin-bottom:8px}.alert-decision{font-size:13px;line-height:1.45;color:#1f2937;font-weight:700}.alert-why{font-size:13px;color:#344054;line-height:1.45}.alert-signals{display:flex;flex-wrap:wrap;gap:7px}.alert-signal{display:inline-flex;align-items:center;gap:5px;border-radius:999px;background:#f2f4f7;border:1px solid #e4e7ec;color:#475467;padding:6px 8px;font-size:11px;font-weight:900}.alert-signal.red{background:var(--redSoft);border-color:#fecdca;color:var(--red)}.alert-signal.yellow{background:var(--yellowSoft);border-color:#fedf89;color:var(--yellow)}.alert-signal.blue{background:var(--blueSoft);border-color:#b5d4f4;color:var(--blue)}.alert-signal.green{background:var(--greenSoft);border-color:#b7e6c5;color:var(--green2)}.alert-source-row{margin-top:10px;display:flex;gap:7px;flex-wrap:wrap}.alert-source-btn{border:1px solid var(--line2);background:#fff;color:#344054;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900;cursor:pointer}.alert-source-btn:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-1px)}.alert-empty{border:1px dashed var(--line2);border-radius:18px;padding:28px;background:#fff;text-align:center;color:var(--muted);box-shadow:var(--shadow)}
+
     @media(max-width:1100px){.align-summary-grid{grid-template-columns:1fr}}
 
     /* TOM */
@@ -180,7 +188,7 @@
     /* BRECHAS DECISIÓN REQUERIDA */
     .brecha-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.brecha-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 15px;box-shadow:var(--shadow)}.brecha-label{font-size:11px;color:var(--muted);font-weight:900;text-transform:uppercase;margin-bottom:6px}.brecha-value{font-size:26px;font-weight:900;line-height:1}.brecha-note{font-size:12px;color:var(--muted);margin-top:4px}.brecha-explain{border:1px solid var(--line);border-radius:16px;background:#fbfcfd;padding:14px;margin-bottom:16px}.brecha-explain h3{margin:0 0 7px;font-size:15px}.brecha-explain p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}.brecha-table{min-width:1500px}.brecha-table th{white-space:nowrap}.brecha-table td{line-height:1.35}.brecha-state{font-size:12px;color:#344054;margin-bottom:7px}.brecha-risk-score{font-size:24px;font-weight:900}.brecha-signals{display:flex;flex-wrap:wrap;gap:6px;max-width:300px}.brecha-signals span{display:inline-flex;align-items:center;background:#f2f4f7;border:1px solid #e4e7ec;border-radius:999px;padding:5px 7px;font-size:11px;font-weight:800;color:#475467}
 
-    @media(max-width:1100px){.grid-2,.grid-3,.grid-4,.grid-5,.summary-grid,.detail-layout,.dictamen,.filters,.action-editor-grid,.initiative-editor-grid,.detail-grid,.exec-stats,.quick-form,.impact-summary,.impact-objective-head,.benefit-summary-grid,.benefit-objective-head,.benefit-kpis{grid-template-columns:1fr}.initiative-editor-grid .span-2,.initiative-editor-grid .span-3,.detail-box-full{grid-column:auto}.detail-left{border-right:none}.topbar{flex-direction:column}.page{padding:16px}.initiative-cascade-card{grid-template-columns:1fr}.initiative-cascade-actions{justify-content:flex-start}.tom-summary-grid,.tom-mini-grid,.brecha-summary-grid{grid-template-columns:1fr}}
+    @media(max-width:1100px){.grid-2,.grid-3,.grid-4,.grid-5,.summary-grid,.detail-layout,.dictamen,.filters,.action-editor-grid,.initiative-editor-grid,.detail-grid,.exec-stats,.quick-form,.impact-summary,.impact-objective-head,.benefit-summary-grid,.benefit-objective-head,.benefit-kpis,.alert-summary-grid,.alert-exec-head,.alert-exec-body{grid-template-columns:1fr}.initiative-editor-grid .span-2,.initiative-editor-grid .span-3,.detail-box-full{grid-column:auto}.detail-left{border-right:none}.topbar{flex-direction:column}.page{padding:16px}.initiative-cascade-card{grid-template-columns:1fr}.initiative-cascade-actions{justify-content:flex-start}.tom-summary-grid,.tom-mini-grid,.brecha-summary-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -1777,36 +1785,123 @@ function renderBeneficios(){
 function money(n){n=Number(n||0);return n?new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN'}).format(n):'—'}
 function matrixCard(title,headers,rows){return'<div class="card"><div class="card-pad"><div class="topbar" style="margin:0"><h2 style="margin:0;font-size:22px">'+esc(title)+'</h2><button class="btn btn-secondary btn-small" onclick="exportCurrentTable()">Exportar CSV</button></div></div><div class="table-wrap"><table id="currentMatrix"><thead><tr>'+headers.map(h=>'<th>'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+(rows.length?rows.map(r=>'<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>').join(''):'<tr><td colspan="'+headers.length+'" class="muted">Sin registros.</td></tr>')+'</tbody></table></div></div>'}
 
-// ─── ALERTAS ──────────────────────────────────────────────────────────
+// ─── ALERTAS EJECUTIVAS AGRUPADAS ─────────────────────────────────────
+function alertToneFromScore(score){
+  score=Number(score||0);
+  if(score>=75)return{tone:'critical',level:'critical',label:'Intervención crítica',color:'red'};
+  if(score>=60)return{tone:'committee',level:'critical',label:'Decisión de comité',color:'yellow'};
+  if(score>=40)return{tone:'adjust',level:'medium',label:'Ajuste operativo',color:'blue'};
+  return{tone:'follow',level:'low',label:'Seguimiento',color:'green'};
+}
+function alertSourceTab(source){
+  const map={KPI:'ejecucion',Ejecución:'ejecucion',Brechas:'brechas',Mapa:'mapa',Impacto:'impacto',TOM:'tom',Alineación:'alineacion',Objetivos:'objetivos'};
+  return map[source]||'objetivos';
+}
+function goToAlertSource(source,objectiveId){
+  state.currentTab=alertSourceTab(source);
+  renderWorkspace();
+  if(objectiveId&&source==='Objetivos')openDetail(objectiveId);
+}
+function createCorrectiveActionForObjective(objectiveId){
+  const o=findObjective(objectiveId);if(!o)return;
+  const inits=o.initiatives||[];
+  if(!inits.length){
+    alert('Este objetivo no tiene iniciativas. Primero crea una iniciativa para poder asignarle una acción correctiva.');
+    openInitiativeEditor(objectiveId);
+    return;
+  }
+  const disconnected=inits.find(isInitiativeDisconnected);
+  const overdue=inits.find(i=>isOverdue(i.dueDate,i.status));
+  const target=disconnected||overdue||inits[0];
+  openActionEditor(objectiveId,target.id);
+}
+function objectiveAlertItems(o){
+  const items=[];
+  const p=objectiveInterventionProfile(o);
+  const kpi=objectiveKpiScore(o), align=objectiveAlignmentScore(o), tom=tomScore(o), impact=objectiveImpactScore(o);
+  const gapRisk=String(o.gapRisk||'Medio');
+  const hasKpi=(o.indicators||[]).length>0, hasInits=(o.initiatives||[]).length>0;
+  const add=(source,title,signal,score,why)=>items.push({source,title,signal,score:clamp(score),why});
+  if(!hasKpi)add('Alineación','Sin KPI rector','No hay indicadores cuantitativos',95,'Sin KPI no existe forma confiable de validar avance, impacto ni cierre del objetivo.');
+  if(!hasInits)add('Impacto','Sin portafolio de ejecución','No hay iniciativas asociadas',88,'El objetivo no tiene un conjunto mínimo de iniciativas que explique cómo se va a lograr.');
+  if(hasKpi&&kpi<50)add('KPI','Resultado crítico','KPI '+kpi+'%',88,'El avance del objetivo está por debajo del umbral mínimo y puede requerir rediseño de ejecución.');
+  else if(hasKpi&&kpi<70)add('KPI','Resultado bajo','KPI '+kpi+'%',62,'El objetivo avanza, pero todavía no justifica declararlo bajo control.');
+  if(hasInits&&impact<50)add('Impacto','Bajo impacto real','Impacto '+impact+'%',72,'Las iniciativas actuales todavía no están generando el impacto esperado en el resultado.');
+  if(p.disconnected>0)add('Impacto','Actividad sin impacto',''+p.disconnected+' iniciativa(s) desconectada(s)',86,'Hay iniciativas que avanzan, pero no están moviendo el KPI en proporción suficiente.');
+  if(p.actionStats.overdue>0)add('Ejecución','Acciones vencidas',p.actionStats.overdue+' acción(es) vencida(s)',80,'Existen compromisos fuera de fecha que pueden estar frenando la ejecución táctica.');
+  if(p.actionStats.dueSoon>0&&p.actionStats.progress<65)add('Ejecución','Compromisos próximos en riesgo',p.actionStats.dueSoon+' próxima(s)',58,'Hay entregables cercanos con avance táctico insuficiente.');
+  if(['Crítico','Critico'].includes(gapRisk))add('Brechas','Brecha crítica','Riesgo gap crítico',78,'La brecha operativo-estratégica puede bloquear el resultado si no se resuelve con decisión ejecutiva.');
+  else if(gapRisk==='Alto')add('Brechas','Brecha alta','Riesgo gap alto',62,'La brecha declarada exige seguimiento de comité o cierre operativo con responsable claro.');
+  if(align<60)add('Alineación','Desalineación estratégica','Alineación '+align+'%',66,'Presupuesto, procesos, estructura o indicadores no sostienen suficientemente al objetivo.');
+  if(tom<65)add('TOM','TOM incompleto','TOM '+tom+'%',60,'El objetivo no tiene todas las piezas operativas necesarias para ejecutar con control.');
+  if(p.criticalRelations.length>0)add('Mapa','Dependencia estratégica sensible',p.criticalRelations.length+' relación(es) crítica(s)',70,'El objetivo está conectado a otros objetivos que pueden amplificar el riesgo o bloquear resultados.');
+  if(p.overdueObjective)add('Ejecución','Objetivo vencido',daysText(o.endDate),85,'La fecha compromiso ya pasó y el objetivo requiere decisión de cierre, ajuste o replanteamiento.');
+  else if(p.dueSoon&&kpi<85)add('Ejecución','Fecha compromiso próxima',daysText(o.endDate),55,'El objetivo se acerca a su fecha compromiso sin evidencia suficiente de cierre.');
+  return items.sort((a,b)=>b.score-a.score);
+}
+function objectiveAlertExecutiveProfile(o){
+  const items=objectiveAlertItems(o);
+  const p=objectiveInterventionProfile(o);
+  const highest=items[0]||null;
+  const score=Math.max(Number(p.score||0), highest?highest.score:0);
+  const level=alertToneFromScore(score);
+  const sources=[...new Set(items.map(i=>i.source))];
+  const cause=highest?highest.title:'Sin alertas críticas';
+  const what=items.length?items.slice(0,3).map(i=>i.signal).join(' · '):'Sin señales relevantes';
+  const why=highest?highest.why:'El objetivo no presenta señales suficientes para intervención ejecutiva.';
+  const decision=items.length?decisionRequiredForObjective(o):'Mantener seguimiento; no requiere decisión de comité salvo cambio de alcance, riesgo o prioridad.';
+  return{objective:o,items,profile:p,score,level,cause,what,why,decision,sources,highest};
+}
 function renderAlertas(){
-  const alerts=planMetrics().alerts;
-  $('viewAlertas').innerHTML='<div class="card card-pad"><h2 style="margin-top:0">Sistema de Alertas Estratégicas</h2><div class="alert-list">'+(alerts.length?alerts.map(a=>'<div class="alert-card alert-'+a.level+'"><div>'+badge(a.label,a.level==='critical'?'red':a.level==='medium'?'yellow':'blue')+'</div><div><strong>'+esc(a.title)+'</strong><div class="small muted">'+esc(a.description)+'</div></div><div><button class="btn btn-secondary btn-small" data-alert-obj="'+a.objectiveId+'">Ver</button>'+getAlertActionBtn(a)+'</div></div>').join(''):'<div class="muted">Sin alertas activas.</div>')+'</div></div>';
-  document.querySelectorAll('[data-alert-obj]').forEach(b=>b.onclick=()=>openDetail(b.dataset.alertObj));
+  const objs=planObjectives();
+  const profiles=objs.map(objectiveAlertExecutiveProfile).filter(x=>x.items.length).sort((a,b)=>b.score-a.score);
+  const critical=profiles.filter(p=>p.level.tone==='critical').length;
+  const committee=profiles.filter(p=>p.level.tone==='committee').length;
+  const affected=profiles.length;
+  const allItems=profiles.flatMap(p=>p.items);
+  const sourceCount=allItems.reduce((m,i)=>{m[i.source]=(m[i.source]||0)+1;return m;},{});
+  const dominantSource=Object.entries(sourceCount).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
+  const overdueTotal=profiles.reduce((a,p)=>a+p.profile.actionStats.overdue,0);
+  const relationTotal=profiles.reduce((a,p)=>a+p.profile.criticalRelations.length,0);
+  let html='<div class="alert-center-hero"><h2>Centro de Alertas Ejecutivas</h2><p>Vista agrupada por objetivo. En lugar de listar síntomas sueltos, consolida las señales críticas, muestra la causa dominante, explica por qué importa y propone la decisión ejecutiva requerida.</p></div>';
+  html+='<div class="alert-summary-grid">'+
+    '<div class="alert-summary-card"><div class="alert-summary-label">Objetivos afectados</div><div class="alert-summary-value">'+affected+'</div><div class="alert-summary-note">Con una o más señales ejecutivas</div></div>'+
+    '<div class="alert-summary-card"><div class="alert-summary-label">Intervención crítica</div><div class="alert-summary-value" style="color:var(--red)">'+critical+'</div><div class="alert-summary-note">Requieren acción inmediata</div></div>'+
+    '<div class="alert-summary-card"><div class="alert-summary-label">Decisión de comité</div><div class="alert-summary-value" style="color:var(--yellow)">'+committee+'</div><div class="alert-summary-note">Requieren acuerdo ejecutivo</div></div>'+
+    '<div class="alert-summary-card"><div class="alert-summary-label">Causa dominante</div><div class="alert-summary-value" style="font-size:22px">'+esc(dominantSource)+'</div><div class="alert-summary-note">Fuente con más señales</div></div>'+
+    '<div class="alert-summary-card"><div class="alert-summary-label">Atrasos / dependencias</div><div class="alert-summary-value" style="font-size:22px">'+overdueTotal+' / '+relationTotal+'</div><div class="alert-summary-note">Acciones vencidas / relaciones críticas</div></div>'+
+  '</div>';
+  html+='<div class="alert-board">';
+  if(!profiles.length){
+    html+='<div class="alert-empty"><div style="font-size:34px;margin-bottom:8px">✅</div><strong>Sin alertas ejecutivas activas.</strong><div style="margin-top:6px">No se detectan objetivos que requieran intervención con los criterios actuales.</div></div>';
+  }
+  profiles.forEach(p=>{
+    const o=p.objective;
+    const signalBadges=p.items.slice(0,7).map(i=>{
+      const cls=i.score>=75?'red':i.score>=60?'yellow':i.score>=40?'blue':'green';
+      return'<span class="alert-signal '+cls+'">'+esc(i.source)+': '+esc(i.signal)+'</span>';
+    }).join('');
+    const sourceBtns=p.sources.map(s=>'<button class="alert-source-btn" data-alert-source="'+esc(s)+'" data-alert-source-obj="'+o.id+'">Ir a '+esc(s)+'</button>').join('');
+    html+='<div class="alert-exec-card '+p.level.tone+'"><div class="alert-exec-head"><div><div class="alert-objective-title">'+esc(o.name)+'</div><div class="alert-objective-meta">'+esc(o.code?o.code+' · ':'')+esc(typeLabels[o.objectiveType]||o.objectiveType)+' · Responsable: '+esc(o.leader||'—')+' · '+daysText(o.endDate)+'</div><div style="margin-top:9px">'+badge(p.level.label,p.level.color)+' '+badge(p.cause,p.level.color)+'</div></div><div class="alert-cause"><strong>Causa dominante:</strong> '+esc(p.cause)+'<br><strong>Qué pasa:</strong> '+esc(p.what)+'<br><strong>Fuente:</strong> '+esc(p.sources.join(' + ')||'—')+'</div><div class="alert-actions"><button class="btn btn-secondary btn-small" data-alert-detail="'+o.id+'">Ver objetivo</button><button class="btn btn-secondary btn-small" data-alert-edit="'+o.id+'">Editar objetivo</button><button class="btn btn-primary btn-small" data-alert-action="'+o.id+'">Crear acción correctiva</button></div></div><div class="alert-exec-body"><div class="alert-panel"><div class="alert-panel-title">Por qué importa</div><div class="alert-why">'+esc(p.why)+'</div><div class="alert-source-row">'+sourceBtns+'</div></div><div class="alert-panel"><div class="alert-panel-title">Decisión requerida</div><div class="alert-decision">'+esc(p.decision)+'</div><div class="alert-signals" style="margin-top:10px">'+signalBadges+'</div></div></div></div>';
+  });
+  html+='</div>';
+  $('viewAlertas').innerHTML=html;
+  document.querySelectorAll('[data-alert-detail]').forEach(b=>b.onclick=()=>openDetail(b.dataset.alertDetail));
   document.querySelectorAll('[data-alert-edit]').forEach(b=>b.onclick=()=>openObjectiveModal(b.dataset.alertEdit));
+  document.querySelectorAll('[data-alert-action]').forEach(b=>b.onclick=()=>createCorrectiveActionForObjective(b.dataset.alertAction));
+  document.querySelectorAll('[data-alert-source]').forEach(b=>b.onclick=()=>goToAlertSource(b.dataset.alertSource,b.dataset.alertSourceObj));
 }
 function getAlertActionBtn(a){
-  if(a.actionType==='edit')return'<button class="btn btn-primary btn-small" data-alert-edit="'+a.objectiveId+'">Completar</button>';
+  if(a.actionType==='edit')return'<button class="btn btn-secondary btn-small" data-alert-edit="'+a.objectiveId+'">Editar objetivo</button>';
   if(a.actionType==='initiative')return'<button class="btn btn-primary btn-small" onclick="openInitiativeEditor(\''+a.objectiveId+'\')">Agregar iniciativa</button>';
   return'';
 }
 function buildAlerts(objs){
   const arr=[];
   objs.forEach(o=>{
-    if(!(o.indicators||[]).length)arr.push(alertObj('critical','Sin KPI','Objetivo sin indicadores',o,'El objetivo no tiene indicadores cuantitativos.','edit'));
-    if(!(o.initiatives||[]).length)arr.push(alertObj('critical','Sin iniciativas','Objetivo sin iniciativas',o,'No existe portafolio de ejecución asociado.','initiative'));
-    if(objectiveKpiScore(o)<50&&(o.indicators||[]).length)arr.push(alertObj('critical','KPI crítico','Avance KPI menor a 50%',o,'Se requiere intervención inmediata.','edit'));
-    if(objectiveAlignmentScore(o)<55)arr.push(alertObj('medium','Desalineación','Alineación estratégica baja',o,'Revisar presupuesto, procesos, estructura e indicadores.','edit'));
-    if(o.endDate&&new Date(o.endDate+'T00:00:00')<new Date(todayKey()+'T00:00:00')&&o.status!=='cumplido')arr.push(alertObj('critical','Vencido','Fecha compromiso vencida',o,'El objetivo está fuera de tiempo.'));
-    if(['Alto','Crítico'].includes(o.gapRisk))arr.push(alertObj('medium','Gap crítico','Riesgo de brecha alto',o,o.gap||'Existe brecha estratégico-operativa relevante.'));
-    (o.initiatives||[]).forEach(i=>{
-      if(isInitiativeDisconnected(i))arr.push(alertObj('critical','Desconectada','Iniciativa avanza sin impacto en KPI',o,i.name+' (avance calculado '+calcInitiativeProgress(i)+'%, impacto real '+clamp(i.realImpact)+'%)'));
-      if(i.redundant==='Sí')arr.push(alertObj('low','Redundancia','Iniciativa redundante',o,i.name));
-      if(i.competes==='Sí')arr.push(alertObj('medium','Competencia','Iniciativa compite con otras decisiones',o,i.name));
-      if(isOverdue(i.dueDate,i.status))arr.push(alertObj('medium','Iniciativa vencida','Fecha de iniciativa vencida',o,i.name+' · Responsable: '+(i.owner||'—')));
-    });
-    (o.strategicRelations||[]).forEach(r=>{
-      const t=findObjective(r.targetId);
-      if(t&&objectiveKpiScore(t)<50&&r.relationType==='Depende de')arr.push(alertObj('critical','Dependencia en riesgo','Objetivo depende de otro objetivo crítico',o,'Depende de: '+t.name));
+    objectiveAlertItems(o).forEach(i=>{
+      const level=i.score>=75?'critical':i.score>=60?'medium':'low';
+      arr.push(alertObj(level,i.source,i.title,o,i.signal,i.source==='Alineación'?'edit':''));
     });
   });
   return arr;
