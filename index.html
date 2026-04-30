@@ -958,6 +958,84 @@ function alignmentEvidenceNudge(o){
   if(ev==='Declarativa')return'Sustituir evidencia declarativa por soporte documentado y trazable.';
   return'Completar soporte y validarlo con el responsable del dato.';
 }
+function normalizeForDecisionText(v){
+  return String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+function objectiveTheme(o){
+  const txt=normalizeForDecisionText([o.name,o.description,o.strategicTheme,o.expectedStrategicResult,(o.areas||[]).join(' ')].join(' '));
+  if(/venta|comercial|retail|distribuidor|canal|mix|promocion|margen/.test(txt))return'comercial';
+  if(/otif|entrega|logistic|transporte|costo logist|unidad/.test(txt))return'logistica';
+  if(/inventario|rotacion|obsoleto|stock|capital de trabajo/.test(txt))return'inventario';
+  if(/satisfaccion|cliente|instalador|experiencia|distribuidor/.test(txt))return'cliente';
+  if(/forecast|demanda|s&op|planeacion|abasto/.test(txt))return'sop';
+  if(/reclamo|garantia|falla|calidad|confiabilidad/.test(txt))return'calidad';
+  if(/digital|seguimiento|proyecto|postventa|tablero|accountability/.test(txt))return'digital';
+  if(/cobranza|cartera|flujo|cash|cuenta por cobrar/.test(txt))return'cobranza';
+  if(/talento|capacidad|tecnico|ventas y servicio|profesionalizacion/.test(txt))return'talento';
+  return'general';
+}
+function pickDecisionTemplate(o,arr){
+  if(!arr.length)return'';
+  const base=String(o.id||o.name||'');
+  let h=0;for(let i=0;i<base.length;i++){h=(h*31+base.charCodeAt(i))>>>0}
+  return arr[h%arr.length];
+}
+function themeDecision(o,kind,c){
+  const theme=objectiveTheme(o);
+  const dim=(c?.label||'').toLowerCase();
+  const byTheme={
+    comercial:{
+      kpi:['Separar la desviación por canal, margen y responsable comercial; decidir qué cuentas, promociones o mix se corrigen esta semana.','Revisar pipeline, conversión y rentabilidad por canal; mantener solo acciones que eleven venta neta rentable.','Definir recuperación comercial por segmento: responsable, meta de cierre y evidencia semanal en tablero.'],
+      dim:['Ajustar coordinación comercial-operativa: dueño por canal, regla de seguimiento y corte semanal de resultados.','Revisar si el proceso comercial y la estructura de responsables soportan la meta de rentabilidad.']
+    },
+    logistica:{
+      kpi:['Analizar causas de incumplimiento OTIF/costo por ruta y decidir acciones de recuperación por nodo logístico.','Revisar capacidad, promesa de servicio y responsables de entrega; cerrar cuellos de botella con fecha y dueño.','Abrir corte operativo de entregas: top fallas, responsable por causa y compromiso de recuperación.'],
+      dim:['Rediseñar flujo logístico, escalamiento y handoffs entre áreas para eliminar esperas y reprocesos.','Clarificar ownership de cumplimiento logístico y reglas de escalamiento ante desviaciones.']
+    },
+    inventario:{
+      kpi:['Definir plan de salida para inventario obsoleto y reglas de rotación; asignar dueño por familia o SKU crítico.','Revisar rotación, compras y demanda; decidir liquidación, reubicación o bloqueo de reposición.','Cruzar inventario lento con forecast y ventas; aprobar acciones concretas de reducción de capital atrapado.'],
+      dim:['Formalizar proceso S&OP-inventarios con reglas de reposición, obsolescencia y escalamiento.','Asignar dueño de rotación y capital de trabajo con tablero de inventario crítico.']
+    },
+    cliente:{
+      kpi:['Identificar las 3 causas principales de insatisfacción y convertirlas en acciones cerrables antes del próximo comité.','Revisar experiencia por punto de contacto; decidir correcciones en servicio, instalación y seguimiento.','Priorizar recuperación de clientes/distribuidores críticos con responsable, fecha y evidencia de cierre.'],
+      dim:['Rediseñar proceso de atención y seguimiento para quejas, instalaciones o distribuidores críticos.','Alinear roles entre servicio, ventas y operación para cerrar brechas de experiencia del cliente.']
+    },
+    sop:{
+      kpi:['Formalizar reglas del ciclo forecast-demanda-S&OP y decidir quién valida, ajusta y escala desviaciones.','Revisar calidad del forecast y handoffs entre comercial, demanda y operación; cerrar decisiones pendientes.','Convertir el S&OP en ritual de decisión: datos, responsables, escenarios y acuerdos trazables.'],
+      dim:['Rediseñar el flujo S&OP y fijar reglas de decisión entre áreas antes del siguiente ciclo.','Definir gobernanza S&OP: entradas, dueños, calendario, decisiones y escalamiento.']
+    },
+    calidad:{
+      kpi:['Abrir análisis causa-raíz de reclamos y fallas; priorizar las causas con mayor costo o recurrencia.','Separar fallas por producto, proceso y responsable; decidir contención inmediata y prevención.','Definir cierre de garantías críticas con evidencia, responsable y criterio de no recurrencia.'],
+      dim:['Clarificar proceso de calidad-garantías: detección, contención, causa raíz y cierre preventivo.','Asignar dueño end-to-end para reclamos y fallas con escalamiento operativo.']
+    },
+    digital:{
+      kpi:['Revisar adopción real del tablero/proceso digital; eliminar doble captura y fijar regla única de seguimiento.','Definir qué información debe vivir en Ximpler y qué decisiones se tomarán con esa evidencia.','Convertir el seguimiento digital en control operativo: responsables, fechas, evidencias y alertas.'],
+      dim:['Estandarizar el flujo digital de proyectos y postventa para evitar seguimiento paralelo por canales informales.','Definir responsable de adopción, calidad de datos y uso ejecutivo del tablero.']
+    },
+    cobranza:{
+      kpi:['Segmentar cartera por antigüedad y monto; decidir cobranza prioritaria, bloqueos o acuerdos de recuperación.','Revisar causas de atraso y responsables de liberación; fijar plan de flujo con cortes semanales.','Alinear ventas, crédito y cobranza para cerrar cartera crítica con fecha y dueño.'],
+      dim:['Rediseñar flujo de crédito-cobranza con reglas de escalamiento y responsables por tramo de cartera.','Clarificar ownership entre ventas, crédito y cobranza para proteger flujo de efectivo.']
+    },
+    talento:{
+      kpi:['Definir capacidades críticas faltantes y priorizar entrenamiento aplicado a resultados medibles.','Revisar brecha de habilidades por rol; decidir plan mínimo de capacitación, acompañamiento o reasignación.','Conectar desarrollo de capacidades con KPI operativo; evitar capacitación sin impacto medible.'],
+      dim:['Alinear estructura, capacidades y responsables antes de exigir mejora de desempeño.','Definir matriz de competencias críticas y responsable de cierre por área.']
+    },
+    general:{
+      kpi:['Escalar desviación y redefinir acciones críticas con dueño, fecha y criterio de recuperación.','Separar la desviación en causas controlables y decidir las 2 acciones con mayor impacto inmediato.','Revisar si las iniciativas actuales realmente explican el avance del KPI y sustituir las de bajo impacto.'],
+      dim:['Corregir la dimensión más débil antes del próximo corte de cadencia.','Convertir la brecha de alineación en una decisión concreta: dueño, recurso, proceso o indicador.']
+    }
+  };
+  const pack=byTheme[theme]||byTheme.general;
+  if(kind==='dimension'){
+    if(dim.includes('presupuesto'))return'Decidir si se fondea, se reduce alcance o se pausa el objetivo por insuficiencia presupuestal.';
+    if(dim.includes('estructura'))return pickDecisionTemplate(o,[...(pack.dim||[]),'Asignar dueño end-to-end, clarificar roles entre áreas y definir mecanismo de escalamiento.']);
+    if(dim.includes('procesos'))return pickDecisionTemplate(o,[...(pack.dim||[]),'Rediseñar flujo operativo, eliminar cuellos de botella y fijar responsables por etapa.']);
+    if(dim.includes('indicadores'))return'Definir KPI rector, meta, frecuencia y responsable del dato antes de continuar.';
+    if(dim.includes('iniciativas'))return'Definir portafolio mínimo de ejecución y asegurar que cada iniciativa impacte un KPI específico.';
+    return pickDecisionTemplate(o,pack.dim||byTheme.general.dim);
+  }
+  return pickDecisionTemplate(o,pack[kind]||pack.kpi||byTheme.general.kpi);
+}
 function alignmentRecommendation(o){
   const score=objectiveAlignmentScore(o);
   const kpi=objectiveKpiScore(o);
@@ -969,53 +1047,38 @@ function alignmentRecommendation(o){
   const dueSoon=objectiveDueSoonActionCount(o);
   const disconnected=objectiveDisconnectedInitiativeCount(o);
   const gapRisk=String(o.gapRisk||'Medio');
-  const endSoon=isDueWithin(o.endDate,30)&&String(o.status||'').toLowerCase()!=='cumplido';
-  let decision='';
+  const status=String(o.status||'').toLowerCase();
+  const endSoon=isDueWithin(o.endDate,30)&&status!=='cumplido';
+  const noKpi=!(o.indicators||[]).length;
+  const noInits=!(o.initiatives||[]).length;
 
-  if(!(o.indicators||[]).length){
-    decision='No aprobar como objetivo estratégico hasta definir KPI rector, meta, frecuencia y responsable del dato.';
-  }else if(!(o.initiatives||[]).length){
-    decision='Definir portafolio mínimo de iniciativas y asignar una primera acción con responsable y fecha.';
-  }else if(overdue>0&&kpi<70){
-    decision='Destrabar acciones vencidas y reasignar responsables; el atraso ya está afectando el avance del objetivo.';
-  }else if(disconnected>0){
-    decision='Revisar portafolio: cancelar, reorientar o sustituir iniciativas que avanzan sin mover el KPI.';
-  }else if(kpi<50){
-    decision='Escalar desviación al comité y redefinir acciones críticas con dueño, fecha y criterio de recuperación.';
-  }else if(gapRisk==='Crítico'||gapRisk==='Critico'){
-    decision='Abrir mesa ejecutiva de resolución; la brecha crítica puede bloquear el resultado esperado.';
-  }else if(gapRisk==='Alto'){
-    decision='Priorizar cierre de brecha y validar en comité las decisiones, recursos o responsables faltantes.';
-  }else if(tom<50){
-    decision='Completar TOM antes de exigir resultados: proceso, dueño end-to-end, capacidades, tecnología y escalamiento.';
-  }else if(tom<70&&score<85){
-    decision='Cerrar faltantes del TOM y validar si el diseño operativo realmente soporta la meta.';
-  }else if(endSoon&&kpi<85){
-    decision='Revisar viabilidad de cierre: ajustar alcance, fecha compromiso o plan de recuperación.';
-  }else if(dueSoon>0&&score<85){
-    decision='Actualizar compromisos próximos y confirmar si las acciones abiertas son suficientes para cerrar la brecha.';
-  }else if(c.score<60){
-    const map={
-      presupuesto:'Decidir si se fondea, se reduce alcance o se pausa el objetivo por insuficiencia presupuestal.',
-      procesos:'Rediseñar flujo operativo, eliminar cuellos de botella y fijar responsables por etapa.',
-      estructura:'Asignar dueño end-to-end, clarificar roles entre áreas y definir mecanismo de escalamiento.',
-      indicadores:'Ajustar KPI, meta, frecuencia y responsable del dato para medir avance real.',
-      iniciativas:'Reforzar el portafolio de iniciativas y asegurar que cada una impacte un KPI específico.'
-    };
-    decision=map[c.key]||'Corregir la dimensión más débil antes del próximo corte de cadencia.';
-  }else if(score>=85&&evScore>=85&&kpi>=80){
-    decision='Mantener seguimiento; no requiere decisión de comité salvo cambio de alcance, riesgo o prioridad.';
-  }else if(score>=85&&evScore<60){
-    decision='Conservar la alineación actual y convertir la evidencia en soporte documentado antes del cierre ejecutivo.';
-  }else if(score>=70){
-    decision='Ajustar la dimensión más débil y revisar avance en el siguiente corte de cadencia.';
-  }else{
-    decision='Llevar a comité como tema de decisión: ajustar alcance, dueño, recursos o fecha compromiso.';
-  }
+  // 1) Bloqueos de diseño: no deberían llegar a comité como objetivos aprobables.
+  if(noKpi)return'No aprobar como objetivo estratégico hasta definir KPI rector, meta, frecuencia y responsable del dato.';
+  if(noInits)return'Definir portafolio mínimo de ejecución: 2 a 3 iniciativas, responsable, fecha y KPI impactado.';
 
-  const nudge=alignmentEvidenceNudge(o);
-  if(nudge&&!/(evidencia|soporte|documentad|trazable)/i.test(decision))decision+=' '+nudge;
-  return decision;
+  // 2) Señales críticas de ejecución: requieren decisión inmediata, no solo documentación.
+  if(disconnected>0)return'Reorientar, cancelar o sustituir iniciativas que avanzan sin mover el KPI; conservar solo las que demuestren impacto.';
+  if(overdue>0)return'Reasignar responsable o redefinir fecha compromiso de acciones vencidas; bloquear nuevas iniciativas hasta cerrar atrasos críticos.';
+  if(gapRisk==='Crítico'||gapRisk==='Critico')return'Abrir mesa de resolución ejecutiva con responsables clave; la brecha crítica puede bloquear el resultado esperado.';
+  if(gapRisk==='Alto')return'Priorizar cierre de brecha: decisión de recursos, responsables o alcance antes del siguiente comité.';
+  if(tom<50)return'Completar modelo operativo antes de seguir ejecutando: proceso, dueño end-to-end, capacidades, tecnología y escalamiento.';
+
+  // 3) Desviación de KPI: la recomendación cambia según el tema del objetivo para evitar texto genérico.
+  if(kpi<50)return themeDecision(o,'kpi',c);
+  if(kpi<70&&score<85)return themeDecision(o,'dimension',c);
+
+  // 4) Alineación: usar la dimensión más débil solo cuando realmente es el problema dominante.
+  if(c.score<60)return themeDecision(o,'dimension',c);
+  if(tom<70&&score<85)return'Cerrar faltantes del TOM y validar si el diseño operativo realmente soporta la meta.';
+  if(endSoon&&kpi<85)return'Revisar viabilidad de cierre: confirmar entregables, replantear alcance o mover fecha con justificación ejecutiva.';
+  if(dueSoon>0&&score<85)return'Confirmar compromisos próximos y validar si son suficientes para corregir la dimensión crítica.';
+
+  // 5) Evidencia: ya no domina toda la recomendación; solo aplica si la operación está razonablemente controlada.
+  if(score>=85&&evScore>=85&&kpi>=80)return'Mantener seguimiento; no requiere decisión de comité salvo cambio de alcance, riesgo o prioridad.';
+  if(score>=85&&evScore<60&&kpi>=70)return'Validar evidencia mínima antes de declarar el objetivo alineado: tablero, minuta, archivo o liga trazable.';
+  if(score>=85)return'Conservar alineación actual y revisar únicamente desviaciones relevantes en el siguiente corte.';
+  if(score>=70)return'Ajustar la dimensión más débil y revisar avance en el siguiente corte de cadencia.';
+  return'Llevar a comité como tema de decisión: ajustar alcance, dueño, recursos o fecha compromiso.';
 }
 function alignmentDetailPanel(o){
   const c=alignmentCriticalDimension(o),score=objectiveAlignmentScore(o),st=alignmentStatus(score);
