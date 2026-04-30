@@ -165,6 +165,19 @@
     .benefit-real-pending{background:#f2f4f7;color:#667085}.benefit-real-partial{background:var(--yellowSoft);color:var(--yellow)}.benefit-real-ok{background:var(--greenSoft);color:var(--green2)}.benefit-real-neutral{background:var(--blueSoft);color:var(--blue)}
     .benefit-real-text{font-size:12px;color:#344054;line-height:1.35}.benefit-money{font-weight:900;white-space:nowrap;font-variant-numeric:tabular-nums}.benefit-empty{border:1px dashed var(--line2);border-radius:16px;padding:22px;background:#fbfcfd;color:var(--muted);text-align:center}
 
+
+
+    /* DICTAMEN EJECUTIVO CONSOLIDADO */
+    .dictamen-exec-hero{background:linear-gradient(135deg,#ffffff 0%,#f8fafc 55%,#eef5ff 100%);border:1px solid var(--line);border-radius:18px;padding:18px 20px;margin-bottom:16px;box-shadow:var(--shadow)}
+    .dictamen-exec-hero h2{margin:0 0 6px;font-size:24px}.dictamen-exec-hero p{margin:0;color:var(--muted);font-size:13px;line-height:1.45;max-width:1050px}
+    .dictamen-metric-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}.dictamen-metric{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
+    .dictamen-metric-label{font-size:10px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.03em;margin-bottom:7px}.dictamen-metric-value{font-size:24px;font-weight:900;line-height:1}.dictamen-metric-note{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.35}
+    .dictamen-layout{display:grid;grid-template-columns:1.05fr .95fr;gap:16px;margin-bottom:16px}.dictamen-panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow)}.dictamen-panel h3{margin:0 0 12px;font-size:17px}
+    .dictamen-objective-list{display:grid;gap:10px}.dictamen-objective-item{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fbfcfd}.dictamen-objective-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.dictamen-objective-title{font-weight:900;line-height:1.2}.dictamen-objective-meta{font-size:12px;color:var(--muted);line-height:1.35;margin-top:4px}.dictamen-decision{font-size:12px;color:#344054;line-height:1.45;margin-top:8px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px}
+    .dictamen-alert-card{border:1px solid var(--line);border-radius:14px;background:#fff;padding:12px;margin-bottom:10px}.dictamen-alert-card:last-child{margin-bottom:0}.dictamen-alert-title{font-weight:900;line-height:1.25}.dictamen-alert-meta{font-size:12px;color:var(--muted);line-height:1.4;margin-top:4px}.dictamen-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.dictamen-tag{display:inline-flex;align-items:center;border-radius:999px;background:#f2f4f7;border:1px solid #e4e7ec;color:#475467;padding:5px 7px;font-size:10px;font-weight:900}.dictamen-tag.red{background:var(--redSoft);border-color:#fecdca;color:var(--red)}.dictamen-tag.yellow{background:var(--yellowSoft);border-color:#fedf89;color:var(--yellow)}.dictamen-tag.blue{background:var(--blueSoft);border-color:#b5d4f4;color:var(--blue)}.dictamen-tag.green{background:var(--greenSoft);border-color:#b7e6c5;color:var(--green2)}
+    .dictamen-copy-section{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow)}.dictamen-copy-section h3{margin:0 0 12px;font-size:17px}.dictamen-note{font-size:12px;color:var(--muted);line-height:1.45;margin-top:8px}
+    @media(max-width:1100px){.dictamen-metric-grid,.dictamen-layout{grid-template-columns:1fr}}
+
     /* MODO RAPIDO */
     .quick-mode-banner{background:linear-gradient(90deg,#eef5ff,#e8f7ee);border:1px solid #b5d4f4;border-radius:14px;padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:14px}.quick-mode-text{font-size:13px;color:#0f5ea9;font-weight:700}.quick-form{display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr auto;gap:10px;align-items:end}
     /* STORAGE */
@@ -2029,28 +2042,135 @@ function openDetail(id){
 }
 
 // ─── DICTAMEN ─────────────────────────────────────────────────────────
-function buildDictamenText(){
-  const p=getPlan(),m=planMetrics(),alerts=m.alerts;
-  const critical=alerts.filter(a=>a.level==='critical');
-  const topRisk=[...m.objs].sort((a,b)=>objectiveRiskScore(b)-objectiveRiskScore(a)).slice(0,5);
-  const lowImpact=m.objs.flatMap(o=>(o.initiatives||[]).filter(isInitiativeDisconnected).map(i=>o.name+' → '+i.name));
-  const cadenceMap={Semanal:7,Mensual:30,Trimestral:90};
-  const days=cadenceMap[p?.governanceCadence]||30;
-  const nextReview=addDays(days);
-  const manualAgenda=(p?.manualAgenda||[]).map(normalizeManualAgendaItem).sort(sortManualAgenda);
-  const manualAgendaText=manualAgenda.length?manualAgenda.map(a=>{
+
+function dictamenExecutiveProfiles(){
+  return planObjectives().map(o=>{
+    const iie=objectiveInterventionProfile(o);
+    const alert=objectiveAlertExecutiveProfile(o);
+    const level=interventionDecisionLevel(iie.score);
+    return {objective:o,iie,alert,level,score:iie.score,decision:decisionRequiredForObjective(o)};
+  }).sort((a,b)=>b.score-a.score);
+}
+function dictamenIieAverage(profiles){return profiles.length?Math.round(profiles.reduce((a,p)=>a+p.score,0)/profiles.length):0}
+function dictamenGeneralState(igee){
+  if(igee>=85)return{label:'Estrategia en control',color:'green',summary:'La estrategia muestra control suficiente. El comité debe conservar cadencia, evidencia y seguimiento.'};
+  if(igee>=70)return{label:'Estrategia viable con ajustes',color:'blue',summary:'La estrategia es viable, pero requiere cerrar ajustes puntuales de ejecución, impacto o evidencia.'};
+  if(igee>=50)return{label:'Estrategia en riesgo',color:'yellow',summary:'La estrategia requiere decisiones ejecutivas para recuperar KPI, impacto y prioridades críticas.'};
+  return{label:'Estrategia críticamente desalineada',color:'red',summary:'La estrategia requiere intervención inmediata, redefinición de prioridades y cierre de brechas críticas.'};
+}
+function dictamenManualAgendaText(manualAgenda){
+  if(!manualAgenda.length)return 'Sin puntos manuales registrados.';
+  return manualAgenda.map(a=>{
     const obj=a.linkedObjectiveId?findObjective(a.linkedObjectiveId):null;
     const init=a.linkedObjectiveId&&a.linkedInitiativeId?findInitiative(a.linkedObjectiveId,a.linkedInitiativeId).initiative:null;
     const rel=[obj?'Objetivo: '+obj.name:'',init?'Iniciativa: '+init.name:''].filter(Boolean).join(' · ');
     return '- ['+a.type+' · '+a.priority+' · '+a.status+'] '+a.title+' · Responsable: '+(a.owner||'—')+(a.dueDate?' · Fecha: '+fmtDate(a.dueDate):'')+(rel?' · '+rel:'')+(a.decision?' · Decisión esperada: '+a.decision:'');
-  }).join('\n'):'Sin puntos manuales registrados.';
-  return`DICTAMEN EJECUTIVO ESTRATÉGICO\n${p?.name||''}\nFecha: ${fmtDate(todayKey())} · Próxima revisión: ${fmtDate(nextReview)}\n\nIGEE: ${m.igee}%\nAvance KPI: ${m.kpi}%\nImpacto real vs esperado: ${m.impact}%\nAlineación estratégica: ${m.align}%\nIIE: ${m.risk}%\nScore TOM promedio: ${m.tom}%\n\nDIAGNÓSTICO\n${m.igee>=85?'Estrategia en control.':m.igee>=70?'Estrategia viable con ajustes.':m.igee>=50?'Estrategia en riesgo.':'Estrategia críticamente desalineada.'}\n\nHALLAZGOS CLAVE\n- Objetivos evaluados: ${m.objs.length}\n- Alertas críticas: ${critical.length}\n- Acciones vencidas: ${m.overdueActions.length}\n- Iniciativas desconectadas de KPI: ${lowImpact.length}\n- Puntos manuales de agenda: ${manualAgenda.length}\n- Objetivos de mayor riesgo: ${topRisk.map(o=>o.name+' ('+objectiveRiskScore(o)+'%)').join(', ')||'Sin datos'}\n${lowImpact.length?'\nINICIATIVAS DESCONECTADAS (avanzan sin mover KPI):\n'+lowImpact.slice(0,6).map(x=>'- '+x).join('\n'):''}\n\nAGENDA MANUAL DEL COMITÉ\n${manualAgendaText}\n\nRECOMENDACIONES PARA EL COMITÉ\n${m.objs.map(o=>'- '+o.name+': '+recommendationForObjective(o)).join('\n')}\n\nACCIONES URGENTES PARA ESTA SEMANA\n${m.overdueActions.slice(0,5).map(({o,init,a})=>'- '+a.title+' ('+o.name+' → '+init.name+') · Responsable: '+(a.responsible||'—')+' · Venció: '+fmtDate(a.dueDate)).join('\n')||'Sin acciones vencidas.'}\n`;
+  }).join('\n');
+}
+function dictamenUrgentActionsText(actions){
+  if(!actions.length)return 'Sin acciones vencidas.';
+  return actions.slice(0,5).map(({o,init,a})=>'- '+(a.title||'Acción sin título')+' ('+o.name+' → '+init.name+') · Responsable: '+(a.responsible||'—')+' · Venció: '+fmtDate(a.dueDate)).join('\n');
+}
+function buildDictamenText(){
+  const p=getPlan(),m=planMetrics();
+  const profiles=dictamenExecutiveProfiles();
+  const iieAvg=dictamenIieAverage(profiles);
+  const general=dictamenGeneralState(m.igee);
+  const topIntervention=profiles.filter(x=>x.score>=60).slice(0,5);
+  const topIfNone=profiles.slice(0,5);
+  const topList=topIntervention.length?topIntervention:topIfNone;
+  const criticalAlerts=profiles.filter(x=>x.alert.items.length&&x.alert.level.tone==='critical').slice(0,5);
+  const committeeDecisions=profiles.filter(x=>x.score>=60).slice(0,7);
+  const cadenceMap={Semanal:7,Mensual:30,Trimestral:90};
+  const days=cadenceMap[p?.governanceCadence]||30;
+  const nextReview=addDays(days);
+  const manualAgenda=(p?.manualAgenda||[]).map(normalizeManualAgendaItem).sort(sortManualAgenda);
+  const objectivesText=topList.length?topList.map(x=>'- '+x.objective.name+' · IIE '+x.score+'% · '+x.level.label+' · Factor dominante: '+(x.iie.dominantComponent?.label||'—')+' · Decisión: '+x.decision).join('\n'):'Sin objetivos registrados.';
+  const alertsText=criticalAlerts.length?criticalAlerts.map(x=>'- '+x.objective.name+' · '+x.alert.cause+' · Señales: '+x.alert.what+' · Fuente: '+(x.alert.sources.join(' + ')||'—')).join('\n'):'Sin alertas ejecutivas críticas consolidadas.';
+  const decisionsText=committeeDecisions.length?committeeDecisions.map(x=>'- '+x.objective.name+': '+x.decision).join('\n'):'No se detectan decisiones de comité obligatorias con los criterios actuales.';
+  return`DICTAMEN EJECUTIVO ESTRATÉGICO
+${p?.name||''}
+Fecha: ${fmtDate(todayKey())} · Próxima revisión: ${fmtDate(nextReview)}
+
+ESTADO GENERAL
+IGEE: ${m.igee}% · ${general.label}
+Avance KPI promedio: ${m.kpi}%
+Impacto real vs esperado: ${m.impact}%
+Alineación estratégica: ${m.align}%
+IIE promedio: ${iieAvg}%
+Score TOM promedio: ${m.tom}%
+Iniciativas desconectadas: ${m.disconnected.length}
+
+LECTURA EJECUTIVA
+${general.summary}
+
+TOP OBJETIVOS QUE REQUIEREN INTERVENCIÓN
+${objectivesText}
+
+ALERTAS EJECUTIVAS CONSOLIDADAS
+${alertsText}
+
+DECISIONES REQUERIDAS PARA COMITÉ
+${decisionsText}
+
+ACCIONES URGENTES PARA ESTA SEMANA
+${dictamenUrgentActionsText(m.overdueActions)}
+
+AGENDA MANUAL DEL COMITÉ
+${dictamenManualAgendaText(manualAgenda)}
+`;
 }
 
+function metricTile(label,value,note,color=''){
+  return '<div class="dictamen-metric"><div class="dictamen-metric-label">'+esc(label)+'</div><div class="dictamen-metric-value" style="'+(color?'color:'+color:'')+'">'+value+'</div><div class="dictamen-metric-note">'+esc(note||'')+'</div></div>';
+}
+function renderDictamenObjectiveItem(x){
+  const o=x.objective;
+  const dom=x.iie.dominantComponent?.label||'—';
+  return '<div class="dictamen-objective-item"><div class="dictamen-objective-top"><div><div class="dictamen-objective-title">'+esc(o.name)+'</div><div class="dictamen-objective-meta">Responsable: '+esc(o.leader||'—')+' · KPI '+objectiveKpiScore(o)+'% · Impacto '+objectiveImpactScore(o)+'% · TOM '+tomScore(o)+'%</div></div><div>'+badge('IIE '+x.score+'%',x.level.color)+'<div style="margin-top:6px">'+badge(x.level.label,x.level.color)+'</div></div></div><div class="dictamen-decision"><strong>Factor dominante:</strong> '+esc(dom)+'<br><strong>Decisión:</strong> '+esc(x.decision)+'</div></div>';
+}
+function renderDictamenAlertCard(x){
+  const o=x.objective;
+  const items=x.alert.items.slice(0,5);
+  const tags=items.map(i=>{
+    const cls=i.score>=75?'red':i.score>=60?'yellow':i.score>=40?'blue':'green';
+    return '<span class="dictamen-tag '+cls+'">'+esc(i.source)+': '+esc(i.signal)+'</span>';
+  }).join('');
+  return '<div class="dictamen-alert-card"><div class="dictamen-alert-title">'+esc(o.name)+'</div><div class="dictamen-alert-meta"><strong>Causa dominante:</strong> '+esc(x.alert.cause)+'<br><strong>Qué pasa:</strong> '+esc(x.alert.what)+'<br><strong>Fuentes:</strong> '+esc(x.alert.sources.join(' + ')||'—')+'</div><div class="dictamen-tags">'+tags+'</div></div>';
+}
 function openDictamen(){
   const m=planMetrics(),txt=buildDictamenText();
-  const igeeCls=m.igee>=75?'b-green':m.igee>=55?'b-yellow':'b-red';
-  $('dictamenBody').innerHTML='<div class="dictamen"><div class="dict-box"><div class="score-big">'+m.igee+'%</div><h3>Estado general</h3><p>'+esc(m.igee>=85?'Estrategia en control':m.igee>=70?'Estrategia viable con ajustes':m.igee>=50?'Estrategia en riesgo':'Estrategia críticamente desalineada')+'</p><ul><li>Avance KPI: '+m.kpi+'%</li><li>Impacto: '+m.impact+'%</li><li>Alineación: '+m.align+'%</li><li>IIE: '+m.risk+'%</li><li>Score TOM: '+m.tom+'%</li><li>Iniciativas desconectadas: '+m.disconnected.length+'</li></ul></div><div class="dict-box"><h3>Alertas críticas</h3><ul>'+((m.alerts.filter(a=>a.level==='critical').map(a=>'<li><strong>'+esc(a.title)+':</strong> '+esc(a.description)+'</li>').join(''))||'<li>Sin alertas críticas.</li>')+'</ul>'+(m.overdueActions.length?'<h3 style="margin-top:12px">Acciones vencidas</h3><ul>'+m.overdueActions.slice(0,5).map(({o,a})=>'<li>'+esc(a.title)+' · '+esc(o.name)+'</li>').join('')+'</ul>':'')+'</div></div><div class="dict-box" style="margin-top:16px"><h3>Texto listo para comité</h3><div class="copybox" id="dictamenText">'+esc(txt)+'</div></div>';
+  const profiles=dictamenExecutiveProfiles();
+  const iieAvg=dictamenIieAverage(profiles);
+  const general=dictamenGeneralState(m.igee);
+  const topIntervention=profiles.filter(x=>x.score>=60).slice(0,5);
+  const topList=(topIntervention.length?topIntervention:profiles.slice(0,5));
+  const alertProfiles=profiles.filter(x=>x.alert.items.length).slice(0,5);
+  const criticalCount=profiles.filter(x=>x.alert.items.length&&x.alert.level.tone==='critical').length;
+  const committeeCount=profiles.filter(x=>x.score>=60&&x.score<75).length;
+  const interventionCritical=profiles.filter(x=>x.score>=75).length;
+  const urgentActions=m.overdueActions.length;
+  const generalColor=general.color==='green'?'var(--green2)':general.color==='blue'?'var(--blue)':general.color==='yellow'?'var(--yellow)':'var(--red)';
+
+  $('dictamenBody').innerHTML=
+    '<div class="dictamen-exec-hero"><h2>Dictamen Ejecutivo Consolidado</h2><p>Salida final para comité. Consolida IGEE, KPI, Impacto, Alineación, IIE, TOM, alertas agrupadas por objetivo, decisiones requeridas y acciones urgentes. No sustituye los reportes de detalle; resume lo que requiere decisión ejecutiva.</p></div>'+
+    '<div class="dictamen-metric-grid">'+
+      metricTile('IGEE',m.igee+'%',general.label,generalColor)+
+      metricTile('KPI promedio',m.kpi+'%','Avance promedio de indicadores')+
+      metricTile('Impacto',m.impact+'%','Impacto real vs esperado')+
+      metricTile('Alineación',m.align+'%','Soporte estratégico-operativo')+
+      metricTile('IIE promedio',iieAvg+'%','Índice de Intervención Ejecutiva')+
+      metricTile('TOM promedio',m.tom+'%','Modelo operativo objetivo')+
+    '</div>'+
+    '<div class="dictamen-layout">'+
+      '<div class="dictamen-panel"><h3>Top objetivos que requieren intervención</h3><div class="dictamen-objective-list">'+(topList.length?topList.map(renderDictamenObjectiveItem).join(''):'<div class="muted">Sin objetivos registrados.</div>')+'</div></div>'+
+      '<div class="dictamen-panel"><h3>Alertas ejecutivas consolidadas</h3><div class="dictamen-note" style="margin:0 0 10px">Intervención crítica: '+interventionCritical+' · Decisión de comité: '+committeeCount+' · Alertas críticas agrupadas: '+criticalCount+' · Acciones vencidas: '+urgentActions+'</div>'+(alertProfiles.length?alertProfiles.map(renderDictamenAlertCard).join(''):'<div class="muted">Sin alertas ejecutivas activas.</div>')+'</div>'+
+    '</div>'+
+    '<div class="dictamen-layout">'+
+      '<div class="dictamen-panel"><h3>Decisiones requeridas para comité</h3><div class="dictamen-objective-list">'+(profiles.filter(x=>x.score>=60).slice(0,7).map(x=>'<div class="dictamen-objective-item"><div class="dictamen-objective-title">'+esc(x.objective.name)+'</div><div class="dictamen-decision">'+esc(x.decision)+'</div></div>').join('')||'<div class="muted">No se detectan decisiones obligatorias de comité con los criterios actuales.</div>')+'</div></div>'+
+      '<div class="dictamen-panel"><h3>Acciones urgentes</h3><div class="dictamen-objective-list">'+(m.overdueActions.slice(0,5).map(({o,init,a})=>'<div class="dictamen-objective-item"><div class="dictamen-objective-title">'+esc(a.title||'Acción sin título')+'</div><div class="dictamen-objective-meta">'+esc(o.name)+' → '+esc(init.name)+'<br>Responsable: '+esc(a.responsible||'—')+' · Venció: '+fmtDate(a.dueDate)+'</div></div>').join('')||'<div class="muted">Sin acciones vencidas.</div>')+'</div></div>'+
+    '</div>'+
+    '<div class="dictamen-copy-section"><h3>Texto listo para comité</h3><div class="copybox" id="dictamenText">'+esc(txt)+'</div><div class="dictamen-note">Este texto usa el IIE y las alertas agrupadas por objetivo. La lista plana de alertas fue sustituida por una lectura consolidada para evitar redundancia con los demás reportes.</div></div>';
   openModal('dictamenModal');
 }
 
