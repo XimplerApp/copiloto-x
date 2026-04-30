@@ -163,7 +163,7 @@
 
 <template id="indicatorTpl"><div class="repeat-item indicator-row"><button type="button" class="remove">Eliminar</button><div class="grid-4"><div class="field"><label>Indicador</label><input class="input ind-name"></div><div class="field"><label>Acción</label><select class="select ind-action"><option>Incrementar</option><option>Reducir</option><option>Mantener</option></select></div><div class="field"><label>Unidad</label><input class="input ind-unit"></div><div class="field"><label>Responsable dato</label><input class="input ind-owner"></div></div><div class="grid-4"><div class="field"><label>Valor inicial</label><input type="number" step="0.01" class="input ind-initial"></div><div class="field"><label>Valor actual</label><input type="number" step="0.01" class="input ind-current"></div><div class="field"><label>Meta</label><input type="number" step="0.01" class="input ind-target"></div><div class="field"><label>Peso KPI %</label><input type="number" step="1" class="input ind-weight" value="100"></div></div></div></template>
 <template id="initiativeTpl"><div class="repeat-item initiative-row"><button type="button" class="remove">Eliminar</button><div class="grid-3"><div class="field"><label>Iniciativa</label><input class="input init-name"></div><div class="field"><label>Responsable</label><input class="input init-owner"></div><div class="field"><label>Fecha compromiso</label><input type="date" class="input init-due"></div></div><div class="grid-4"><div class="field"><label>Estatus</label><select class="select init-status"><option>Pendiente</option><option selected>En progreso</option><option>Terminada</option><option>Pausada</option></select></div><div class="field"><label>Avance %</label><input type="number" min="0" max="100" step="1" class="input init-progress"></div><div class="field"><label>Impacto esperado %</label><input type="number" min="0" max="100" step="1" class="input init-expimpact"></div><div class="field"><label>Impacto real %</label><input type="number" min="0" max="100" step="1" class="input init-realimpact"></div></div><div class="grid-4"><div class="field"><label>Prioridad</label><select class="select init-priority"><option>Crítica</option><option selected>Alta</option><option>Media</option><option>Baja</option></select></div><div class="field"><label>¿Redundante?</label><select class="select init-redundant"><option>No</option><option>Sí</option></select></div><div class="field"><label>¿Compite?</label><select class="select init-competes"><option>No</option><option>Sí</option></select></div><div class="field"><label>KPI impactado</label><input class="input init-kpi"></div></div><div class="grid-4"><div class="field"><label>Beneficio esperado</label><input class="input init-benefit"></div><div class="field"><label>Beneficio real</label><input class="input init-benefitreal"></div><div class="field"><label>Dueño beneficio</label><input class="input init-benefitowner"></div><div class="field"><label>Fecha beneficio</label><input type="date" class="input init-benefitdate"></div></div><div class="grid-4"><div class="field"><label>Presupuesto</label><input type="number" step="0.01" class="input init-budget"></div><div class="field"><label>Gastado</label><input type="number" step="0.01" class="input init-spent"></div><div class="field"><label>Acciones tácticas</label><textarea class="textarea init-actions" placeholder="Una acción por línea"></textarea></div><div class="field"><label>Detalle / evidencia</label><textarea class="textarea init-detail"></textarea></div></div></div></template>
-<template id="relationTpl"><div class="repeat-item relation-row"><button type="button" class="remove">Eliminar</button><div class="grid-4"><div class="field"><label>Objetivo relacionado</label><select class="select rel-target"></select></div><div class="field"><label>Tipo de relación</label><select class="select rel-type"><option>Depende de</option><option>Impacta a</option><option>Habilita a</option><option>Bloquea a</option><option>Duplica a</option><option>Compite con</option></select></div><div class="field"><label>Intensidad sugerida / editable</label><select class="select rel-intensity"><option>Alta</option><option selected>Media</option><option>Baja</option></select><div class="hint rel-intensity-hint">Se sugiere según tipo de relación y criticidad del objetivo relacionado.</div></div><div class="field"><label>Riesgo sugerido / editable</label><select class="select rel-risk"><option>Bajo</option><option selected>Medio</option><option>Alto</option><option>Crítico</option></select><div class="hint rel-risk-hint">Se ajusta por KPI, riesgo, tipo de relación y tiempo de impacto.</div></div></div><div class="grid-4"><div class="field"><label>Tiempo de impacto</label><select class="select rel-time"><option>Inmediato</option><option>30 días</option><option>90 días</option><option>Anual</option></select></div><div class="field"><label>Responsable relación</label><input class="input rel-owner"></div><div class="field"><label>Justificación estratégica de la relación</label><input class="input rel-evidence" placeholder="Ej. Si falla cobranza, la venta rentable se vuelve presión de flujo."></div><div class="field"><label>Sugerencia automática</label><button type="button" class="btn btn-secondary btn-small rel-suggest">Sugerir intensidad, riesgo y justificación</button><div class="hint rel-mode-hint">Modo sugerido automático.</div></div></div></div></template>
+<template id="relationTpl"><div class="repeat-item relation-row"><button type="button" class="remove">Eliminar</button><div class="grid-4"><div class="field"><label>Objetivo relacionado</label><select class="select rel-target"></select></div><div class="field"><label>Tipo de relación</label><select class="select rel-type"><option>Depende de</option><option>Impacta a</option><option>Habilita a</option><option>Bloquea a</option><option>Duplica a</option><option>Compite con</option></select></div><div class="field"><label>Intensidad sugerida / editable</label><select class="select rel-intensity"><option>Alta</option><option selected>Media</option><option>Baja</option></select><div class="hint rel-intensity-hint">Se sugiere según tipo de relación, contexto causal y tiempo de impacto.</div></div><div class="field"><label>Riesgo sugerido / editable</label><select class="select rel-risk"><option>Bajo</option><option selected>Medio</option><option>Alto</option><option>Crítico</option></select><div class="hint rel-risk-hint">El KPI bajo ajusta el riesgo, pero no lo vuelve crítico por sí solo.</div></div></div><div class="grid-4"><div class="field"><label>Tiempo de impacto</label><select class="select rel-time"><option>Inmediato</option><option>30 días</option><option>90 días</option><option>Anual</option></select></div><div class="field"><label>Responsable relación</label><input class="input rel-owner"></div><div class="field"><label>Justificación estratégica de la relación</label><input class="input rel-evidence" placeholder="Ej. Si falla cobranza, la venta rentable se vuelve presión de flujo."></div><div class="field"><label>Sugerencia automática</label><button type="button" class="btn btn-secondary btn-small rel-suggest">Sugerir intensidad, riesgo y justificación</button><div class="hint rel-mode-hint">Modo sugerido automático.</div></div></div></div></template>
 
 <script>
 // ─── CLAVES Y CONSTANTES ───────────────────────────────────────────────
@@ -249,29 +249,32 @@ function relationIntensityBadge(v){return v==='Alta'?'purple':v==='Media'?'yello
 function relationRiskBadge(v){return v==='Crítico'||v==='Alto'?'red':v==='Medio'?'yellow':'green'}
 function relationBaseByType(type){
   const t=String(type||'Impacta a');
-  if(t==='Depende de')return{intensity:3,risk:70,driver:'Dependencia directa'};
-  if(t==='Bloquea a')return{intensity:3,risk:85,driver:'Bloqueo potencial'};
-  if(t==='Habilita a')return{intensity:3,risk:58,driver:'Habilitador estratégico'};
-  if(t==='Compite con')return{intensity:2,risk:72,driver:'Tensión de prioridades'};
-  if(t==='Duplica a')return{intensity:2,risk:48,driver:'Posible redundancia'};
-  return{intensity:2,risk:45,driver:'Impacto indirecto'};
+  // Base conservadora: el tipo de relación define el punto de partida, pero no vuelve todo crítico.
+  // El riesgo crítico se reserva para bloqueo directo o dependencia directa con impacto severo.
+  if(t==='Depende de')return{intensity:2.35,risk:58,driver:'Dependencia directa'};
+  if(t==='Bloquea a')return{intensity:2.75,risk:76,driver:'Bloqueo operativo potencial'};
+  if(t==='Habilita a')return{intensity:1.85,risk:38,driver:'Habilitador de capacidad'};
+  if(t==='Compite con')return{intensity:1.95,risk:52,driver:'Tensión de prioridades'};
+  if(t==='Duplica a')return{intensity:1.25,risk:25,driver:'Posible redundancia'};
+  return{intensity:1.75,risk:40,driver:'Impacto indirecto'};
 }
-function relationRiskLabel(score){score=Number(score||0);if(score>=88)return'Crítico';if(score>=65)return'Alto';if(score>=35)return'Medio';return'Bajo'}
-function relationIntensityLabel(score){score=Number(score||0);if(score>=2.65)return'Alta';if(score>=1.65)return'Media';return'Baja'}
+function relationRiskLabel(score){score=Number(score||0);if(score>=90)return'Crítico';if(score>=66)return'Alto';if(score>=36)return'Medio';return'Bajo'}
+function relationIntensityLabel(score){score=Number(score||0);if(score>=2.55)return'Alta';if(score>=1.65)return'Media';return'Baja'}
 function relationBusinessDrivers(source,target){
   const s=plainText(source?.name||''),t=plainText(target?.name||''),both=s+' '+t;
   const drivers=[];
   const pair=(a,b)=>hasAnyText(s,a)&&hasAnyText(t,b)||hasAnyText(s,b)&&hasAnyText(t,a);
-  if(pair(['venta','comercial','retail','distribuidor'],['cobranza','cartera','flujo']))drivers.push({risk:18,intensity:.35,text:'Ventas y cobranza afectan flujo y rentabilidad'});
-  if(pair(['venta','comercial','retail','distribuidor'],['otif','entrega','logistica']))drivers.push({risk:16,intensity:.35,text:'Crecimiento comercial presiona servicio y entregas'});
-  if(pair(['inventario','rotacion','obsoleto'],['otif','entrega','logistica']))drivers.push({risk:18,intensity:.45,text:'Disponibilidad de inventario condiciona cumplimiento OTIF'});
-  if(pair(['forecast','s&op','demanda','planeacion'],['inventario','rotacion','obsoleto']))drivers.push({risk:16,intensity:.35,text:'Planeación de demanda define inventario y compras'});
-  if(pair(['satisfaccion','cliente','instalador','distribuidor'],['otif','entrega','reclamo','garantia']))drivers.push({risk:14,intensity:.35,text:'Experiencia del cliente depende de entrega y calidad'});
-  if(pair(['garantia','fallas','reclamo','calidad'],['talento','tecnico','servicio','capacidad']))drivers.push({risk:12,intensity:.25,text:'Capacidades técnicas reducen fallas y reclamos'});
-  if(pair(['digital','tablero','accountability','seguimiento'],['s&op','forecast','gobernanza','ejecucion']))drivers.push({risk:10,intensity:.25,text:'Visibilidad digital habilita seguimiento y decisiones'});
-  if(pair(['costo logistico','costo','logistico'],['otif','entrega','servicio']))drivers.push({risk:15,intensity:.35,text:'Costo y servicio pueden entrar en tensión'});
-  if(pair(['margen','rentable','rentabilidad'],['inventario','costo','promocion','mix']))drivers.push({risk:14,intensity:.35,text:'Inventario, costo y mix afectan margen'});
-  if(!drivers.length&&hasAnyText(both,['cliente','satisfaccion','servicio']))drivers.push({risk:8,intensity:.15,text:'Impacto visible en experiencia del cliente'});
+  const add=(risk,intensity,text,core=false)=>drivers.push({risk,intensity,text,core});
+  if(pair(['venta','comercial','retail','distribuidor'],['cobranza','cartera','flujo']))add(14,.28,'Dependencia financiera entre crecimiento y cartera',true);
+  if(pair(['venta','comercial','retail','distribuidor'],['otif','entrega','logistica']))add(12,.22,'Presión comercial sobre capacidad logística',true);
+  if(pair(['inventario','rotacion','obsoleto'],['otif','entrega','logistica']))add(13,.30,'Disponibilidad de inventario condiciona OTIF',true);
+  if(pair(['forecast','s&op','demanda','planeacion'],['inventario','rotacion','obsoleto']))add(10,.18,'Forecast define compras, cobertura e inventario',true);
+  if(pair(['satisfaccion','cliente','instalador','distribuidor'],['otif','entrega','reclamo','garantia']))add(10,.22,'Servicio y calidad afectan experiencia del cliente',true);
+  if(pair(['garantia','fallas','reclamo','calidad'],['talento','tecnico','servicio','capacidad']))add(8,.15,'Capacidad técnica reduce fallas y reclamos',false);
+  if(pair(['digital','tablero','accountability','seguimiento'],['s&op','forecast','gobernanza','ejecucion']))add(6,.10,'Trazabilidad digital habilita visibilidad ejecutiva',false);
+  if(pair(['costo logistico','costo','logistico'],['otif','entrega','servicio']))add(12,.18,'Tensión costo-servicio en logística',true);
+  if(pair(['margen','rentable','rentabilidad'],['inventario','costo','promocion','mix']))add(10,.20,'Inventario, costo y mix afectan margen',true);
+  if(!drivers.length&&hasAnyText(both,['cliente','satisfaccion','servicio']))add(6,.10,'Impacto indirecto en experiencia del cliente',false);
   return drivers;
 }
 function generateRelationJustification(source,target,type){
@@ -279,9 +282,9 @@ function generateRelationJustification(source,target,type){
   const sl=plainText(s),tl=plainText(t);
   const pair=(a,b)=>hasAnyText(sl,a)&&hasAnyText(tl,b)||hasAnyText(sl,b)&&hasAnyText(tl,a);
   if(pair(['venta','comercial','retail','distribuidor'],['cobranza','cartera','flujo']))return'El crecimiento comercial solo es sano si la cobranza sostiene flujo, cartera y rentabilidad.';
-  if(pair(['venta','comercial','retail','distribuidor'],['otif','entrega','logistica']))return'Mayor demanda comercial aumenta la presión sobre entregas, disponibilidad y cumplimiento OTIF.';
-  if(pair(['inventario','rotacion','obsoleto'],['otif','entrega','logistica']))return'Sin inventario correcto, el cumplimiento de entrega puede fallar aunque la operación logística ejecute bien.';
-  if(pair(['forecast','s&op','demanda','planeacion'],['inventario','rotacion','obsoleto']))return'La calidad del forecast define compras, rotación y riesgo de inventario obsoleto.';
+  if(pair(['venta','comercial','retail','distribuidor'],['otif','entrega','logistica']))return'Mayor demanda comercial presiona la capacidad logística; si OTIF no escala, el crecimiento deteriora servicio.';
+  if(pair(['inventario','rotacion','obsoleto'],['otif','entrega','logistica']))return'La disponibilidad correcta de producto condiciona el cumplimiento de entregas y promesa al cliente.';
+  if(pair(['forecast','s&op','demanda','planeacion'],['inventario','rotacion','obsoleto']))return'La calidad del forecast define compras, cobertura y riesgo de inventario obsoleto.';
   if(pair(['satisfaccion','cliente','instalador','distribuidor'],['otif','entrega','garantia','reclamo']))return'La experiencia del cliente se deteriora cuando entregas, garantías o reclamos no se resuelven a tiempo.';
   if(pair(['garantia','fallas','reclamo','calidad'],['talento','tecnico','servicio','capacidad']))return'La capacitación y capacidad técnica reducen errores, reclamos y costos de garantía.';
   if(pair(['digital','tablero','accountability','seguimiento'],['gobernanza','ejecucion','s&op','forecast']))return'Sin trazabilidad digital, la gobernanza pierde visibilidad sobre acuerdos, responsables y avance real.';
@@ -294,19 +297,59 @@ function generateRelationJustification(source,target,type){
   if(type==='Duplica a')return'La relación puede indicar esfuerzos redundantes que conviene consolidar o diferenciar.';
   return'Existe una relación de causa-efecto que debe revisarse para evitar decisiones aisladas entre objetivos.';
 }
+function capRelationRisk(type,risk,context){
+  const t=String(type||'Impacta a');
+  const time=context.impactTime||'90 días';
+  const core=!!context.core;
+  const directCritical=(context.targetKpiLow&&context.targetRiskHigh&&(time==='Inmediato'||time==='30 días')&&core);
+  if(t==='Duplica a')return Math.min(risk,55);                  // duplicidad rara vez es crítica
+  if(t==='Habilita a')return Math.min(risk,time==='Anual'?58:72); // habilitador suele ser medio/alto
+  if(t==='Impacta a')return Math.min(risk,(core&&(time==='Inmediato'||time==='30 días'))?82:74);
+  if(t==='Compite con')return Math.min(risk,78);
+  if(t==='Depende de')return Math.min(risk,directCritical?92:82);
+  if(t==='Bloquea a')return Math.min(risk,(context.targetRiskHigh||context.sourceRiskHigh||time==='Inmediato'||time==='30 días')?93:84);
+  return Math.min(risk,74);
+}
+function capRelationIntensity(type,intensity,context){
+  const t=String(type||'Impacta a');
+  const core=!!context.core;
+  if(t==='Duplica a')return Math.min(intensity,1.95);        // baja/media
+  if(t==='Habilita a')return Math.min(intensity,2.35);       // generalmente media
+  if(t==='Impacta a')return Math.min(intensity,core?2.50:2.25);
+  if(t==='Compite con')return Math.min(intensity,2.35);
+  if(t==='Depende de')return Math.min(intensity,2.85);
+  if(t==='Bloquea a')return Math.min(intensity,2.95);
+  return Math.min(intensity,2.25);
+}
 function evaluateStrategicRelation(source,rel,target){
-  const base=relationBaseByType(rel?.relationType);
+  const type=rel?.relationType||'Impacta a';
+  const base=relationBaseByType(type);
   let risk=base.risk,intensity=base.intensity;
   const drivers=[base.driver];
-  const tKpi=target?objectiveKpiScore(target):0,tRisk=target?objectiveRiskScore(target):0,sRisk=source?objectiveRiskScore(source):0;
-  if(target&&tKpi<50){risk+=18;intensity+=.25;drivers.push('Objetivo relacionado con KPI bajo')}
-  if(target&&tRisk>=70){risk+=14;intensity+=.20;drivers.push('Objetivo relacionado en alto riesgo')}
-  if(source&&sRisk>=70){risk+=8;drivers.push('Objetivo origen en alto riesgo')}
-  if(rel?.impactTime==='Inmediato'){risk+=10;intensity+=.15;drivers.push('Impacto inmediato')}
-  if(rel?.impactTime==='30 días'){risk+=5;drivers.push('Impacto de corto plazo')}
-  relationBusinessDrivers(source,target).forEach(d=>{risk+=d.risk;intensity+=d.intensity;drivers.push(d.text)});
-  risk=clamp(risk);intensity=Math.max(1,Math.min(3,intensity));
-  return{suggestedIntensity:relationIntensityLabel(intensity),suggestedRisk:relationRiskLabel(risk),riskScore:Math.round(risk),justification:generateRelationJustification(source,target,rel?.relationType),drivers};
+  const business=relationBusinessDrivers(source,target);
+  const core=business.some(d=>d.core);
+  const tKpi=target?objectiveKpiScore(target):0;
+  const tRisk=target?objectiveRiskScore(target):0;
+  const sRisk=source?objectiveRiskScore(source):0;
+
+  business.forEach(d=>{risk+=d.risk;intensity+=d.intensity;drivers.push(d.text)});
+
+  // El KPI o riesgo del objetivo relacionado ajusta la lectura, pero no vuelve crítica la relación por sí solo.
+  if(target&&tKpi<50){risk+=7;drivers.push('Objetivo relacionado con KPI bajo')}
+  if(target&&tRisk>=75){risk+=6;drivers.push('Objetivo relacionado en riesgo alto')}
+  if(source&&sRisk>=75){risk+=3;drivers.push('Objetivo origen en riesgo alto')}
+
+  if(rel?.impactTime==='Inmediato'){risk+=7;intensity+=.10;drivers.push('Impacto inmediato')}
+  else if(rel?.impactTime==='30 días'){risk+=4;drivers.push('Impacto de corto plazo')}
+  else if(rel?.impactTime==='Anual'){risk-=6;drivers.push('Impacto anual: menor urgencia')}
+
+  const context={core,impactTime:rel?.impactTime||'90 días',targetKpiLow:tKpi<50,targetRiskHigh:tRisk>=75,sourceRiskHigh:sRisk>=75};
+  risk=capRelationRisk(type,clamp(risk),context);
+  intensity=capRelationIntensity(type,Math.max(1,Math.min(3,intensity)),context);
+
+  // Criterio visible: prioriza causa de negocio y tipo de relación; evita repetir solo KPI/riesgo.
+  const visibleDrivers=[...new Set(drivers)].slice(0,4);
+  return{suggestedIntensity:relationIntensityLabel(intensity),suggestedRisk:relationRiskLabel(risk),riskScore:Math.round(risk),justification:generateRelationJustification(source,target,type),drivers:visibleDrivers};
 }
 function progressColor(v){v=Number(v||0);return v>=80?'var(--green2)':v>=50?'var(--yellow)':'var(--red)'}
 function ring(v){v=clamp(v);return'<div class="ring" style="--val:'+v+';--color:'+progressColor(v)+'"><span>'+v+'%</span></div>'}
@@ -1172,7 +1215,7 @@ function renderMapa(){
     const mode=r.manualOverride?'Manual':'Sugerido';
     return'<div class="rel-card"><strong>'+esc(o.name)+'</strong><div class="small muted">'+esc(r.relationType)+' → '+esc(t?t.name:'Objetivo eliminado')+'</div><div style="margin-top:7px">'+badge(intensity,relationIntensityBadge(intensity))+' '+badge('Riesgo '+risk,relationRiskBadge(risk))+' '+badge(mode,mode==='Manual'?'blue':'gray')+'</div><div class="small muted" style="margin-top:6px"><strong>Justificación:</strong> '+esc(justification)+'</div><div class="small muted" style="margin-top:6px"><strong>Criterio:</strong> '+esc(ev.drivers.slice(0,3).join(' · '))+'</div></div>';
   })).join('');
-  $('viewMapa').innerHTML='<div class="map-layers">'+typeOrder.map(t=>'<div class="map-layer"><h3>'+typeLabels[t]+'</h3><div class="map-row">'+objs.filter(o=>o.objectiveType===t).map(o=>{const risk=objectiveRiskScore(o);const bdr=risk>=70?'border-left:4px solid var(--red)':risk>=45?'border-left:4px solid var(--yellow)':'';return'<div class="node" style="'+bdr+'"><div class="node-title">'+esc(o.code?o.code+' · ':'')+esc(o.name)+'</div><div class="node-meta">'+esc(o.leader||'—')+' · KPI '+objectiveKpiScore(o)+'% · Impacto '+objectiveImpactScore(o)+'% · Riesgo '+risk+'%</div></div>'}).join('')+'</div></div>').join('')+'</div><div class="section" style="margin-top:16px"><h3>Relaciones estratégicas</h3><div class="hint" style="margin-bottom:12px">Las relaciones muestran dependencias, habilitadores, bloqueos, duplicidades o tensiones entre objetivos. La intensidad y el riesgo se sugieren automáticamente con base en el tipo de relación, el riesgo/KPI del objetivo relacionado, el tiempo de impacto y el contexto de negocio; pueden editarse desde cada objetivo.</div><div class="relation-grid">'+(relationCards||'<div class="empty-box">Sin relaciones estratégicas registradas.</div>')+'</div></div>';
+  $('viewMapa').innerHTML='<div class="map-layers">'+typeOrder.map(t=>'<div class="map-layer"><h3>'+typeLabels[t]+'</h3><div class="map-row">'+objs.filter(o=>o.objectiveType===t).map(o=>{const risk=objectiveRiskScore(o);const bdr=risk>=70?'border-left:4px solid var(--red)':risk>=45?'border-left:4px solid var(--yellow)':'';return'<div class="node" style="'+bdr+'"><div class="node-title">'+esc(o.code?o.code+' · ':'')+esc(o.name)+'</div><div class="node-meta">'+esc(o.leader||'—')+' · KPI '+objectiveKpiScore(o)+'% · Impacto '+objectiveImpactScore(o)+'% · Riesgo '+risk+'%</div></div>'}).join('')+'</div></div>').join('')+'</div><div class="section" style="margin-top:16px"><h3>Relaciones estratégicas</h3><div class="hint" style="margin-bottom:12px">Las relaciones muestran dependencias, habilitadores, bloqueos, duplicidades o tensiones entre objetivos. La intensidad y el riesgo se sugieren con un criterio conservador: tipo de relación, contexto de negocio, tiempo de impacto y desempeño del objetivo relacionado. “Crítico” queda reservado para bloqueos o dependencias directas severas; siempre puede editarse desde cada objetivo.</div><div class="relation-grid">'+(relationCards||'<div class="empty-box">Sin relaciones estratégicas registradas.</div>')+'</div></div>';
 }
 function renderAlineacion(){
   const objs=planObjectives();
