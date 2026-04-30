@@ -137,6 +137,16 @@
     .impact-portafolio-note{font-size:12px;color:#475467;line-height:1.35}
 
 
+
+
+    /* TABLEROS CONSOLIDADOS KPI / OPERATIVO */
+    .dashboard-hero{background:linear-gradient(135deg,#fff 0%,#fbfcfd 55%,#eef5ff 100%);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin-bottom:16px;box-shadow:var(--shadow);display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+    .dashboard-hero h2{margin:0 0 5px;font-size:23px}.dashboard-hero p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}.dashboard-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .dashboard-summary{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}.dash-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 15px;box-shadow:var(--shadow)}.dash-label{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:900;margin-bottom:6px}.dash-value{font-size:24px;font-weight:900;line-height:1}.dash-note{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.35}
+    .dash-filters{display:grid;grid-template-columns:1fr 210px 210px 210px;gap:12px;padding:16px;border-bottom:1px solid var(--line)}
+    .kpi-table{min-width:1500px}.kpi-table td{vertical-align:middle}.kpi-gauge{width:76px;height:42px;position:relative;overflow:hidden}.kpi-gauge:before{content:"";position:absolute;left:0;top:0;width:76px;height:76px;border-radius:50%;background:conic-gradient(from 270deg,var(--red) 0 54deg,var(--yellow) 54deg 108deg,var(--green2) 108deg 180deg,#e9eef3 180deg 360deg)}.kpi-gauge:after{content:"";position:absolute;left:14px;top:14px;width:48px;height:48px;border-radius:50%;background:#fff}.kpi-needle{position:absolute;left:37px;bottom:3px;width:3px;height:31px;background:#172033;border-radius:999px;transform-origin:bottom center;transform:rotate(calc(-90deg + (var(--score)*1.8deg)));z-index:2}.kpi-score-text{position:absolute;left:0;right:0;bottom:-1px;text-align:center;font-size:10px;font-weight:900;z-index:3}.kpi-weight{width:76px;border:1px solid var(--line2);border-radius:9px;padding:7px 8px;font-weight:900}.kpi-state-pill{display:inline-flex;min-width:54px;justify-content:center;border-radius:999px;padding:7px 10px;font-weight:900;font-size:12px}.kpi-state-green{background:var(--greenSoft);color:var(--green2)}.kpi-state-yellow{background:var(--yellowSoft);color:var(--yellow)}.kpi-state-red{background:var(--redSoft);color:var(--red)}
+    .op-table{min-width:1580px}.op-group{border:1px solid var(--line2);border-radius:14px;padding:10px 12px;background:#fff;min-width:210px}.op-group.objective{border-left:4px solid var(--green)}.op-group.initiative{border-left:4px solid var(--blue)}.op-k{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:900}.op-t{font-weight:900;color:var(--green);margin-top:4px;line-height:1.25}.op-s{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.35}.op-detail{font-size:12px;color:var(--muted);line-height:1.35;margin-top:3px}.op-money{font-weight:900;white-space:nowrap;font-variant-numeric:tabular-nums}
+
     /* BENEFICIOS ESTRATÉGICOS */
     .benefit-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
     .benefit-summary-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 15px;box-shadow:var(--shadow)}
@@ -195,14 +205,14 @@
     /* BRECHAS DECISIÓN REQUERIDA */
     .brecha-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.brecha-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 15px;box-shadow:var(--shadow)}.brecha-label{font-size:11px;color:var(--muted);font-weight:900;text-transform:uppercase;margin-bottom:6px}.brecha-value{font-size:26px;font-weight:900;line-height:1}.brecha-note{font-size:12px;color:var(--muted);margin-top:4px}.brecha-explain{border:1px solid var(--line);border-radius:16px;background:#fbfcfd;padding:14px;margin-bottom:16px}.brecha-explain h3{margin:0 0 7px;font-size:15px}.brecha-explain p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}.brecha-table{min-width:1500px}.brecha-table th{white-space:nowrap}.brecha-table td{line-height:1.35}.brecha-state{font-size:12px;color:#344054;margin-bottom:7px}.brecha-risk-score{font-size:24px;font-weight:900}.brecha-signals{display:flex;flex-wrap:wrap;gap:6px;max-width:300px}.brecha-signals span{display:inline-flex;align-items:center;background:#f2f4f7;border:1px solid #e4e7ec;border-radius:999px;padding:5px 7px;font-size:11px;font-weight:800;color:#475467}
 
-    @media(max-width:1100px){.grid-2,.grid-3,.grid-4,.grid-5,.summary-grid,.detail-layout,.filters,.action-editor-grid,.initiative-editor-grid,.detail-grid,.exec-stats,.quick-form,.impact-summary,.impact-objective-head,.benefit-summary-grid,.benefit-objective-head,.benefit-kpis,.alert-summary-grid,.alert-exec-head,.alert-exec-body{grid-template-columns:1fr}.initiative-editor-grid .span-2,.initiative-editor-grid .span-3,.detail-box-full{grid-column:auto}.detail-left{border-right:none}.topbar{flex-direction:column}.page{padding:16px}.initiative-cascade-card{grid-template-columns:1fr}.initiative-cascade-actions{justify-content:flex-start}.tom-summary-grid,.tom-mini-grid,.brecha-summary-grid{grid-template-columns:1fr}}
+    @media(max-width:1100px){.grid-2,.grid-3,.grid-4,.grid-5,.summary-grid,.detail-layout,.filters,.action-editor-grid,.initiative-editor-grid,.detail-grid,.exec-stats,.quick-form,.impact-summary,.impact-objective-head,.benefit-summary-grid,.benefit-objective-head,.benefit-kpis,.alert-summary-grid,.alert-exec-head,.alert-exec-body,.dashboard-hero,.dashboard-summary,.dash-filters{grid-template-columns:1fr}.initiative-editor-grid .span-2,.initiative-editor-grid .span-3,.detail-box-full{grid-column:auto}.detail-left{border-right:none}.topbar{flex-direction:column}.page{padding:16px}.initiative-cascade-card{grid-template-columns:1fr}.initiative-cascade-actions{justify-content:flex-start}.tom-summary-grid,.tom-mini-grid,.brecha-summary-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
 <div class="page">
   <section id="planningView">
     <div class="topbar">
-      <div><h1>Ximpler EDGE · Copiloto Estratégico</h1><p class="subtitle">Planeación, alineación, ejecución, impacto, brechas, TOM, beneficios, alertas y cadencia ejecutiva.</p></div>
+      <div><h1>Ximpler EDGE · Copiloto Estratégico</h1><p class="subtitle">Planeación, objetivos, KPI's, operación, alineación, impacto, brechas, TOM, beneficios, alertas y cadencia ejecutiva.</p></div>
       <div class="actions">
         <button id="newPlanningBtn" class="btn btn-primary">Nueva Planeación +</button>
         <button id="exportBackupBtn" class="btn btn-secondary">Exportar Backup JSON</button>
@@ -221,15 +231,15 @@
     <div class="topbar">
       <div><button id="backToPlansBtn" class="btn-ghost">← Volver a Planeaciones</button><h1 id="workspaceTitle">Planeación</h1><p id="workspaceSubtitle" class="subtitle">Sistema vivo de gestión estratégica.</p></div>
       <div class="actions">
-        <button id="newObjectiveQuickBtn" class="btn btn-exec">+ Objetivo Rápido</button>
-        <button id="newObjectiveBtn" class="btn btn-primary">Nuevo Objetivo Completo +</button>
+        <button id="newObjectiveBtn" class="btn btn-primary">Nuevo Objetivo +</button>
         <a id="basicLink" class="btn btn-basic" href="#">Versión Básica</a>
       </div>
     </div>
     <div id="summaryGrid" class="summary-grid"></div>
     <div class="nav-tabs" id="mainTabs"></div>
-    <div id="viewEjecucion" class="view-panel hidden"></div>
     <div id="viewObjetivos" class="view-panel"></div>
+    <div id="viewKPI" class="view-panel hidden"></div>
+    <div id="viewOperativo" class="view-panel hidden"></div>
     <div id="viewMapa" class="view-panel hidden"></div>
     <div id="viewAlineacion" class="view-panel hidden"></div>
     <div id="viewImpacto" class="view-panel hidden"></div>
@@ -243,9 +253,6 @@
 
 <!-- MODALES -->
 <div id="planningModal" class="modal"><div class="modal-card" style="width:min(820px,100%)"><div class="modal-header"><div class="modal-title"><h2 id="planningModalTitle">Nueva Planeación</h2><p>Define visión, periodo y gobierno estratégico.</p></div><div class="actions"><button id="closePlanningModal" class="btn btn-secondary">Cancelar</button><button id="savePlanning" class="btn btn-primary">Guardar</button></div></div><div class="form-body"><div class="field"><label class="required">Nombre</label><input id="pName" class="input" placeholder="Ej. Planeación Estratégica 2026"></div><div class="field"><label>Visión estratégica al año</label><input id="pVision" class="input" placeholder="Ej. Ser el operador logístico más confiable de la región"></div><div class="field"><label>Descripción</label><textarea id="pDesc" class="textarea"></textarea></div><div class="grid-2"><div class="field"><label>Mapa / Jerarquía</label><input id="pMap" class="input" placeholder="Corporativo / Unidad / Área"></div><div class="field"><label>Responsable</label><input id="pOwner" class="input"></div></div><div class="grid-3"><div class="field"><label>Inicio</label><input id="pStart" class="input" type="date"></div><div class="field"><label>Fecha compromiso</label><input id="pEnd" class="input" type="date"></div><div class="field"><label>Estatus</label><select id="pStatus" class="select"><option value="activo">Activo</option><option value="en_riesgo">En riesgo</option><option value="pausado">Pausado</option><option value="cumplido">Cumplido</option></select></div></div><div class="grid-2"><div class="field"><label>Cadencia de gobernanza</label><select id="pCadence" class="select"><option>Semanal</option><option selected>Mensual</option><option>Trimestral</option></select></div><div class="field"><label>Comité responsable</label><input id="pCommittee" class="input" placeholder="Comité Estratégico / Alta Dirección"></div></div></div></div></div>
-
-<!-- MODAL OBJETIVO RÁPIDO -->
-<div id="quickObjectiveModal" class="modal"><div class="modal-card modal-compact"><div class="modal-header"><div class="modal-title"><h2>Objetivo Rápido</h2><p>Captura lo esencial en menos de 60 segundos. Podrás completar el resto después.</p></div><div class="actions"><button id="closeQuickObjectiveModal" class="btn btn-secondary">Cancelar</button><button id="saveQuickObjective" class="btn btn-primary">Crear Objetivo</button></div></div><div class="form-body"><div class="grid-2"><div class="field"><label class="required">Nombre del objetivo</label><input id="qoName" class="input" placeholder="Ej. Reducir tiempo de entrega"></div><div class="field"><label class="required">Líder responsable</label><input id="qoLeader" class="input" placeholder="Nombre del responsable"></div></div><div class="grid-2"><div class="field"><label class="required">Fecha compromiso</label><input id="qoEnd" class="input" type="date"></div><div class="field"><label>Estatus</label><select id="qoStatus" class="select"><option value="activo">Activo</option><option value="en_riesgo">En riesgo</option><option value="pausado">Pausado</option></select></div></div><div class="grid-3"><div class="field"><label>Indicador principal</label><input id="qoKpiName" class="input" placeholder="Ej. Entregas a tiempo"></div><div class="field"><label>Meta</label><input id="qoKpiTarget" class="input" type="number" placeholder="92"></div><div class="field"><label>Unidad</label><input id="qoKpiUnit" class="input" placeholder="% / días / $"></div></div><div class="field"><label>Primera iniciativa</label><input id="qoInitiative" class="input" placeholder="Ej. Implementar sistema de ruteo"></div><div style="background:#eef5ff;border-radius:12px;padding:12px;margin-top:6px;font-size:12px;color:#0f5ea9;"><strong>Tip:</strong> Después podrás agregar más indicadores, iniciativas, brechas y TOM desde "Editar Objetivo".</div></div></div></div>
 
 <!-- MODAL OBJETIVO COMPLETO -->
 <div id="objectiveModal" class="modal"><div class="modal-card"><div class="modal-header"><div class="modal-title"><h2 id="objectiveModalTitle">Nuevo Objetivo</h2><p>Captura arquitectura, indicadores, iniciativas, brechas, TOM y relaciones.</p></div><div class="actions"><button id="closeObjectiveModal" class="btn btn-secondary">Cancelar</button><button id="saveObjective" class="btn btn-primary">Guardar Objetivo</button></div></div><div class="form-body">
@@ -279,10 +286,9 @@ const SAVE_COUNTER_KEY='ximpler_save_counter';
 const typeLabels={vision:'Visión/Resultado superior',resultado:'Resultado',cliente:'Cliente/Población',impulsor:'Impulsor/Operación',habilitador:'Habilitador/Capacidades'};
 const typeOrder=['vision','resultado','cliente','impulsor','habilitador'];
 const tabs=[
-  ['ejecucion','🎯 Ejecución',true,'view'],
   ['objetivos','Objetivos',false,'view'],
-  ['kpi','Tablero KPI´s',false,'link'],
-  ['operativo','Tablero Operativo',false,'link'],
+  ['kpi','Tablero KPI´s',false,'view'],
+  ['operativo','Tablero Operativo',false,'view'],
   ['mapa','Mapa Estratégico',false,'view'],
   ['alineacion','Alineación',false,'view'],
   ['impacto','Impacto / Portafolio',false,'view'],
@@ -295,7 +301,7 @@ const tabs=[
 
 let state={
   plannings:[],objectives:[],currentPlanningId:null,editingPlanningId:null,
-  editingObjectiveId:null,currentTab:'ejecucion',detailObjectiveId:null,
+  editingObjectiveId:null,currentTab:'objetivos',detailObjectiveId:null,
   expandedObjectives:{},actionContext:null,editingActionId:null,
   initiativeContext:null,editingInitiativeId:null,
   viewingActionId:null,viewingInitiativeId:null,
@@ -568,11 +574,8 @@ function bindBaseEvents(){
   $('planningSort').onchange=renderPlanningView;
   $('backToPlansBtn').onclick=()=>{state.currentPlanningId=null;$('workspaceView').classList.add('hidden');$('planningView').classList.remove('hidden');renderPlanningView()};
   $('newObjectiveBtn').onclick=()=>openObjectiveModal();
-  $('newObjectiveQuickBtn').onclick=()=>openQuickObjectiveModal();
   $('closeObjectiveModal').onclick=()=>closeModal('objectiveModal');
   $('saveObjective').onclick=saveObjective;
-  $('closeQuickObjectiveModal').onclick=()=>closeModal('quickObjectiveModal');
-  $('saveQuickObjective').onclick=saveQuickObjective;
   $('addIndicator').onclick=()=>addIndicatorRow();
   $('addInitiative').onclick=()=>addInitiativeRow();
   $('addRelation').onclick=()=>addRelationRow();
@@ -628,8 +631,6 @@ function renderWorkspace(){
   $('workspaceTitle').textContent=p.name;
   $('workspaceSubtitle').textContent=(p.vision?('Visión: '+p.vision+' · '):'')+'Periodo: '+fmtDate(p.startDate)+' → '+fmtDate(p.endDate);
   const planningParam=encodeURIComponent(p.id);
-  if($('kpiLink'))$('kpiLink').href='tablero_kpis_ximpler_edge.html?planningId='+planningParam;
-  if($('opLink'))$('opLink').href='tablero_operativo_ximpler_edge.html?planningId='+planningParam;
   $('basicLink').href='version_basica.html?planningId='+planningParam;
   const m=planMetrics();
   const igeeCls=m.igee>=75?'#22a652':m.igee>=55?'#b7791f':'#d92d20';
@@ -643,185 +644,17 @@ function renderWorkspace(){
     ['Desconectadas','<span style="color:'+(m.disconnected.length?'var(--purple)':'var(--green2)')+';font-size:24px;font-weight:900">'+m.disconnected.length+'</span>','Iniciativas sin impacto KPI']
   ].map(x=>'<div class="summary-card"><div class="summary-label">'+x[0]+'</div><div class="summary-value">'+x[1]+'</div><div class="summary-note">'+x[2]+'</div></div>').join('');
   $('mainTabs').innerHTML=tabs.map(t=>{
-    const type=t[3]||'view';
-    if(type==='link'){
-      const href=t[0]==='kpi'?'tablero_kpis_ximpler_edge.html?planningId='+planningParam:'tablero_operativo_ximpler_edge.html?planningId='+planningParam;
-      return '<a class="tab tab-dashboard" href="'+href+'">'+t[1]+'</a>';
-    }
-    return '<button class="tab '+(t[2]?'tab-exec':'')+' '+(state.currentTab===t[0]?'active':'')+'" data-tab="'+t[0]+'">'+t[1]+'</button>';
+    const extra=(t[0]==='kpi'||t[0]==='operativo')?'tab-dashboard':'';
+    return '<button class="tab '+extra+' '+(state.currentTab===t[0]?'active':'')+'" data-tab="'+t[0]+'">'+t[1]+'</button>';
   }).join('');
   document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{state.currentTab=b.dataset.tab;renderWorkspace()});
   document.querySelectorAll('.view-panel').forEach(v=>v.classList.add('hidden'));
-  const viewIds={ejecucion:'viewEjecucion',objetivos:'viewObjetivos',mapa:'viewMapa',alineacion:'viewAlineacion',impacto:'viewImpacto',brechas:'viewBrechas',tom:'viewTOM',beneficios:'viewBeneficios',alertas:'viewAlertas',cadencia:'viewCadencia'};
+  const viewIds={objetivos:'viewObjetivos',kpi:'viewKPI',operativo:'viewOperativo',mapa:'viewMapa',alineacion:'viewAlineacion',impacto:'viewImpacto',brechas:'viewBrechas',tom:'viewTOM',beneficios:'viewBeneficios',alertas:'viewAlertas',cadencia:'viewCadencia'};
+  if(!viewIds[state.currentTab])state.currentTab='objetivos';
   $(viewIds[state.currentTab]).classList.remove('hidden');
   renderCurrentTab();
 }
-function renderCurrentTab(){({ejecucion:renderEjecucion,objetivos:renderObjetivos,mapa:renderMapa,alineacion:renderAlineacion,impacto:renderImpacto,brechas:renderBrechas,tom:renderTOM,beneficios:renderBeneficios,alertas:renderAlertas,cadencia:renderCadencia})[state.currentTab]()}
-
-// ─── VISTA DE EJECUCIÓN DIARIA ────────────────────────────────────────
-function renderEjecucion(){
-  const m=planMetrics();
-  const objs=planObjectives();
-  // Objetivos ordenados por riesgo desc
-  const sortedByRisk=[...objs].sort((a,b)=>objectiveRiskScore(b)-objectiveRiskScore(a));
-  const top3Risk=sortedByRisk.slice(0,3);
-
-  // Próxima fecha de revisión según cadencia
-  const p=getPlan();
-  const cadenceMap={Semanal:7,Mensual:30,Trimestral:90};
-  const cadenceDays=cadenceMap[p?.governanceCadence]||30;
-  const nextReview=addDays(cadenceDays);
-
-  let html='';
-  // header
-  html+=`<div class="exec-header">
-    <h2>Vista de Ejecución — ${fmtDate(todayKey())}</h2>
-    <p>Próxima revisión de comité: ${fmtDate(nextReview)} · Cadencia ${p?.governanceCadence||'Mensual'} · Comité: ${esc(p?.committee||'No definido')}</p>
-  </div>`;
-
-  // stats
-  const totalInits=objs.reduce((a,o)=>a+(o.initiatives||[]).length,0);
-  html+=`<div class="exec-stats">
-    <div class="exec-stat"><div class="exec-stat-val" style="color:${m.overdueActions.length?'var(--red)':'var(--green2)'}">${m.overdueActions.length}</div><div class="exec-stat-lbl">Acciones vencidas</div></div>
-    <div class="exec-stat"><div class="exec-stat-val" style="color:${m.upcomingActions.length?'var(--yellow)':'var(--green2)'}">${m.upcomingActions.length}</div><div class="exec-stat-lbl">Próximas 7 días</div></div>
-    <div class="exec-stat"><div class="exec-stat-val" style="color:${m.disconnected.length?'var(--purple)':'var(--green2)'}">${m.disconnected.length}</div><div class="exec-stat-lbl">Iniciativas desconectadas</div></div>
-    <div class="exec-stat"><div class="exec-stat-val" style="color:${m.criticalAlerts.length?'var(--red)':'var(--green2)'}">${m.criticalAlerts.length}</div><div class="exec-stat-lbl">Alertas críticas</div></div>
-    <div class="exec-stat"><div class="exec-stat-val">${totalInits}</div><div class="exec-stat-lbl">Iniciativas activas</div></div>
-  </div>`;
-
-  // IGEE con recomendación
-  const igeeText=m.igee>=85?'Estrategia en control. Mantener cadencia de revisión.'
-    :m.igee>=70?'Estrategia viable. Atender alertas y completar TOM de objetivos débiles.'
-    :m.igee>=50?'Estrategia en riesgo. Intervención requerida en objetivos críticos.'
-    :'Estrategia críticamente desalineada. Convocar comité de urgencia.';
-  const igeeColor=m.igee>=75?'var(--green2)':m.igee>=55?'var(--yellow)':'var(--red)';
-  html+=`<div class="cadence-box">
-    <div class="cadence-title" style="display:flex;align-items:center;gap:12px">
-      <span>Estado IGEE</span>
-      <span style="font-size:28px;font-weight:900;color:${igeeColor}">${m.igee}%</span>
-    </div>
-    <p style="font-size:13px;color:var(--muted);margin:0">${igeeText}</p>
-    <div style="margin-top:12px;font-size:13px;font-weight:700">Top 3 objetivos con mayor riesgo:</div>
-    <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px">
-      ${top3Risk.map(o=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff">
-        <div style="flex:1"><strong>${esc(o.name)}</strong> <span class="muted small">· ${esc(o.leader||'—')}</span></div>
-        ${ring(objectiveRiskScore(o))}
-        <span class="badge b-${objectiveRiskScore(o)>=70?'red':objectiveRiskScore(o)>=45?'yellow':'green'}">Riesgo ${objectiveRiskScore(o)}%</span>
-        <button class="btn btn-secondary btn-small" onclick="openDetail('${o.id}')">Ver</button>
-        <button class="btn btn-secondary btn-small" onclick="openObjectiveModal('${o.id}')">Completar</button>
-      </div>`).join('')}
-    </div>
-  </div>`;
-
-  // ACCIONES VENCIDAS
-  if(m.overdueActions.length){
-    html+=`<div class="exec-section">
-      <div class="exec-section-title"><span style="color:var(--red)">●</span> Acciones vencidas (${m.overdueActions.length})</div>
-      <div class="exec-items">`;
-    m.overdueActions.forEach(({o,init,a})=>{
-      html+=`<div class="exec-item overdue">
-        <div>
-          <div class="exec-item-title">${esc(a.title||'Sin título')}</div>
-          <div class="exec-item-meta">
-            Objetivo: <strong>${esc(o.name)}</strong> · Iniciativa: <strong>${esc(init.name)}</strong><br>
-            Responsable: ${esc(a.responsible||'—')} · Vencida: <strong>${fmtDate(a.dueDate)}</strong> (${daysText(a.dueDate)})
-          </div>
-        </div>
-        <div class="exec-item-actions">
-          <button class="exec-resolve-btn" onclick="openActionEditor('${o.id}','${init.id}','${a.id}')">Resolver</button>
-          <button class="btn btn-secondary btn-small" onclick="openDetail('${o.id}')">Ver objetivo</button>
-        </div>
-      </div>`;
-    });
-    html+=`</div></div>`;
-  }
-
-  // PRÓXIMAS 7 DÍAS
-  if(m.upcomingActions.length){
-    html+=`<div class="exec-section">
-      <div class="exec-section-title"><span style="color:var(--yellow)">●</span> Próximas acciones — 7 días (${m.upcomingActions.length})</div>
-      <div class="exec-items">`;
-    m.upcomingActions.forEach(({o,init,a})=>{
-      html+=`<div class="exec-item urgent">
-        <div>
-          <div class="exec-item-title">${esc(a.title||'Sin título')}</div>
-          <div class="exec-item-meta">Objetivo: <strong>${esc(o.name)}</strong> · Iniciativa: <strong>${esc(init.name)}</strong><br>Responsable: ${esc(a.responsible||'—')} · Fecha: <strong>${fmtDate(a.dueDate)}</strong> (${daysText(a.dueDate)})</div>
-        </div>
-        <div class="exec-item-actions">
-          <button class="exec-review-btn" onclick="openActionEditor('${o.id}','${init.id}','${a.id}')">Actualizar</button>
-        </div>
-      </div>`;
-    });
-    html+=`</div></div>`;
-  }
-
-  // INICIATIVAS DESCONECTADAS
-  if(m.disconnected.length){
-    html+=`<div class="exec-section">
-      <div class="exec-section-title"><span style="color:var(--purple)">●</span> Iniciativas que avanzan sin mover el KPI (${m.disconnected.length})</div>
-      <div class="exec-items">`;
-    m.disconnected.forEach(({objective:o,initiative:i})=>{
-      const kpiScore=objectiveKpiScore(o);
-      html+=`<div class="exec-item disconnected">
-        <div>
-          <div class="exec-item-title">${esc(i.name)}</div>
-          <div class="exec-item-meta">
-            Objetivo: <strong>${esc(o.name)}</strong> · Responsable: ${esc(i.owner||o.leader||'—')}<br>
-            Avance calculado: <strong>${calcInitiativeProgress(i)}%</strong> · Impacto real: <strong>${clamp(i.realImpact)}%</strong> vs esperado: <strong>${clamp(i.expectedImpact)}%</strong><br>
-            KPI del objetivo: <strong>${kpiScore}%</strong> ${i.impactKpi?'· KPI que debería impactar: '+esc(i.impactKpi):'· Sin KPI asignado'}
-          </div>
-        </div>
-        <div class="exec-item-actions">
-          <span class="init-risk-badge init-risk-disc">Desconectada</span>
-          <button class="btn btn-secondary btn-small" onclick="openInitiativeEditor('${o.id}','${i.id}')">Revisar iniciativa</button>
-          <button class="btn btn-secondary btn-small" onclick="openDetail('${o.id}')">Ver objetivo</button>
-        </div>
-      </div>`;
-    });
-    html+=`</div></div>`;
-  }
-
-  // OBJETIVOS SIN KPI O SIN INICIATIVAS (alerta copiloto)
-  const sinKpi=planObjectives().filter(o=>!(o.indicators||[]).length);
-  const sinInit=planObjectives().filter(o=>!(o.initiatives||[]).length);
-  if(sinKpi.length||sinInit.length){
-    html+=`<div class="exec-section">
-      <div class="exec-section-title"><span style="color:var(--yellow)">●</span> Copiloto: objetivos que requieren atención inmediata</div>
-      <div class="exec-items">`;
-    sinKpi.forEach(o=>{
-      html+=`<div class="exec-item urgent">
-        <div>
-          <div class="exec-item-title">${esc(o.name)}</div>
-          <div class="exec-item-meta">Sin indicadores cuantitativos. No es posible medir el avance ni calcular el IGEE de forma confiable.</div>
-        </div>
-        <div class="exec-item-actions">
-          <button class="exec-review-btn" onclick="openObjectiveModal('${o.id}')">Agregar KPI</button>
-        </div>
-      </div>`;
-    });
-    sinInit.forEach(o=>{
-      html+=`<div class="exec-item urgent">
-        <div>
-          <div class="exec-item-title">${esc(o.name)}</div>
-          <div class="exec-item-meta">Sin iniciativas estratégicas. No existe portafolio de ejecución para lograr este objetivo.</div>
-        </div>
-        <div class="exec-item-actions">
-          <button class="exec-review-btn" onclick="openInitiativeEditor('${o.id}')">Crear iniciativa</button>
-        </div>
-      </div>`;
-    });
-    html+=`</div></div>`;
-  }
-
-  if(!m.overdueActions.length&&!m.upcomingActions.length&&!m.disconnected.length&&!sinKpi.length&&!sinInit.length){
-    html+=`<div class="empty-box" style="text-align:center;padding:32px">
-      <div style="font-size:32px;margin-bottom:10px">✅</div>
-      <strong>Sin pendientes urgentes.</strong> Todos los objetivos, iniciativas y acciones están en orden. Mantén seguimiento en Cadencia y Alertas Ejecutivas.
-    </div>`;
-  }
-
-  $('viewEjecucion').innerHTML=html;
-}
+function renderCurrentTab(){({objetivos:renderObjetivos,kpi:renderKPI,operativo:renderOperativo,mapa:renderMapa,alineacion:renderAlineacion,impacto:renderImpacto,brechas:renderBrechas,tom:renderTOM,beneficios:renderBeneficios,alertas:renderAlertas,cadencia:renderCadencia})[state.currentTab]()}
 
 // ─── CADENCIA DE GOBERNANZA ──────────────────────────────────────────
 function renderCadencia(){
@@ -1136,23 +969,6 @@ function deleteInitiative(objectiveId,initiativeId){
 }
 
 // ─── OBJETIVO RÁPIDO ──────────────────────────────────────────────────
-function openQuickObjectiveModal(){
-  $('qoName').value='';$('qoLeader').value='';$('qoEnd').value='';$('qoStatus').value='activo';
-  $('qoKpiName').value='';$('qoKpiTarget').value='';$('qoKpiUnit').value='';$('qoInitiative').value='';
-  openModal('quickObjectiveModal');
-}
-function saveQuickObjective(){
-  const name=$('qoName').value.trim(),leader=$('qoLeader').value.trim(),endDate=$('qoEnd').value;
-  if(!name)return alert('Ingresa el nombre del objetivo.');
-  if(!leader)return alert('Ingresa el líder responsable.');
-  if(!endDate)return alert('Ingresa la fecha compromiso.');
-  const kpiName=$('qoKpiName').value.trim(),kpiTarget=$('qoKpiTarget').value,kpiUnit=$('qoKpiUnit').value.trim();
-  const initName=$('qoInitiative').value.trim();
-  const indicators=kpiName?[{id:uid(),name:kpiName,action:'Incrementar',unit:kpiUnit,initialValue:0,current:0,target:Number(kpiTarget||0),kpiWeight:100,hidden:false,metaPlan:[],valueHistory:[]}]:[];
-  const initiatives=initName?[normalizeInitiative({name:initName,owner:leader,status:'Pendiente',priority:'Alta'})]:[];
-  const o=normalizeObjective({planningId:state.currentPlanningId,name,leader,endDate,status:$('qoStatus').value,objectiveType:'resultado',indicators,initiatives});
-  state.objectives.unshift(o);saveRaw();closeModal('quickObjectiveModal');renderWorkspace();
-}
 
 // ─── BADGE & HELPERS ──────────────────────────────────────────────────
 function badge(text,color){return'<span class="badge b-'+(color||'blue')+'">'+esc(text)+'</span>'}
@@ -1571,6 +1387,105 @@ function decisionRequiredForObjective(o){
 }
 function recommendationForObjective(o){return decisionRequiredForObjective(o)}
 
+
+// ─── TABLERO KPI CONSOLIDADO ─────────────────────────────────────────
+function kpiGauge(v){v=clamp(v);return '<div class="kpi-gauge" style="--score:'+v+'"><div class="kpi-needle"></div><div class="kpi-score-text">'+v+'%</div></div>'}
+function indicatorState(score){score=Number(score||0);if(score>=80)return{key:'green',label:'En meta'};if(score>=50)return{key:'yellow',label:'Atención'};return{key:'red',label:'Crítico'}}
+function kpiPill(v){v=clamp(v);const cls=v>=80?'kpi-state-green':v>=50?'kpi-state-yellow':'kpi-state-red';return '<span class="kpi-state-pill '+cls+'">'+v+'%</span>'}
+function renderKPI(){
+  const plan=getPlan()||{};
+  const objs=planObjectives();
+  const visibleIndicators=objs.flatMap(o=>(o.indicators||[]).filter(i=>!i.hidden));
+  const avg=(arr,fn)=>arr.length?Math.round(arr.reduce((a,x)=>a+fn(x),0)/arr.length):0;
+  const kpi=avg(objs,objectiveKpiScore),impact=avg(objs,objectiveImpactScore),iie=avg(objs,o=>(typeof objectiveInterventionProfile==='function'?objectiveInterventionProfile(o).score:objectiveRiskScore(o)));
+  const igee=Math.round(kpi*.45+impact*.30+(100-iie)*.25);
+  $('viewKPI').innerHTML=`<div class="dashboard-hero"><div><h2>Tablero KPI´s</h2><p>${esc(plan.name||'Planeación')} · Vista consolidada dentro del mismo index: indicadores, pesos, metas, avance, impacto e IIE del objetivo.</p></div><div class="dashboard-actions"><button class="btn btn-secondary btn-small" id="kpiRefreshBtn">Actualizar</button><button class="btn btn-secondary btn-small" id="kpiExportBtn">Exportar CSV</button></div></div>
+  <div class="dashboard-summary">
+    <div class="dash-card"><div class="dash-label">IGEE KPI</div><div class="dash-value">${igee}%</div><div class="dash-note">Score ejecutivo KPI</div></div>
+    <div class="dash-card"><div class="dash-label">Objetivos</div><div class="dash-value">${objs.length}</div><div class="dash-note">Dentro del plan</div></div>
+    <div class="dash-card"><div class="dash-label">Indicadores</div><div class="dash-value">${visibleIndicators.length}</div><div class="dash-note">Activos visibles</div></div>
+    <div class="dash-card"><div class="dash-label">Avance KPI</div><div class="dash-value">${kpi}%</div><div class="dash-note">Resultado cuantitativo</div></div>
+    <div class="dash-card"><div class="dash-label">Impacto</div><div class="dash-value">${impact}%</div><div class="dash-note">Real vs esperado</div></div>
+    <div class="dash-card"><div class="dash-label">IIE</div><div class="dash-value">${iie}%</div><div class="dash-note">Intervención ejecutiva</div></div>
+  </div>
+  <div class="card"><div class="dash-filters"><input id="kpiSearch" class="input" placeholder="Buscar objetivo, indicador, responsable, área"><select id="kpiTypeFilter" class="select"><option value="all">Todos los tipos</option>${typeOrder.map(t=>'<option value="'+t+'">'+typeLabels[t]+'</option>').join('')}</select><select id="kpiStateFilter" class="select"><option value="all">Todos los estados</option><option value="green">En meta</option><option value="yellow">Atención</option><option value="red">Crítico</option></select><select id="kpiPerspectiveFilter" class="select"><option value="all">Todas las perspectivas</option><option value="financiera">Financiera / Resultado</option><option value="cliente">Cliente / Mercado</option><option value="procesos">Procesos</option><option value="capacidades">Capacidades</option></select></div><div class="table-wrap"><table id="kpiMatrix" class="kpi-table"><thead><tr><th>Medidor objetivo</th><th>Objetivo</th><th>Tipo</th><th>Perspectiva</th><th>Peso objetivo</th><th>Indicador</th><th>Peso indicador</th><th>Subárea / Dueño</th><th>Valor actual</th><th>Meta</th><th>Fecha compromiso</th><th>Avance</th><th>Impacto Obj.</th><th>IIE Obj.</th><th>Estado</th></tr></thead><tbody id="kpiBody"></tbody></table></div></div>`;
+  const renderRows=()=>{
+    const q=plainText($('kpiSearch').value),tf=$('kpiTypeFilter').value,sf=$('kpiStateFilter').value,pf=$('kpiPerspectiveFilter').value;
+    const rows=[];
+    objs.forEach(o=>{
+      (o.indicators||[]).filter(i=>!i.hidden).forEach((ind)=>{
+        const score=calcIndicator(ind),st=indicatorState(score);
+        const hay=plainText([o.name,o.code,o.leader,...(o.areas||[]),ind.name,ind.owner,ind.unit].join(' '));
+        if(q&&!hay.includes(q))return;
+        if(tf!=='all'&&o.objectiveType!==tf)return;
+        if(sf!=='all'&&st.key!==sf)return;
+        if(pf!=='all'&&o.strategicPerspective!==pf)return;
+        rows.push({o,ind,score,st});
+      });
+    });
+    window.__kpiExportRows=rows;
+    const objKey=r=>r.o.id||r.o.name;
+    const countConsecutive=(idx)=>{const key=objKey(rows[idx]);let c=0;for(let i=idx;i<rows.length;i++){if(objKey(rows[i])!==key)break;c++;}return c;};
+    $('kpiBody').innerHTML=rows.length?rows.map((r,idx)=>{
+      const showObj=idx===0||objKey(rows[idx-1])!==objKey(r);
+      const span=showObj?countConsecutive(idx):0;
+      const iieScore=(typeof objectiveInterventionProfile==='function')?objectiveInterventionProfile(r.o).score:objectiveRiskScore(r.o);
+      return '<tr>'+(showObj?'<td rowspan="'+span+'">'+kpiGauge(objectiveKpiScore(r.o))+'</td><td rowspan="'+span+'"><strong>'+esc(r.o.code?r.o.code+' · ':'')+esc(r.o.name)+'</strong><div class="muted small">'+esc(r.o.leader||'—')+'</div></td><td rowspan="'+span+'">'+badge(typeLabels[r.o.objectiveType]||r.o.objectiveType,'blue')+'</td><td rowspan="'+span+'">'+esc(r.o.strategicPerspective||'—')+'</td><td rowspan="'+span+'"><input class="kpi-weight" type="number" value="'+esc(r.o.kpiWeight||0)+'" data-kpi-obj-weight="'+r.o.id+'"> %</td>':'')+'<td><strong>'+esc(r.ind.name)+'</strong><div class="muted small">'+esc(r.ind.action||'Incrementar')+'</div></td><td><input class="kpi-weight" type="number" value="'+esc(r.ind.kpiWeight||100)+'" data-kpi-ind-weight="'+r.o.id+'" data-ind-id="'+r.ind.id+'"> %</td><td>'+esc(r.ind.owner||((r.o.areas||[]).join(', '))||r.o.leader||'—')+'</td><td>'+esc(r.ind.current)+' '+esc(r.ind.unit||'')+'</td><td>'+esc(r.ind.target)+' '+esc(r.ind.unit||'')+'</td><td><strong>'+daysText(r.o.endDate)+'</strong><div class="muted small">'+fmtDate(r.o.endDate)+'</div></td><td>'+kpiPill(r.score)+'</td><td>'+kpiPill(objectiveImpactScore(r.o))+'</td><td>'+kpiPill(iieScore)+'</td><td>'+badge(r.st.label,r.st.key==='green'?'green':r.st.key==='yellow'?'yellow':'red')+'</td></tr>';
+    }).join(''):'<tr><td colspan="15" class="muted">No hay KPI´s con los filtros actuales.</td></tr>';
+    document.querySelectorAll('[data-kpi-obj-weight]').forEach(input=>input.onchange=()=>{const o=findObjective(input.dataset.kpiObjWeight);if(o){o.kpiWeight=Number(input.value||0);saveRaw();renderWorkspace();}});
+    document.querySelectorAll('[data-kpi-ind-weight]').forEach(input=>input.onchange=()=>{const o=findObjective(input.dataset.kpiIndWeight);if(o){const ind=(o.indicators||[]).find(x=>x.id===input.dataset.indId);if(ind){ind.kpiWeight=Number(input.value||0);saveRaw();renderWorkspace();}}});
+  };
+  ['kpiSearch','kpiTypeFilter','kpiStateFilter','kpiPerspectiveFilter'].forEach(id=>$(id).addEventListener('input',renderRows));
+  $('kpiRefreshBtn').onclick=()=>renderWorkspace();
+  $('kpiExportBtn').onclick=exportKpiCsv;
+  renderRows();
+}
+function exportKpiCsv(){
+  const header=['Medidor objetivo','Objetivo','Tipo','Perspectiva','Peso objetivo','Indicador','Peso indicador','Subárea / Dueño','Valor actual','Meta','Fecha compromiso','Avance','Impacto Obj.','IIE Obj.','Estado'];
+  const rows=(window.__kpiExportRows||[]).map(r=>{const iieScore=(typeof objectiveInterventionProfile==='function')?objectiveInterventionProfile(r.o).score:objectiveRiskScore(r.o);return[objectiveKpiScore(r.o)+'%',(r.o.code?r.o.code+' · ':'')+(r.o.name||''),typeLabels[r.o.objectiveType]||r.o.objectiveType,r.o.strategicPerspective||'',r.o.kpiWeight||0,(r.ind.name||''),r.ind.kpiWeight||100,r.ind.owner||((r.o.areas||[]).join(', '))||r.o.leader||'',(r.ind.current||0)+' '+(r.ind.unit||''),(r.ind.target||0)+' '+(r.ind.unit||''),daysText(r.o.endDate)+' · '+fmtDate(r.o.endDate),r.score+'%',objectiveImpactScore(r.o)+'%',iieScore+'%',r.st.label]});
+  downloadCsvRows('tablero_kpis_ximpler_edge.csv',[header,...rows]);
+}
+
+// ─── TABLERO OPERATIVO CONSOLIDADO ───────────────────────────────────
+function opObjectiveAdvance(o){const inits=o.initiatives||[];if(!inits.length)return 0;return Math.round(inits.reduce((a,i)=>a+calcInitiativeProgress(i),0)/inits.length)}
+function opImpactEfficiency(i){const e=Number(i.expectedImpact||0),r=Number(i.realImpact||0);return e>0?Math.round(clamp((r/e)*100)):calcInitiativeProgress(i)}
+function opRiskFor(i,a){let r=0;if(isOverdue(a?.dueDate||i.dueDate,a?.status||i.status))r+=45;if(i.redundant==='Sí')r+=15;if(i.competes==='Sí')r+=20;if(calcInitiativeProgress(i)>65&&opImpactEfficiency(i)<45)r+=20;if(i.budget&&Number(i.spent||0)>Number(i.budget||0))r+=20;return clamp(r)}
+function opStatusColor(s){s=String(s||'').toLowerCase();if(s.includes('venc'))return'red';if(s.includes('termin')||s.includes('final'))return'green';if(s.includes('progreso'))return'blue';if(s.includes('paus'))return'yellow';return'gray'}
+function opRiskBadge(v){return badge(v>=70?'Alto':v>=40?'Medio':'Bajo',v>=70?'red':v>=40?'yellow':'green')}
+function buildOperativoRows(){const rows=[];planObjectives().forEach(o=>{(o.initiatives||[]).forEach(i=>{const actions=(i.actions||[]).length?(i.actions||[]):[{id:'empty_'+i.id,title:'Sin acciones asignadas',responsible:i.owner||o.leader,dueDate:i.dueDate,status:i.status,detail:i.detail||'La iniciativa todavía no tiene acciones tácticas registradas.'}];actions.forEach(a=>{const status=isOverdue(a.dueDate||i.dueDate,a.status||i.status)?'Vencida':(a.status||i.status||'Por hacer');rows.push({objective:o,initiative:i,action:a,status,due:a.dueDate||i.dueDate,risk:opRiskFor(i,a),objAdvance:opObjectiveAdvance(o),initAdvance:calcInitiativeProgress(i),eff:opImpactEfficiency(i)});});});});return rows;}
+function renderOperativo(){
+  const plan=getPlan()||{};
+  const all=buildOperativoRows();
+  const objs=planObjectives();
+  const inits=objs.flatMap(o=>o.initiatives||[]);
+  const actionsRegistered=objs.reduce((sum,o)=>sum+(o.initiatives||[]).reduce((a,i)=>a+(i.actions||[]).length,0),0);
+  const overdue=all.filter(r=>r.status==='Vencida').length;
+  const op=objs.length?Math.round(objs.reduce((a,o)=>a+opObjectiveAdvance(o),0)/objs.length):0;
+  const impact=inits.length?Math.round(inits.reduce((a,i)=>a+opImpactEfficiency(i),0)/inits.length):0;
+  $('viewOperativo').innerHTML=`<div class="dashboard-hero"><div><h2>Tablero Operativo</h2><p>${esc(plan.name||'Planeación')} · Concentrado operativo dentro del mismo index: iniciativas, acciones, responsables, fechas, avance, impacto, presupuesto y riesgo táctico.</p></div><div class="dashboard-actions"><button class="btn btn-secondary btn-small" id="opRefreshBtn">Actualizar</button><button class="btn btn-secondary btn-small" id="opExportBtn">Exportar CSV</button></div></div>
+  <div class="dashboard-summary"><div class="dash-card"><div class="dash-label">Objetivos</div><div class="dash-value">${objs.length}</div><div class="dash-note">Mapa operativo</div></div><div class="dash-card"><div class="dash-label">Iniciativas</div><div class="dash-value">${inits.length}</div><div class="dash-note">Portafolio activo</div></div><div class="dash-card"><div class="dash-label">Acciones</div><div class="dash-value">${actionsRegistered}</div><div class="dash-note">Tácticas registradas</div></div><div class="dash-card"><div class="dash-label">Vencidas</div><div class="dash-value">${overdue}</div><div class="dash-note">Fuera de tiempo</div></div><div class="dash-card"><div class="dash-label">% Operativo</div><div class="dash-value">${op}%</div><div class="dash-note">Acciones terminadas</div></div><div class="dash-card"><div class="dash-label">Impacto</div><div class="dash-value">${impact}%</div><div class="dash-note">Real vs esperado</div></div></div>
+  <div class="card"><div class="dash-filters"><input id="opSearch" class="input" placeholder="Buscar objetivo, iniciativa, acción o responsable"><select id="opStatusFilter" class="select"><option value="all">Todos los estatus</option><option>Por hacer</option><option>En progreso</option><option>Terminada</option><option>Finalizada</option><option>Pausada</option><option>Vencida</option></select><select id="opPriorityFilter" class="select"><option value="all">Todas las prioridades</option><option>Crítica</option><option>Alta</option><option>Media</option><option>Baja</option></select><select id="opImpactFilter" class="select"><option value="all">Todo impacto</option><option value="low">Bajo impacto</option><option value="efficient">Alta eficiencia</option><option value="overrun">Gasto alto</option></select></div><div class="table-wrap"><table id="opMatrix" class="op-table"><thead><tr><th>% Obj.</th><th>Objetivo</th><th>% Inic.</th><th>Iniciativa</th><th>Acción / Entregable</th><th>Responsable</th><th>Fecha compromiso</th><th>Estatus</th><th>Prioridad</th><th>Impacto esperado</th><th>Impacto real</th><th>Eficiencia impacto</th><th>Presupuesto</th><th>Gastado</th><th>Riesgo</th></tr></thead><tbody id="opBody"></tbody></table></div></div>`;
+  const renderRows=()=>{
+    const q=plainText($('opSearch').value),sf=$('opStatusFilter').value,pf=$('opPriorityFilter').value,ifil=$('opImpactFilter').value;
+    const rows=all.filter(r=>{const hay=plainText([r.objective.name,r.objective.code,r.initiative.name,r.action.title,r.action.detail,r.action.responsible,r.initiative.owner,r.status].join(' '));if(q&&!hay.includes(q))return false;if(sf!=='all'&&r.status!==sf)return false;if(pf!=='all'&&r.initiative.priority!==pf)return false;if(ifil==='low'&&!(r.eff<50))return false;if(ifil==='efficient'&&!(r.eff>=80))return false;if(ifil==='overrun'&&!(r.initiative.budget&&Number(r.initiative.spent||0)>Number(r.initiative.budget||0)))return false;return true;});
+    window.__opExportRows=rows;
+    const objectiveKey=r=>r.objective.id||r.objective.name;
+    const initiativeKey=r=>objectiveKey(r)+'::'+(r.initiative.id||r.initiative.name);
+    const countConsecutive=(idx,keyFn)=>{const key=keyFn(rows[idx]);let count=0;for(let i=idx;i<rows.length;i++){if(keyFn(rows[i])!==key)break;count++;}return count;};
+    $('opBody').innerHTML=rows.length?rows.map((r,idx)=>{const showObjective=idx===0||objectiveKey(rows[idx-1])!==objectiveKey(r);const showInitiative=idx===0||initiativeKey(rows[idx-1])!==initiativeKey(r);const objSpan=showObjective?countConsecutive(idx,objectiveKey):0;const initSpan=showInitiative?countConsecutive(idx,initiativeKey):0;return '<tr>'+(showObjective?'<td rowspan="'+objSpan+'">'+ring(r.objAdvance)+'</td><td rowspan="'+objSpan+'"><div class="op-group objective"><div class="op-k">Objetivo</div><div class="op-t">'+esc(r.objective.code?r.objective.code+' · ':'')+esc(r.objective.name)+'</div><div class="op-s">'+esc(r.objective.leader||'—')+'</div></div></td>':'')+(showInitiative?'<td rowspan="'+initSpan+'">'+ring(r.initAdvance)+'</td><td rowspan="'+initSpan+'"><div class="op-group initiative"><div class="op-k">Iniciativa</div><div class="op-t" style="color:var(--blue)">'+esc(r.initiative.name)+'</div><div class="op-s">Beneficio: '+esc(r.initiative.benefitExpected||'—')+'</div></div></td>':'')+'<td><strong>'+esc(r.action.title)+'</strong><div class="op-detail">'+esc(r.action.detail||r.initiative.detail||'')+'</div></td><td>'+esc(r.action.responsible||r.initiative.owner||r.objective.leader||'—')+'</td><td><strong>'+daysText(r.due)+'</strong><div class="muted small">'+fmtDate(r.due)+'</div></td><td>'+badge(r.status,opStatusColor(r.status))+'</td><td>'+badge(r.initiative.priority||'—',r.initiative.priority==='Crítica'?'red':r.initiative.priority==='Alta'?'yellow':'blue')+'</td><td class="mono">'+(r.initiative.expectedImpact||0)+'%</td><td class="mono">'+(r.initiative.realImpact||0)+'%</td><td>'+ring(r.eff)+'</td><td><span class="op-money">'+money(r.initiative.budget)+'</span></td><td><span class="op-money">'+money(r.initiative.spent)+'</span></td><td>'+opRiskBadge(r.risk)+'</td></tr>';}).join(''):'<tr><td colspan="15" class="muted">Sin acciones con los filtros actuales.</td></tr>';
+  };
+  ['opSearch','opStatusFilter','opPriorityFilter','opImpactFilter'].forEach(id=>$(id).addEventListener('input',renderRows));
+  $('opRefreshBtn').onclick=()=>renderWorkspace();
+  $('opExportBtn').onclick=exportOperativoCsv;
+  renderRows();
+}
+function exportOperativoCsv(){
+  const header=['% Obj.','Objetivo','% Inic.','Iniciativa','Acción / Entregable','Responsable','Fecha compromiso','Estatus','Prioridad','Impacto esperado','Impacto real','Eficiencia impacto','Presupuesto','Gastado','Riesgo'];
+  const rows=(window.__opExportRows||[]).map(r=>[r.objAdvance+'%',(r.objective.code?r.objective.code+' · ':'')+(r.objective.name||''),r.initAdvance+'%',r.initiative.name||'',(r.action.title||'')+(r.action.detail?' - '+r.action.detail:''),r.action.responsible||r.initiative.owner||r.objective.leader||'',daysText(r.due)+' · '+fmtDate(r.due),r.status||'',r.initiative.priority||'',(r.initiative.expectedImpact||0)+'%',(r.initiative.realImpact||0)+'%',r.eff+'%',r.initiative.budget||0,r.initiative.spent||0,r.risk>=70?'Alto':r.risk>=40?'Medio':'Bajo']);
+  downloadCsvRows('tablero_operativo_ximpler_edge.csv',[header,...rows]);
+}
+function downloadCsvRows(filename,rows){const csv=rows.map(row=>row.map(cell=>'"'+String(cell??'').replace(/"/g,'""')+'"').join(',')).join('\n');downloadText(filename,csv)}
+
 // ─── MAPA ────────────────────────────────────────────────────────────
 function renderMapa(){
   const objs=planObjectives();
@@ -1803,7 +1718,7 @@ function alertToneFromScore(score){
   return{tone:'follow',level:'low',label:'Seguimiento',color:'green'};
 }
 function alertSourceTab(source){
-  const map={KPI:'ejecucion',Ejecución:'ejecucion',Brechas:'brechas',Mapa:'mapa',Impacto:'impacto',TOM:'tom',Alineación:'alineacion',Objetivos:'objetivos'};
+  const map={KPI:'kpi',Operativo:'operativo',Ejecución:'operativo',Brechas:'brechas',Mapa:'mapa',Impacto:'impacto',TOM:'tom',Alineación:'alineacion',Objetivos:'objetivos'};
   return map[source]||'objetivos';
 }
 function goToAlertSource(source,objectiveId){
@@ -1837,15 +1752,15 @@ function objectiveAlertItems(o){
   else if(hasKpi&&kpi<70)add('KPI','Resultado bajo','KPI '+kpi+'%',62,'El objetivo avanza, pero todavía no justifica declararlo bajo control.');
   if(hasInits&&impact<50)add('Impacto','Bajo impacto real','Impacto '+impact+'%',72,'Las iniciativas actuales todavía no están generando el impacto esperado en el resultado.');
   if(p.disconnected>0)add('Impacto','Actividad sin impacto',''+p.disconnected+' iniciativa(s) desconectada(s)',86,'Hay iniciativas que avanzan, pero no están moviendo el KPI en proporción suficiente.');
-  if(p.actionStats.overdue>0)add('Ejecución','Acciones vencidas',p.actionStats.overdue+' acción(es) vencida(s)',80,'Existen compromisos fuera de fecha que pueden estar frenando la ejecución táctica.');
-  if(p.actionStats.dueSoon>0&&p.actionStats.progress<65)add('Ejecución','Compromisos próximos en riesgo',p.actionStats.dueSoon+' próxima(s)',58,'Hay entregables cercanos con avance táctico insuficiente.');
+  if(p.actionStats.overdue>0)add('Operativo','Acciones vencidas',p.actionStats.overdue+' acción(es) vencida(s)',80,'Existen compromisos fuera de fecha que pueden estar frenando la ejecución táctica.');
+  if(p.actionStats.dueSoon>0&&p.actionStats.progress<65)add('Operativo','Compromisos próximos en riesgo',p.actionStats.dueSoon+' próxima(s)',58,'Hay entregables cercanos con avance táctico insuficiente.');
   if(['Crítico','Critico'].includes(gapRisk))add('Brechas','Brecha crítica','Riesgo gap crítico',78,'La brecha operativo-estratégica puede bloquear el resultado si no se resuelve con decisión ejecutiva.');
   else if(gapRisk==='Alto')add('Brechas','Brecha alta','Riesgo gap alto',62,'La brecha declarada exige seguimiento de comité o cierre operativo con responsable claro.');
   if(align<60)add('Alineación','Desalineación estratégica','Alineación '+align+'%',66,'Presupuesto, procesos, estructura o indicadores no sostienen suficientemente al objetivo.');
   if(tom<65)add('TOM','TOM incompleto','TOM '+tom+'%',60,'El objetivo no tiene todas las piezas operativas necesarias para ejecutar con control.');
   if(p.criticalRelations.length>0)add('Mapa','Dependencia estratégica sensible',p.criticalRelations.length+' relación(es) crítica(s)',70,'El objetivo está conectado a otros objetivos que pueden amplificar el riesgo o bloquear resultados.');
-  if(p.overdueObjective)add('Ejecución','Objetivo vencido',daysText(o.endDate),85,'La fecha compromiso ya pasó y el objetivo requiere decisión de cierre, ajuste o replanteamiento.');
-  else if(p.dueSoon&&kpi<85)add('Ejecución','Fecha compromiso próxima',daysText(o.endDate),55,'El objetivo se acerca a su fecha compromiso sin evidencia suficiente de cierre.');
+  if(p.overdueObjective)add('Operativo','Objetivo vencido',daysText(o.endDate),85,'La fecha compromiso ya pasó y el objetivo requiere decisión de cierre, ajuste o replanteamiento.');
+  else if(p.dueSoon&&kpi<85)add('Operativo','Fecha compromiso próxima',daysText(o.endDate),55,'El objetivo se acerca a su fecha compromiso sin evidencia suficiente de cierre.');
   return items.sort((a,b)=>b.score-a.score);
 }
 function objectiveAlertExecutiveProfile(o){
